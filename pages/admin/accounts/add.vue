@@ -27,9 +27,7 @@
 			<b>Add Account</b>
 		</div>
 
-		<div class="root">
-			<my-accounts-form @submitted="onSubmit" />
-		</div>
+		<my-accounts-form @submitted="onSubmit" />
 	</div>
 </template>
 

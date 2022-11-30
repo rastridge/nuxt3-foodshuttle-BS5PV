@@ -137,7 +137,6 @@ async function getAll() {
 									STATUS as status
 								from inbrc_admin_users
 								where deleted = 0`
-	console.log('in gellall config.DB_DATABASE = ', config.DB_DATABASE)
 	const users = await doDBQuery(sql)
 
 	return users.map((u) => {
@@ -155,9 +154,6 @@ async function getOne(id) {
 	const sql = `SELECT *
 								FROM inbrc_admin_users
 								WHERE admin_user_id = ${id}`
-	console.log('in usersservice getone')
-
-	console.log('sql= ', sql)
 
 	user = await doDBQuery(sql)
 	perms = await _getPerms(id)

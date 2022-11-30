@@ -25,11 +25,11 @@
 	.root {
 		max-width: 70%;
 		margin: 0 auto;
-		padding: 1rem;
+		padding: 3rem;
 		margin-top: 1rem;
-		border: solid thick green;
+		border: solid thin rgb(0, 0, 0);
 		border-radius: 20px;
-		background-color: rgba(245, 245, 245, 0.528);
+		background-color: rgba(255, 255, 255, 0.3);
 	}
 
 	.bd-placeholder-img {

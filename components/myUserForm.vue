@@ -108,9 +108,6 @@
 </template>
 
 <style>
-	.formroot {
-		text-align: left;
-	}
 	[data-invalid] .formkit-inner {
 		border-color: red;
 		box-shadow: 0 0 0 1px red;

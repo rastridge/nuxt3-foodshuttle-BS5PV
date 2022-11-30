@@ -2,11 +2,13 @@
 
 export const accountService = {
 	getAll,
+	getMemberTypes, // authorization
 	/* 	getOne,
 	addOne,
 	editOne,
 	deleteOne,
 	changeStatus,
+	getMemberAdminTypes,
 */
 }
 
