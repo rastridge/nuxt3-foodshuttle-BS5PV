@@ -37,15 +37,10 @@
 		})
 	}
 	const checkId = (item, itemId) => {
-		// console.log('in checkId id = ', item.id !== itemId)
 		return item.id !== itemId
 	}
 	const deleteFromBrowser = (itemId) => {
-		console.log('mylist deleteFromBrowser itemId= ', itemId)
-		console.log('mylist deleteFromBrowser users= ', users.value)
 		users.value = users.value.filter((item) => checkId(item, itemId))
-
-		// console.log('mylist deleteFromBrowser users after = ', users)
 	}
 
 	const deleteItem = (id) => {

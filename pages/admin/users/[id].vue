@@ -26,10 +26,6 @@
 			},
 		})
 		navigate('/admin/users')
-		/* 		console.log('got here1', pending)
-		if (pending) {
-			console.log('got here2', pending)
-		} */
 	}
 </script>
 

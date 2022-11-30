@@ -26,10 +26,6 @@
 			},
 		})
 		navigate('/admin/accounts')
-		/* 		console.log('got here1', pending)
-		if (pending) {
-			console.log('got here2', pending)
-		} */
 	}
 </script>
 
@@ -42,8 +38,6 @@
 			<b>Edit Account</b>
 		</div>
 
-		<div class="root">
-			<my-accounts-form :id="id" @submitted="onSubmit" />
-		</div>
+		<my-accounts-form :id="id" @submitted="onSubmit" />
 	</div>
 </template>

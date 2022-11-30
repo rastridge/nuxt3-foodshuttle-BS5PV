@@ -12,6 +12,7 @@ async function doDBQuery(sql, inserts) {
 	if (inserts) {
 		sql = mysql.format(sql, inserts)
 	}
+
 	const [rows, fields] = await conn1.execute(sql, inserts)
 	await conn1.end()
 	return rows
@@ -23,6 +24,8 @@ export const accountsService = {
 	addOne,
 	editOne,
 	deleteOne,
+	getMemberTypes,
+	getMemberAdminTypes,
 }
 
 async function getAll() {
@@ -59,13 +62,10 @@ async function addOne(info) {
 		member_firstname,
 		member_lastname,
 	])
-	console.log('addOne -- ', account_email, member_firstname, member_lastname)
 	return accounts
 }
 
 async function editOne(info) {
-	console.log('editOne --  info = ', info)
-
 	const sql = `UPDATE inbrc_accounts
 							SET
 									account_email = ?,
@@ -160,4 +160,15 @@ async function deleteOne(id) {
 
 	const accounts = await doDBQuery(sql, [id])
 	return accounts
+}
+
+async function getMemberTypes() {
+	const sql = `SELECT * FROM inbrc_member_types WHERE 1`
+	const membertypes = await doDBQuery(sql)
+	return membertypes
+}
+async function getMemberAdminTypes() {
+	const sql = `SELECT * FROM inbrc_member_admin_types WHERE 1`
+	const memberadmintypes = await doDBQuery(sql)
+	return memberadmintypes
 }
