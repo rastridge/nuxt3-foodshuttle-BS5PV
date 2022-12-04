@@ -1,4 +1,6 @@
 <script setup>
+	definePageMeta({ layout: 'admin' })
+
 	const router = useRouter()
 
 	const onSubmit = function (state) {

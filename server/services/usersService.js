@@ -1,5 +1,5 @@
 ﻿import mysql from 'mysql2/promise'
-
+import bcrypt from 'bcrypt'
 const config = useRuntimeConfig()
 
 async function doDBQuery(sql, inserts) {
@@ -12,7 +12,8 @@ async function doDBQuery(sql, inserts) {
 	if (inserts) {
 		sql = mysql.format(sql, inserts)
 	}
-	const [rows, fields] = await conn1.execute(sql, inserts)
+	// console.log('in doDBQuery sql = ', sql)
+	const [rows, fields] = await conn1.execute(sql)
 	await conn1.end()
 	return rows
 }
@@ -38,7 +39,7 @@ export const usersService = {
 /***************************************** */
 
 async function _setPerms(aPerms, id) {
-	sql = `DELETE
+	const sql = `DELETE
             FROM
                 inbrc_admin_perms
             WHERE
@@ -51,7 +52,7 @@ async function _setPerms(aPerms, id) {
 
 	// add new permission record
 	async function myFunction(value, index) {
-		sql = `INSERT
+		const sql = `INSERT
 								INTO inbrc_admin_perms
 										(
 												admin_user_id,
@@ -74,7 +75,7 @@ async function _setPerms(aPerms, id) {
 
 async function _getPerms(id) {
 	// need this to include app name in perms
-	sql = `SELECT
+	const sql = `SELECT
 								p.admin_perm_id, a.admin_app_id, a.admin_app_name, p.admin_perm, u.admin_user_id
 							FROM
 								inbrc_admin_perms p, inbrc_admin_apps a, inbrc_admin_users u
@@ -85,46 +86,44 @@ async function _getPerms(id) {
 								AND
 								p.admin_user_id  = ${id}`
 
-	perms = await doDBQuery(sql)
+	const perms = await doDBQuery(sql)
 
 	return perms
 }
 
 async function authenticate({ username, password }) {
-	let lc_username = username.toLowerCase()
-
+	const lc_username = username.toLowerCase()
 	const sql = `SELECT *
 								FROM inbrc_admin_users
 								WHERE deleted = 0`
 
-	users = await doDBQuery(sql)
+	const users = await doDBQuery(sql)
 
-	const hashedpassword = md5(password).substring(3, 11)
-	let user = users.find(
-		(u) =>
-			u.admin_user_name === lc_username && u.admin_user_pass === hashedpassword
-	)
+	let user = users.find((u) => {
+		// console.log(
+		// 	bcrypt.compareSync(password, u.admin_user_pass) &&
+		// 		u.admin_user_name === lc_username
+		// )
+		let match = false
+		if (
+			bcrypt.compareSync(password, u.admin_user_pass) &&
+			u.admin_user_name === lc_username
+		) {
+			match = true
+		} else {
+			match = false
+		}
+		return match
+	})
+
 	if (user) {
 		// add permissions to user
-		const perms = await _getPerms(user.admin_user_id)
-		user.perms = perms
-		//	create token here, expires In: '60 m'
-		const token = jwt.sign(
-			{
-				sub: user.admin_user_id,
-				exp: Math.floor(Date.now() / 1000) + 60 * 60 * 60,
-			},
-			JWT_SECRET
-		)
-
-		const { admin_user_pass, admin_user_remind, ...userWithoutPassword } = user
-		loginLog(user)
-		return {
-			...userWithoutPassword,
-			token,
-		}
+		// const perms = await _getPerms(user.admin_user_id)
+		// user.perms = perms
+	} else {
+		user = {}
 	}
-	return null
+	return user
 }
 
 async function getAll() {
@@ -132,18 +131,12 @@ async function getAll() {
 									admin_user_name as title,
 									modified_dt as dt,
 									admin_user_id as id,
-									admin_user_remind,
-									admin_user_pass,
 									STATUS as status
 								from inbrc_admin_users
 								where deleted = 0`
 	const users = await doDBQuery(sql)
 
-	return users.map((u) => {
-		//strips key value pair from all objects in the array with key=
-		const { admin_user_remind, admin_user_pass, ...userWithoutPassword } = u
-		return userWithoutPassword
-	})
+	return users
 }
 
 /***************************************** */
@@ -155,8 +148,8 @@ async function getOne(id) {
 								FROM inbrc_admin_users
 								WHERE admin_user_id = ${id}`
 
-	user = await doDBQuery(sql)
-	perms = await _getPerms(id)
+	const user = await doDBQuery(sql)
+	const perms = await _getPerms(id)
 	let jsObj2 = perms
 	let jsObj = user[0]
 	jsObj.perms = jsObj2
@@ -169,17 +162,17 @@ async function deleteOne(id) {
 								SET deleted=1, deleted_dt= NOW()
 								WHERE admin_user_id=` + id
 
-	user = await doDBQuery(sql)
+	const user = await doDBQuery(sql)
 
 	return user
 }
 
 async function addOne({ username, password, email }) {
 	const conn = await mysql.createConnection({
-		host: DB.DB_HOST,
-		user: DB.DB_USER,
-		password: DB.DB_PASSWORD,
-		database: DB.DB_DATABASE,
+		host: config.DB_HOST,
+		user: config.DB_USER,
+		password: config.DB_PASSWORD,
+		database: config.DB_DATABASE,
 	})
 
 	try {
@@ -201,18 +194,17 @@ async function addOne({ username, password, email }) {
 							SET
 								admin_user_name  = ?,
 								admin_user_pass  = ?,
-								admin_user_remind  = ?,
 								admin_user_email  = ?,
 								status = 1,
 								created_dt = NOW(),
 								modified_dt = NOW()`
 
-			const hashedpassword = md5(password).substring(3, 11)
+			const hashedpassword = await bcrypt.hashSync(admin_user_pass, 10)
 			let inserts = []
-			inserts.push(lc_username, hashedpassword, password, email)
+			inserts.push(lc_username, hashedpassword, email)
 			sql = mysql.format(sql, inserts)
 			const [rows, fields] = await conn.execute(sql)
-			user = rows
+			const user = rows
 			// initial permissions with view only
 			const id = user.insertId
 			const apps = await getApps()
@@ -239,16 +231,17 @@ async function addOne({ username, password, email }) {
 				' email = ' +
 				email
 			const emaildata = {
-				from: FROM,
-				fromName: FROM_NAME,
+				from: config.FROM,
+				fromName: config.FROM_NAME,
 				to: 'ron.astridge@me.com',
 				subject: 'BRC Member Account Modification',
 				body_text: '',
 				body_html: '<h3>' + msg + '</h3>',
 			}
-			sendEmail(emaildata)
+			console.log('emaildata= ', emaildata)
+			// sendEmail(emaildata)
 		} else {
-			const msg = 'A user with username ' + username + ' already exists'
+			/* 			const msg = 'A user with username ' + username + ' already exists'
 			const emaildata = {
 				from: FROM,
 				fromName: FROM_NAME,
@@ -257,7 +250,7 @@ async function addOne({ username, password, email }) {
 				body_text: '',
 				body_html: '<h3>' + msg + '</h3>',
 			}
-			sendEmail(emaildata)
+			sendEmail(emaildata) */
 		}
 
 		await conn.commit()
@@ -271,62 +264,102 @@ async function addOne({ username, password, email }) {
 
 /***************************************** */
 /*              editOne                    */
-/*                                         */
 /***************************************** */
-async function editOne({ id, username, password, email, perms }) {
+
+async function editOne(info) {
+	const {
+		admin_user_id,
+		admin_user_name,
+		admin_user_email,
+		admin_user_pass,
+		perms,
+		password,
+	} = info
+
+	// console.log(
+	// 	'in server editone ',
+	// 	admin_user_id,
+	// 	admin_user_name,
+	// 	admin_user_email,
+	// 	admin_user_pass,
+	// 	password
+	// )
+
 	const conn = await mysql.createConnection({
-		host: DB.DB_HOST,
-		user: DB.DB_USER,
-		password: DB.DB_PASSWORD,
-		database: DB.DB_DATABASE,
+		host: config.DB_HOST,
+		user: config.DB_USER,
+		password: config.DB_PASSWORD,
+		database: config.DB_DATABASE,
 	})
 	try {
 		await conn.query('START TRANSACTION')
 
-		// check for existing username
+		// check for existing admin_user_name
 		let sql =
 			`SELECT *
 							FROM inbrc_admin_users
 							WHERE
-								deleted = 0 AND admin_user_id <> ` + id
-
+								deleted = 0 AND admin_user_id <> ` + admin_user_id
 		const [rows, fields] = await conn.execute(sql)
 		const users = rows
-		let lc_username = username.toLowerCase()
-		let user = users.find((u) => u.admin_user_name === lc_username)
+		let lc_username = admin_user_name.toLowerCase()
+		let user = users.find((u) => {
+			u.admin_user_name === lc_username
+		})
+
 		// if no other users with proposed username
 		if (!user) {
-			// update user info
 			sql = `UPDATE inbrc_admin_users
 							SET
 									admin_user_name = ?,
 									admin_user_email = ?,
-									admin_user_remind = ?,
 									admin_user_pass = ?,
 									modified_dt= NOW()
 							WHERE
 									admin_user_id = ?`
 
-			const hashedpassword = md5(password).substring(3, 11)
 			let inserts = []
-			inserts.push(lc_username, email, password, hashedpassword, id)
+			if (password.length > 0) {
+				const new_admin_user_pass = await bcrypt.hashSync(password, 10)
+				inserts.push(
+					lc_username,
+					admin_user_email,
+					new_admin_user_pass,
+					admin_user_id
+				)
+			} else {
+				inserts.push(
+					lc_username,
+					admin_user_email,
+					admin_user_pass,
+					admin_user_id
+				)
+			}
 			sql = mysql.format(sql, inserts)
 			const [rows, fields] = await conn.execute(sql)
 			user = rows
+			// console.log('user =', { user })
+			// console.log(
+			// 	'new_admin_user_pass ',
+			// 	new_admin_user_pass,
+			// 	'admin_user_pass ',
+			// 	admin_user_pass
+			// )
 
 			// update user perms by deleting old - creating new
 			sql = `DELETE
 						FROM
 							inbrc_admin_perms
 						WHERE
-							admin_user_id = ${id}`
+							admin_user_id = ${admin_user_id}`
 
 			await conn.execute(sql)
 
-			// create new perms
-			// loop through permissions array
-			perms.forEach(myFunction)
-			async function myFunction(value, index) {
+			// update perms
+			// loop through existing perms array
+			perms.forEach(newPerms)
+
+			async function newPerms(value, index) {
 				sql = `INSERT
 							INTO inbrc_admin_perms
 								(
@@ -338,22 +371,22 @@ async function editOne({ id, username, password, email, perms }) {
 									${value.admin_app_id},
 									${value.admin_perm}
 								)`
-
 				await conn.execute(sql)
 			}
-			const msg =
+			/* 			const msg =
 				'The account for admin user ' + lc_username + '  has been modified '
 			const emaildata = {
-				from: FROM,
-				fromName: FROM_NAME,
+				from: config.FROM,
+				fromName: config.FROM_NAME,
 				to: 'ron.astridge@me.com',
 				subject: 'BRC Member Account Modification',
 				body_text: '',
 				body_html: '<h3>' + msg + '</h3>',
-			}
-			sendEmail(emaildata)
+			} */
+			// console.log(emaildata)
+			// sendEmail(emaildata)
 		} else {
-			const msg = 'A user with username ' + lc_username + ' already exists'
+			/* 			const msg = 'A user with username ' + lc_username + ' already exists'
 			user.error = msg
 			const emaildata = {
 				from: FROM,
@@ -362,19 +395,18 @@ async function editOne({ id, username, password, email, perms }) {
 				subject: 'BRC Member Account Modification',
 				body_text: '',
 				body_html: '<h3>' + msg + '</h3>',
-			}
-			sendEmail(emaildata)
+			} */
+			// sendEmail(emaildata)
 		}
 
 		await conn.commit()
 		await conn.end()
-		// activityLog('userservice', 'COMMIT ', '')
-
+		console.log('userservice COMMIT ')
 		return user
 	} catch (e) {
 		await conn.query('ROLLBACK')
 		await conn.end()
-		// activityLog('userservice', 'ROLLBACK ', '')
+		console.log('userservice ROLLBACK ')
 	}
 }
 
@@ -389,7 +421,7 @@ async function changeStatus({ id, status }) {
 		status +
 		`" WHERE admin_user_id  = ` +
 		id
-	user = await doDBQuery(sql)
+	const user = await doDBQuery(sql)
 
 	return user
 }
@@ -401,7 +433,7 @@ async function getApps() {
                 FROM inbrc_admin_apps
                 ORDER BY
                     admin_app_id`
-	apps = await doDBQuery(sql)
+	const apps = await doDBQuery(sql)
 
 	return apps
 }
@@ -420,7 +452,7 @@ async function getAppPerms() {
 								AND
 								p.admin_user_id = u.admin_user_id`
 
-	perms = await doDBQuery(sql)
+	const perms = await doDBQuery(sql)
 
 	return perms
 }
@@ -444,7 +476,7 @@ async function resetRequest({ username }) {
 			` go to  <a href="${SITE_URL}/admin/users/resetform/` +
 			username +
 			'">RESET PASSWORD</a>'
-
+		/* 
 		const email = {
 			from: FROM,
 			fromName: FROM_NAME,
@@ -453,7 +485,7 @@ async function resetRequest({ username }) {
 			body_text: '',
 			body_html: '<h3>' + msg + '</h3>',
 		}
-		sendEmail(email)
+		sendEmail(email) */
 	}
 
 	return username
@@ -468,11 +500,11 @@ async function resetPassword({ user, pass }) {
 					WHERE
 						admin_user_name = '${user}'`
 
-	const hashedpassword = md5(pass).substring(3, 11)
+	const hashedpassword = await bcrypt.hashSync(admin_user_pass, 10)
 	let inserts = []
 	inserts.push(hashedpassword)
 	const result = await doDBQuery(sql, inserts)
-
+	/* 
 	const email = {
 		from: FROM,
 		fromName: FROM_NAME,
@@ -482,6 +514,6 @@ async function resetPassword({ user, pass }) {
 		body_html: `<h3>The password has been changed for ${user}. The new password is "${pass}"</h3>`,
 	}
 	sendEmail(email)
-
+ */
 	return result
 }

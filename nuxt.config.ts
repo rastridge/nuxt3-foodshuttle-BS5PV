@@ -1,6 +1,11 @@
 export default defineNuxtConfig({
 	ssr: false,
-	modules: ['@formkit/nuxt', 'bootstrap-vue-3/nuxt', 'nuxt-icon'],
+	modules: [
+		'@formkit/nuxt',
+		'bootstrap-vue-3/nuxt',
+		'nuxt-icon',
+		'@pinia/nuxt',
+	],
 	css: [
 		'bootstrap/dist/css/bootstrap.css',
 		'primevue/resources/themes/saga-blue/theme.css',
@@ -18,6 +23,8 @@ export default defineNuxtConfig({
 		DB_DATABASE: process.env.DB_DATABASE,
 		ONSERVER: process.server,
 		ONCLIENT: process.client,
+		FROM: process.env.FROM,
+		FROM_NAME: process.env.FROM_NAME,
 		// Keys within public, will be also be
 		// exposed to the client-side
 		public: {

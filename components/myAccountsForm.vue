@@ -34,7 +34,7 @@
 					label="Year joined"
 					name="year_joined"
 					v-model="state.member_year"
-					step="-1"
+					step="1"
 				/>
 				<FormKit
 					type="text"
@@ -167,13 +167,17 @@
 			</FormKit>
 
 			<div class="mb-3">
-				<button class="btn btn-danger" @click="cancelForm()">Cancel</button>
+				<button class="btn btn-danger" @click.prevent="cancelForm()">
+					Cancel
+				</button>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script setup>
+	const runtimeConfig = useRuntimeConfig()
+
 	const emit = defineEmits(['submitted'])
 
 	const props = defineProps({
@@ -186,7 +190,7 @@
 		{
 			method: 'get',
 			headers: {
-				firebaseapikey: 12345,
+				firebaseapikey: runtimeConfig.apiSecret,
 			},
 		}
 	)
@@ -209,7 +213,7 @@
 	const { data: memberTypes } = await useFetch('/accounts/membertypes', {
 		method: 'get',
 		headers: {
-			firebaseapikey: 12345,
+			firebaseapikey: runtimeConfig.apiSecret,
 		},
 	})
 	// convert for formkit
@@ -231,7 +235,7 @@
 		member_firstname: '',
 		member_lastname: '',
 
-		member_year: '',
+		member_year: 2022,
 		account_addr_street: '',
 		account_addr_street_ext: '',
 		account_addr_city: '',
@@ -240,11 +244,11 @@
 		account_addr_postal: '',
 		account_addr_phone: '',
 
-		member_show_phone: '',
-		member_show_addr: '',
-		newsletter_recipient: '',
-		mail_recipient: '',
-		sms_recipient: '',
+		member_show_phone: 1,
+		member_show_addr: 1,
+		newsletter_recipient: 1,
+		mail_recipient: 1,
+		sms_recipient: 1,
 
 		member_type_id: '',
 		member_type2_id: '',
@@ -256,6 +260,7 @@
 	// edit if there is an id - add if not
 	const IdToEdit = parseInt(props.id)
 	if (IdToEdit !== 0) {
+		// get user with id
 		const runtimeConfig = useRuntimeConfig()
 		const {
 			data: formdata,

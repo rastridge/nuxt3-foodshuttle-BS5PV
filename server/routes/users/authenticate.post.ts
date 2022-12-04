@@ -6,8 +6,6 @@ export default defineEventHandler(async (event) => {
 	const body = await readBody(event)
 
 	if (headers.authorization == config.apiSecret) {
-		// console.log('body=', body)
-		return usersService.editOne(body)
-		// return body
+		return usersService.authenticate(body)
 	}
 })

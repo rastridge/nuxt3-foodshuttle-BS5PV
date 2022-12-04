@@ -12,8 +12,7 @@ async function doDBQuery(sql, inserts) {
 	if (inserts) {
 		sql = mysql.format(sql, inserts)
 	}
-
-	const [rows, fields] = await conn1.execute(sql, inserts)
+	const [rows, fields] = await conn1.execute(sql)
 	await conn1.end()
 	return rows
 }
@@ -53,14 +52,77 @@ async function addOne(info) {
 									account_email = ?,
 									member_firstname = ?,
 									member_lastname = ?,
-									comment = ?,
+
+									member_year = ?,
+									account_addr_street = ?,
+									account_addr_street_ext = ?,
+									account_addr_city = ?,
+									account_addr_state = ?,
+									account_addr_country = ?,
+									account_addr_postal = ?,
+									account_addr_phone = ?,
+
+									member_show_phone = ?,
+									member_show_addr = ?,
+									newsletter_recipient = ?,
+									mail_recipient = ?,
+									sms_recipient = ?,
+
+									member_type_id = ?,
+									member_type2_id = ?,
+									member_admin_type_id = ?,
+									member_admin_type2_id = ?,
 									created_dt = NOW(),
-									modified_dt = NOW();`
-	const { account_email, member_firstname, member_lastname } = info
+									modified_dt= NOW();`
+	const {
+		account_email,
+		member_firstname,
+		member_lastname,
+
+		member_year,
+		account_addr_street,
+		account_addr_street_ext,
+		account_addr_city,
+		account_addr_state,
+		account_addr_country,
+		account_addr_postal,
+		account_addr_phone,
+
+		member_show_phone,
+		member_show_addr,
+		newsletter_recipient,
+		mail_recipient,
+		sms_recipient,
+
+		member_type_id,
+		member_type2_id,
+		member_admin_type_id,
+		member_admin_type2_id,
+	} = info
 	const accounts = await doDBQuery(sql, [
 		account_email,
 		member_firstname,
 		member_lastname,
+
+		member_year,
+		account_addr_street,
+		account_addr_street_ext,
+		account_addr_city,
+		account_addr_state,
+		account_addr_country,
+		account_addr_postal,
+		account_addr_phone,
+
+		member_show_phone,
+		member_show_addr,
+		newsletter_recipient,
+		mail_recipient,
+		sms_recipient,
+
+		member_type_id,
+		member_type2_id,
+		member_admin_type_id,
+		member_admin_type2_id,
 	])
 	return accounts
 }

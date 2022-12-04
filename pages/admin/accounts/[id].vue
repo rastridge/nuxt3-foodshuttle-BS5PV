@@ -1,12 +1,8 @@
 <script setup>
+	definePageMeta({ layout: 'admin' })
 	const route = useRoute()
 	const id = ref(route.params.id)
 
-	definePageMeta({
-		validate: async (route) => {
-			return /^\d+$/.test(route.params.id)
-		},
-	})
 	const navigate = (p) => {
 		return navigateTo({
 			path: p,

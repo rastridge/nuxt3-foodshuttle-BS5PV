@@ -3,6 +3,7 @@
 		<Head>
 			<Title>Admin Users List</Title>
 		</Head>
+		<!-- <p>Page visits: {{ count }}</p> -->
 
 		<div class="text-center m-5 display-6">
 			<b>Users List</b>
@@ -19,5 +20,5 @@
 	</div>
 </template>
 <script setup>
-	// clearNuxtData()
+	definePageMeta({ layout: 'admin' })
 </script>

@@ -19,5 +19,5 @@
 	</div>
 </template>
 <script setup>
-	// clearNuxtData()
+	definePageMeta({ layout: 'admin' })
 </script>

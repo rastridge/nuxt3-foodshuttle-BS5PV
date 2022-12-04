@@ -13,19 +13,25 @@ export const accountService = {
 }
 
 async function getAll() {
-	const {
-		data: accounts,
-		pending,
-		error,
-		refresh,
-	} = await useFetch('/accounts/getall', {
+	const { data, pending, error, refresh } = await useFetch('/accounts/getall', {
 		method: 'get',
 		headers: {
 			firebaseapikey: 12345,
 		},
 	})
-	return accounts
+	return data
 }
+
+async function getMemberTypes() {
+	const { data } = await useFetch('/accounts/membertypes', {
+		method: 'get',
+		headers: {
+			firebaseapikey: 12345,
+		},
+	})
+	return data
+}
+
 /* 
 async function getAll() {
 	const {

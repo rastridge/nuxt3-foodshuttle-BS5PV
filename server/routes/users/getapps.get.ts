@@ -1,13 +1,13 @@
 import { usersService } from '~~/server/services/usersService'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler((event) => {
 	const config = useRuntimeConfig()
 	const headers = event.req.headers
-	const body = await readBody(event)
 
 	if (headers.authorization == config.apiSecret) {
-		// console.log('body=', body)
-		return usersService.editOne(body)
-		// return body
+		const a = usersService.getApps()
+		return a
+	} else {
+		return []
 	}
 })

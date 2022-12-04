@@ -1,26 +1,17 @@
 <template>
 	<header>
-		<my-header />
+		<my-admin-header />
 	</header>
 
-	<!-- spacer -->
+	<!-- spacer to avoid header -->
 	<div class="p-0 mt-3 bg-transparent" style="height: 30px"></div>
 	<!-- <div class="d-flex w-100 h-100 p-3 text-center mx-auto flex-column"> -->
 	<div class="root">
 		<slot />
 	</div>
-	<footer>
-		<my-footer />
-	</footer>
 </template>
 
-<script setup>
-	import { useMouse } from '@/composables/useMouse'
-	import '@formkit/themes/genesis'
-	// const colorMode = useColorMode()
-	const { x, y } = useMouse()
-	const route = useRoute()
-</script>
+<script setup></script>
 
 <style>
 	body {

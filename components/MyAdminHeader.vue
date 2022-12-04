@@ -9,14 +9,24 @@
 
 	const items = ref([
 		{
-			label: 'Home',
+			label: 'logout',
 			icon: 'pi pi-fw pi-bookmark',
-			url: '/',
+			to: '/logout.vue',
 		},
 		{
-			label: 'Login',
+			label: 'Accounts',
+			icon: 'pi pi-fw pi-bookmark',
+			to: '/admin/accounts',
+		},
+		{
+			label: 'Users',
 			icon: 'pi pi-fw pi-user',
-			url: '/loginpage',
+			to: '/admin/users',
+		},
+		{
+			label: 'News',
+			icon: 'pi pi-fw pi-bookmark',
+			to: '/admin/users',
 		},
 	])
 </script>
