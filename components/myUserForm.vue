@@ -1,6 +1,14 @@
 <template>
 	<div class="row">
 		<div class="col">
+			<div class="spinner-border text-primary" role="status">
+				<span class="visually-hidden">Loading...</span>
+			</div>
+
+			<p v-if="apps_data" class="display-3">apps_data Loaded...</p>
+			<p v-if="apps_data">apps_data= {{ apps_data }}</p>
+			<p v-if="form_state" class="display-3">form_state Loaded...</p>
+			<p>form_state= {{ form_state }}</p>
 			<form class="form-horizontal">
 				<div class="form-group">
 					<div class="col-sm-offset-2 col-sm-4">
@@ -13,7 +21,6 @@
 					</div>
 				</div>
 
-				<!-- Username input-->
 				<div class="form-group">
 					<label class="col-sm-4 control-label" for="admin_user_name"
 						>Username:
@@ -29,7 +36,6 @@
 					</div>
 				</div>
 
-				<!-- pass input-->
 				<div class="form-group">
 					<label class="col-sm-4 control-label" for="admin_user_email"
 						>Email:
@@ -44,8 +50,7 @@
 					</div>
 				</div>
 
-				<!-- reset password -->
-				<div class="form-check">
+				<div v-if="!addForm" class="form-check">
 					<div class="col-sm-4">
 						<input
 							id="reset"
@@ -61,8 +66,7 @@
 				</div>
 				<br />
 
-				<!-- Password new -->
-				<div v-if="reset">
+				<div v-if="reset || addForm">
 					<div class="form-group">
 						<label class="col-sm-4 control-label" for="password"
 							>New Password:
@@ -79,7 +83,6 @@
 						</div>
 					</div>
 
-					<!-- SameAs Password input-->
 					<div class="form-group">
 						<label class="col-sm-4 control-label" for="repeatPass"
 							>Repeat Password:
@@ -96,12 +99,12 @@
 					</div>
 				</div>
 
-				<!-- permissions -->
 				<div class="row">
 					<div class="col">
 						<h5 class="text-center">Application permissions</h5>
 						<div class="table-responsive">
 							<table
+								v-if="apps_data"
 								class="table table-sm"
 								style="
 									white-space: nowrap;
@@ -117,7 +120,7 @@
 										<th>No access</th>
 									</tr>
 								</thead>
-								<tbody v-if="form_state.perms && apps">
+								<tbody>
 									<tr v-for="(item, index) in apps" :key="item.admin_app_id">
 										<td class="text-end">{{ item.admin_app_name }} :</td>
 										<td>
@@ -189,28 +192,13 @@
 </template>
 
 <script setup>
-	const emit = defineEmits(['submitted'])
 	const runtimeConfig = useRuntimeConfig()
 
-	const props = defineProps({
-		id: { Number, default: 0 },
-	})
+	const form_state = ref({})
 
-	const form_state = ref({
-		admin_user_id: '',
-		admin_user_name: '',
-		admin_user_email: '',
-		admin_user_pass: '',
-		password: '',
-		perms: null,
-	})
-	const apps = ref('')
-
+	// password input
 	const reset = ref(false)
 	const repeatPass = ref('')
-
-	const IdToEdit = parseInt(props.id)
-
 	const resetPassword = () => {
 		reset.value = !reset
 		if (reset.value) {
@@ -220,41 +208,212 @@
 	}
 	const match = computed(() => form_state.value.password !== repeatPass.value)
 	const required = computed(() => form_state.value.password === '')
+	const addForm = props.id === 0
 
-	// add or edit - if edit get existing data
-	if (IdToEdit !== 0) {
-		const { data: form_data } = await useFetch(`/users/${IdToEdit}`, {
+	// get app namefor access inputs
+	const { data: apps_data } = await useFetch(`/users/getapps`, {
+		pick: 'admin_app_name',
+		method: 'get',
+		headers: {
+			firebaseapikey: runtimeConfig.apiSecret,
+		},
+	})
+
+	console.log('apps_data= ', apps_data)
+	// const apps = apps_data.value
+
+	const apps = [
+		{
+			admin_app_id: 1,
+			admin_app_name: 'settings',
+		},
+		{
+			admin_app_id: 2,
+			admin_app_name: 'sponsors',
+		},
+		{
+			admin_app_id: 3,
+			admin_app_name: 'videos',
+		},
+		{
+			admin_app_id: 4,
+			admin_app_name: 'news',
+		},
+		{
+			admin_app_id: 5,
+			admin_app_name: 'newsletters',
+		},
+		{
+			admin_app_id: 6,
+			admin_app_name: 'sms',
+		},
+		{
+			admin_app_id: 8,
+			admin_app_name: 'users',
+		},
+		{
+			admin_app_id: 11,
+			admin_app_name: 'content',
+		},
+		{
+			admin_app_id: 12,
+			admin_app_name: 'accounts',
+		},
+		{
+			admin_app_id: 19,
+			admin_app_name: 'contributions',
+		},
+		{
+			admin_app_id: 21,
+			admin_app_name: 'filemanager',
+		},
+		{
+			admin_app_id: 26,
+			admin_app_name: 'archive',
+		},
+		{
+			admin_app_id: 29,
+			admin_app_name: 'payments',
+		},
+		{
+			admin_app_id: 31,
+			admin_app_name: 'newsletters_archive',
+		},
+	]
+
+	// initlaize form ////////////////////////////
+	// get users id if editing
+	const props = defineProps({
+		id: { Number, default: 0 },
+	})
+	// add is zero  edit is non zero
+	if (props.id !== 0) {
+		// get user data
+		const { data: form_data } = await useFetch(`/users/${props.id}`, {
 			method: 'get',
 			headers: {
 				firebaseapikey: runtimeConfig.apiSecret,
 			},
 		})
+		console.log('form_data= ', form_data)
 
-		const { data: apps_data } = await useFetch(`/users/getapps`, {
-			method: 'get',
-			headers: {
-				firebaseapikey: runtimeConfig.apiSecret,
+		// init form values if editing
+		form_state.value.admin_user_id = form_data.value.admin_user_id
+		form_state.value.admin_user_name = form_data.value.admin_user_name
+		form_state.value.admin_user_email = form_data.value.admin_user_email
+		form_state.value.admin_user_pass = form_data.value.admin_user_pass
+		form_state.value.password = ''
+		form_state.value.perms = form_data.value.perms
+	} else {
+		// init form values if adding
+		form_state.value.admin_user_id = ''
+		form_state.value.admin_user_name = ''
+		form_state.value.admin_user_email = ''
+		form_state.value.admin_user_pass = ''
+		form_state.value.password = ''
+		form_state.value.perms = [
+			{
+				admin_perm_id: 5843,
+				admin_app_id: 1,
+				admin_app_name: 'settings',
+				admin_perm: 3,
+				admin_user_id: 0,
 			},
-		})
-
-		if (form_data.value.admin_user_id < 1) {
-			throw createError({
-				statusCode: 404,
-				statusMessage: 'Account Not Found ' + IdToEdit,
-				fatal: true,
-			})
-		} else {
-			form_state.value.admin_user_id = form_data.value.admin_user_id
-			form_state.value.admin_user_name = form_data.value.admin_user_name
-			form_state.value.admin_user_email = form_data.value.admin_user_email
-			form_state.value.admin_user_pass = form_data.value.admin_user_pass
-			form_state.value.password = ''
-			form_state.value.perms = form_data.value.perms
-			apps.value = apps_data.value
-		}
+			{
+				admin_perm_id: 5844,
+				admin_app_id: 2,
+				admin_app_name: 'sponsors',
+				admin_perm: 3,
+				admin_user_id: 0,
+			},
+			{
+				admin_perm_id: 5845,
+				admin_app_id: 3,
+				admin_app_name: 'videos',
+				admin_perm: 3,
+				admin_user_id: 0,
+			},
+			{
+				admin_perm_id: 5846,
+				admin_app_id: 4,
+				admin_app_name: 'news',
+				admin_perm: 3,
+				admin_user_id: 0,
+			},
+			{
+				admin_perm_id: 5847,
+				admin_app_id: 5,
+				admin_app_name: 'newsletters',
+				admin_perm: 3,
+				admin_user_id: 0,
+			},
+			{
+				admin_perm_id: 5848,
+				admin_app_id: 6,
+				admin_app_name: 'sms',
+				admin_perm: 3,
+				admin_user_id: 0,
+			},
+			{
+				admin_perm_id: 5849,
+				admin_app_id: 8,
+				admin_app_name: 'users',
+				admin_perm: 3,
+				admin_user_id: 0,
+			},
+			{
+				admin_perm_id: 5850,
+				admin_app_id: 11,
+				admin_app_name: 'content',
+				admin_perm: 3,
+				admin_user_id: 0,
+			},
+			{
+				admin_perm_id: 5851,
+				admin_app_id: 12,
+				admin_app_name: 'accounts',
+				admin_perm: 3,
+				admin_user_id: 0,
+			},
+			{
+				admin_perm_id: 5852,
+				admin_app_id: 19,
+				admin_app_name: 'contributions',
+				admin_perm: 3,
+				admin_user_id: 0,
+			},
+			{
+				admin_perm_id: 5853,
+				admin_app_id: 21,
+				admin_app_name: 'filemanager',
+				admin_perm: 3,
+				admin_user_id: 0,
+			},
+			{
+				admin_perm_id: 5854,
+				admin_app_id: 26,
+				admin_app_name: 'archive',
+				admin_perm: 3,
+				admin_user_id: 0,
+			},
+			{
+				admin_perm_id: 5855,
+				admin_app_id: 29,
+				admin_app_name: 'payments',
+				admin_perm: 3,
+				admin_user_id: 0,
+			},
+			{
+				admin_perm_id: 5856,
+				admin_app_id: 31,
+				admin_app_name: 'newsletters_archive',
+				admin_perm: 3,
+				admin_user_id: 0,
+			},
+		]
 	}
-
-	// form handlers
+	// form handlers ///////////////////////////////
+	const emit = defineEmits(['submitted'])
 	const submitForm = (form_state) => {
 		console.log('in submitForm form_state = ', form_state)
 		emit('submitted', form_state)

@@ -29,9 +29,7 @@
 			<b>Add User</b>
 		</div>
 
-		<div class="root">
-			<my-user-form @submitted="onSubmit" />
-		</div>
+		<my-user-form @submitted="onSubmit" />
 	</div>
 </template>
 

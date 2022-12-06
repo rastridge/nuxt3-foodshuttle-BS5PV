@@ -11,7 +11,7 @@
 		{
 			label: 'logout',
 			icon: 'pi pi-fw pi-bookmark',
-			to: '/logout.vue',
+			to: '/logout',
 		},
 		{
 			label: 'Accounts',

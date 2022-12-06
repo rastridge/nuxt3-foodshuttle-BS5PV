@@ -1,3 +1,37 @@
+<template>
+	<div>
+		<div class="spinner-border text-primary" role="status">
+			<span class="visually-hidden">Loading...</span>
+		</div>
+
+		<div v-if="!users"><p class="display-2">Loading . . .</p></div>
+		<div v-else>
+			<ClientOnly>
+				<EasyDataTable
+					empty-message="No users"
+					theme-color="#f97316"
+					table-class-name="customize-table"
+					:headers="headers"
+					:items="users"
+				>
+					<template #item-title="{ title }">
+						<span>{{ title }}</span></template
+					>
+					<template #item-actions="id">
+						<button @click="updateUser(id.id)">
+							<Icon size="18" name="fluent:edit-16-filled" />
+						</button>
+						<button @click="deleteItem(id.id)">
+							<Icon
+								size="18"
+								name="fluent:delete-16-regular"
+							/></button></template
+				></EasyDataTable>
+			</ClientOnly>
+		</div>
+	</div>
+</template>
+
 <script setup>
 	// import { userservice } from '@/services'
 	const runtimeConfig = useRuntimeConfig()
@@ -23,6 +57,7 @@
 			firebaseapikey: runtimeConfig.apiSecret,
 		},
 	})
+	console.log('users= ', users)
 
 	const updateUser = (id) => {
 		navigateTo(`/admin/users/${id}`)
@@ -53,33 +88,6 @@
 		{ text: 'Actions', value: 'actions', sortable: false },
 	]
 </script>
-
-<template>
-	<div>
-		<ClientOnly>
-			<EasyDataTable
-				empty-message="No users"
-				theme-color="#f97316"
-				table-class-name="customize-table"
-				:headers="headers"
-				:items="users"
-			>
-				<template #item-title="{ title }">
-					<span>{{ title }}</span></template
-				>
-				<template #item-actions="id">
-					<button @click="updateUser(id.id)">
-						<Icon size="18" name="fluent:edit-16-filled" />
-					</button>
-					<button @click="deleteItem(id.id)">
-						<Icon
-							size="18"
-							name="fluent:delete-16-regular"
-						/></button></template
-			></EasyDataTable>
-		</ClientOnly>
-	</div>
-</template>
 
 <style>
 	.customize-table {

@@ -14,14 +14,6 @@
 	</footer>
 </template>
 
-<script setup>
-	import { useMouse } from '@/composables/useMouse'
-	import '@formkit/themes/genesis'
-	// const colorMode = useColorMode()
-	const { x, y } = useMouse()
-	const route = useRoute()
-</script>
-
 <style>
 	body {
 		background-color: rgb(183, 134, 134);

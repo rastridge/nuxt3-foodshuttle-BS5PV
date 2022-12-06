@@ -1,16 +1,46 @@
-<script setup>
-	// import { accountService } from '@/services'
-	const runtimeConfig = useRuntimeConfig()
-	// let accounts = reactive([])
+<template>
+	<div>
+		<div class="spinner-border text-primary" role="status">
+			<span class="visually-hidden">Loading...</span>
+		</div>
+		<div v-if="!accounts" class="spinner-border text-primary" role="status">
+			<span class="visually-hidden">Loading...</span>
+		</div>
 
-	/* 	accountService.getAll().then(
-		(data) => {
-			accounts.value = data
-		},
-		(error) => {
-			error.value = error
-		}
-	) */
+		<div v-else>
+			<ClientOnly>
+				<EasyDataTable
+					empty-message="No accounts"
+					theme-color="#f97316"
+					table-class-name="customize-table"
+					:headers="headers"
+					:items="accounts"
+				>
+					<template
+						#item-member_firstname="{ member_firstname, member_lastname }"
+					>
+						<span>{{
+							member_lastname + ', ' + member_firstname
+						}}</span></template
+					>
+					<template #item-actions="account_id">
+						<button @click="updateAccount(account_id.account_id)">
+							<Icon size="18" name="fluent:edit-16-filled" />
+						</button>
+						<button @click="deleteItem(account_id.account_id)">
+							<Icon
+								size="18"
+								name="fluent:delete-16-regular"
+							/></button></template
+				></EasyDataTable>
+			</ClientOnly>
+		</div>
+	</div>
+</template>
+
+<script setup>
+	const runtimeConfig = useRuntimeConfig()
+
 	const {
 		data: accounts,
 		pending,
@@ -27,61 +57,30 @@
 	const updateAccount = (id) => {
 		navigateTo(`/admin/accounts/${id}`)
 	}
-
-	const deleteFromDB = async (itemId) => {
-		const { pending, error, refresh } = await useFetch(`/accounts/${itemId}`, {
+	const deleteFromDB = async (id) => {
+		const { pending, error, refresh } = await useFetch(`/accounts/${id}`, {
 			method: 'delete',
 			headers: {
 				firebaseapikey: runtimeConfig.apiSecret,
 			},
 		})
 	}
-	const checkId = (item, itemId) => {
-		return item.account_id !== itemId
+	const checkId = (item, id) => {
+		return item.account_id !== id
 	}
-	const deleteFromBrowser = (itemId) => {
-		accounts.value = accounts.value.filter((item) => checkId(item, itemId))
+	const deleteFromBrowser = (id) => {
+		accounts.value = accounts.value.filter((item) => checkId(item, id))
 	}
 
 	const deleteItem = (id) => {
-		const itemId = parseInt(id)
-		deleteFromDB(itemId)
-		deleteFromBrowser(itemId)
+		deleteFromDB(id)
+		deleteFromBrowser(id)
 	}
 	const headers = [
 		{ text: 'Name', value: 'member_firstname', sortable: true },
 		{ text: 'Actions', value: 'actions', sortable: false },
 	]
 </script>
-
-<template>
-	<div>
-		<ClientOnly>
-			<EasyDataTable
-				empty-message="No accounts"
-				theme-color="#f97316"
-				table-class-name="customize-table"
-				:headers="headers"
-				:items="accounts"
-			>
-				<template
-					#item-member_firstname="{ member_firstname, member_lastname }"
-				>
-					<span>{{ member_lastname + ', ' + member_firstname }}</span></template
-				>
-				<template #item-actions="account_id">
-					<button @click="updateAccount(account_id.account_id)">
-						<Icon size="18" name="fluent:edit-16-filled" />
-					</button>
-					<button @click="deleteItem(account_id.account_id)">
-						<Icon
-							size="18"
-							name="fluent:delete-16-regular"
-						/></button></template
-			></EasyDataTable>
-		</ClientOnly>
-	</div>
-</template>
 
 <style>
 	.customize-table {

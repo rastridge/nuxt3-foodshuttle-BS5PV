@@ -1,6 +1,10 @@
 <template>
 	<div class="row">
 		<div class="col">
+			<div v-if="!form_data" class="spinner-border text-primary" role="status">
+				<span class="visually-hidden">Loading...</span>
+			</div>
+
 			<FormKit
 				type="form"
 				:config="{ validationVisibility: 'live' }"
@@ -208,7 +212,6 @@
 	const memberAdminTypeOptions = getMemberAdminTypeOptions(
 		memberAdminTypes.value
 	)
-
 	// get member types
 	const { data: memberTypes } = await useFetch('/accounts/membertypes', {
 		method: 'get',
@@ -258,8 +261,7 @@
 	})
 
 	// edit if there is an id - add if not
-	const IdToEdit = parseInt(props.id)
-	if (IdToEdit !== 0) {
+	if (props.id !== 0) {
 		// get user with id
 		const runtimeConfig = useRuntimeConfig()
 		const {
@@ -267,45 +269,37 @@
 			pending,
 			error,
 			refresh,
-		} = await useFetch(`/accounts/${IdToEdit}`, {
+		} = await useFetch(`/accounts/${props.id}`, {
 			method: 'get',
 			headers: {
 				firebaseapikey: runtimeConfig.apiSecret,
 			},
 		})
 
-		if (!formdata.value) {
-			throw createError({
-				statusCode: 404,
-				statusMessage: 'Account Not Found ' + IdToEdit,
-				fatal: true,
-			})
-		} else {
-			state.member_firstname = formdata.value.member_firstname
-			state.member_lastname = formdata.value.member_lastname
-			state.account_email = formdata.value.account_email
-			state.account_id = formdata.value.account_id
-			state.member_year = formdata.value.member_year
-			state.account_addr_street = formdata.value.account_addr_street
-			state.account_addr_street_ext = formdata.value.account_addr_street_ext
-			state.account_addr_city = formdata.value.account_addr_city
-			state.account_addr_state = formdata.value.account_addr_state
-			state.account_addr_country = formdata.value.account_addr_country
-			state.account_addr_postal = formdata.value.account_addr_postal
-			state.account_addr_phone = formdata.value.account_addr_phone
+		state.member_firstname = formdata.value.member_firstname
+		state.member_lastname = formdata.value.member_lastname
+		state.account_email = formdata.value.account_email
+		state.account_id = formdata.value.account_id
+		state.member_year = formdata.value.member_year
+		state.account_addr_street = formdata.value.account_addr_street
+		state.account_addr_street_ext = formdata.value.account_addr_street_ext
+		state.account_addr_city = formdata.value.account_addr_city
+		state.account_addr_state = formdata.value.account_addr_state
+		state.account_addr_country = formdata.value.account_addr_country
+		state.account_addr_postal = formdata.value.account_addr_postal
+		state.account_addr_phone = formdata.value.account_addr_phone
 
-			state.member_show_phone = formdata.value.member_show_phone
-			state.member_show_addr = formdata.value.member_show_addr
-			state.newsletter_recipient = formdata.value.newsletter_recipient
-			state.mail_recipient = formdata.value.mail_recipient
-			state.sms_recipient = formdata.value.sms_recipient
+		state.member_show_phone = formdata.value.member_show_phone
+		state.member_show_addr = formdata.value.member_show_addr
+		state.newsletter_recipient = formdata.value.newsletter_recipient
+		state.mail_recipient = formdata.value.mail_recipient
+		state.sms_recipient = formdata.value.sms_recipient
 
-			state.member_type_id = formdata.value.member_type_id
-			state.member_type2_id = formdata.value.member_type2_id
-			state.member_admin_type_id = formdata.value.member_admin_type_id
-			state.member_admin_type2_id = formdata.value.member_admin_type2_id
-			state.member_admin_type2_id = formdata.value.member_admin_type2_id
-		}
+		state.member_type_id = formdata.value.member_type_id
+		state.member_type2_id = formdata.value.member_type2_id
+		state.member_admin_type_id = formdata.value.member_admin_type_id
+		state.member_admin_type2_id = formdata.value.member_admin_type2_id
+		state.member_admin_type2_id = formdata.value.member_admin_type2_id
 	}
 
 	// form handlers

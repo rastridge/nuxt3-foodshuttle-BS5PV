@@ -41,9 +41,9 @@
 								>Login
 							</b-button>
 							<br />
-							<nuxt-link to="/admin/resetpassword" active-class="active"
+							<!-- 							<nuxt-link to="/admin/resetpassword" active-class="active"
 								><a>Forgot password?</a></nuxt-link
-							>
+							> -->
 						</div>
 					</div>
 				</div>
