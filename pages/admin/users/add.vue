@@ -9,13 +9,15 @@
 
 	const handleSubmit = async function (state) {
 		const runtimeConfig = useRuntimeConfig()
-		await useFetch('/users/addone', {
+		// console.log('state= ', state)
+		const { error } = await useFetch('/users/addone', {
 			method: 'post',
 			body: state,
 			headers: {
 				firebaseapikey: runtimeConfig.apiSecret,
 			},
 		})
+
 		navigateTo('/admin/users')
 	}
 </script>
@@ -28,7 +30,7 @@
 		<div class="text-center m-5 display-6">
 			<b>Add User</b>
 		</div>
-
+		<p v-if="error">error.message</p>
 		<my-user-form @submitted="onSubmit" />
 	</div>
 </template>

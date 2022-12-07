@@ -167,27 +167,44 @@ async function deleteOne(id) {
 	return user
 }
 
-async function addOne({ username, password, email }) {
+/***************************************** */
+/*              addOne                     */
+/***************************************** */
+async function addOne({ admin_user_name, password, admin_user_email, perms }) {
 	const conn = await mysql.createConnection({
 		host: config.DB_HOST,
 		user: config.DB_USER,
 		password: config.DB_PASSWORD,
 		database: config.DB_DATABASE,
 	})
-
+	/* 	console.log('IN ADDONE ', {
+		admin_user_name,
+		password,
+		admin_user_email,
+		perms,
+	}) */
 	try {
 		await conn.query('START TRANSACTION')
+		// console.log('START TRANSACTION')
+
 		// check for existing username
 		let sql = `select *
 							from inbrc_admin_users
 							where deleted = 0`
-
 		const [rows, fields] = await conn.execute(sql)
 		const users = rows
-		let lc_username = username.toLowerCase()
-		let user = users.find((u) => u.admin_user_name === lc_username)
+		const lc_username = admin_user_name.toLowerCase()
+		const lc_admin_user_email = admin_user_email.toLowerCase()
+		const user = users.find(
+			(u) =>
+				u.admin_user_name === lc_username ||
+				u.admin_user_email === lc_admin_user_email
+		)
+		// console.log('START TRANSACTION')
 
 		if (!user) {
+			// console.log('2a')
+
 			// no other users with proposed username
 			sql = `INSERT INTO
 								inbrc_admin_users
@@ -199,37 +216,36 @@ async function addOne({ username, password, email }) {
 								created_dt = NOW(),
 								modified_dt = NOW()`
 
-			const hashedpassword = await bcrypt.hashSync(admin_user_pass, 10)
 			let inserts = []
-			inserts.push(lc_username, hashedpassword, email)
+			const hashedpassword = await bcrypt.hashSync(password, 10)
+			inserts.push(lc_username, hashedpassword, admin_user_email)
 			sql = mysql.format(sql, inserts)
 			const [rows, fields] = await conn.execute(sql)
 			const user = rows
 			// initial permissions with view only
 			const id = user.insertId
-			const apps = await getApps()
-			apps.forEach(myFunction)
-			async function myFunction(value, index) {
-				sql = `INSERT
-								INTO inbrc_admin_perms
-										(
-												admin_user_id,
-												admin_app_id,
-												admin_perm
-										) values (
-												${id},
-												${value.admin_app_id},
-												1
-										)`
+			// console.log('1 id= ', id)
+
+			perms.forEach(async (value, index) => {
+				sql = `INSERT INTO inbrc_admin_perms
+										SET
+											admin_user_id = ?,
+											admin_app_id = ?,
+											admin_perm = ?`
+
+				inserts = []
+				inserts.push(id, value.admin_app_id, value.admin_perm)
+				sql = mysql.format(sql, inserts)
 				await conn.execute(sql)
-			}
+				// console.log('3 sql= ', sql)
+			})
 			const msg =
 				'An account for user ' +
-				username +
+				lc_username +
 				'  has been created, password = ' +
 				password +
 				' email = ' +
-				email
+				admin_user_email
 			const emaildata = {
 				from: config.FROM,
 				fromName: config.FROM_NAME,
@@ -238,27 +254,39 @@ async function addOne({ username, password, email }) {
 				body_text: '',
 				body_html: '<h3>' + msg + '</h3>',
 			}
-			console.log('emaildata= ', emaildata)
+			// console.log('4 emaildata= ', emaildata)
 			// sendEmail(emaildata)
 		} else {
-			/* 			const msg = 'A user with username ' + username + ' already exists'
+			console.log('2b')
+			const msg =
+				'A user with username ' +
+				lc_username +
+				' or email ' +
+				lc_admin_user_email +
+				' already exists'
+			user.error = msg
 			const emaildata = {
-				from: FROM,
-				fromName: FROM_NAME,
+				from: config.FROM,
+				fromName: config.FROM_NAME,
 				to: 'ron.astridge@me.com',
 				subject: 'BRC Member Account Modification',
 				body_text: '',
 				body_html: '<h3>' + msg + '</h3>',
 			}
-			sendEmail(emaildata) */
+			// console.log('emaildata= ', emaildata)
+			// console.log('EXISTS ', msg)
+
+			// sendEmail(emaildata)
 		}
 
 		await conn.commit()
 		await conn.end()
+		console.log('userservice addOne COMMIT')
 		return user
 	} catch (e) {
 		await conn.query('ROLLBACK')
 		await conn.end()
+		console.log('userservice addOne ROLLBACK')
 	}
 }
 
@@ -276,15 +304,6 @@ async function editOne(info) {
 		password,
 	} = info
 
-	// console.log(
-	// 	'in server editone ',
-	// 	admin_user_id,
-	// 	admin_user_name,
-	// 	admin_user_email,
-	// 	admin_user_pass,
-	// 	password
-	// )
-
 	const conn = await mysql.createConnection({
 		host: config.DB_HOST,
 		user: config.DB_USER,
@@ -294,7 +313,7 @@ async function editOne(info) {
 	try {
 		await conn.query('START TRANSACTION')
 
-		// check for existing admin_user_name
+		// check for existing admin_user_name or admin_user_email
 		let sql =
 			`SELECT *
 							FROM inbrc_admin_users
@@ -302,12 +321,14 @@ async function editOne(info) {
 								deleted = 0 AND admin_user_id <> ` + admin_user_id
 		const [rows, fields] = await conn.execute(sql)
 		const users = rows
-		let lc_username = admin_user_name.toLowerCase()
+		const lc_username = admin_user_name.toLowerCase()
+		const lc_admin_user_email = admin_user_email.toLowerCase()
 		let user = users.find((u) => {
-			u.admin_user_name === lc_username
+			u.admin_user_name === lc_username ||
+				u.admin_user_email === lc_admin_user_email
 		})
 
-		// if no other users with proposed username
+		// if no other users with proposed username or email
 		if (!user) {
 			sql = `UPDATE inbrc_admin_users
 							SET
@@ -338,14 +359,6 @@ async function editOne(info) {
 			sql = mysql.format(sql, inserts)
 			const [rows, fields] = await conn.execute(sql)
 			user = rows
-			// console.log('user =', { user })
-			// console.log(
-			// 	'new_admin_user_pass ',
-			// 	new_admin_user_pass,
-			// 	'admin_user_pass ',
-			// 	admin_user_pass
-			// )
-
 			// update user perms by deleting old - creating new
 			sql = `DELETE
 						FROM
@@ -373,8 +386,13 @@ async function editOne(info) {
 								)`
 				await conn.execute(sql)
 			}
-			/* 			const msg =
-				'The account for admin user ' + lc_username + '  has been modified '
+			const msg =
+				'The account for admin user ' +
+				lc_username +
+				'  has been modified, password = ' +
+				password +
+				' email = ' +
+				admin_user_email
 			const emaildata = {
 				from: config.FROM,
 				fromName: config.FROM_NAME,
@@ -382,31 +400,38 @@ async function editOne(info) {
 				subject: 'BRC Member Account Modification',
 				body_text: '',
 				body_html: '<h3>' + msg + '</h3>',
-			} */
+			}
 			// console.log(emaildata)
 			// sendEmail(emaildata)
 		} else {
-			/* 			const msg = 'A user with username ' + lc_username + ' already exists'
+			const msg =
+				'A user with username ' +
+				lc_username +
+				' or email ' +
+				lc_admin_user_email +
+				' already exists'
 			user.error = msg
 			const emaildata = {
-				from: FROM,
-				fromName: FROM_NAME,
+				from: config.FROM,
+				fromName: config.FROM_NAME,
 				to: 'ron.astridge@me.com',
 				subject: 'BRC Member Account Modification',
 				body_text: '',
 				body_html: '<h3>' + msg + '</h3>',
-			} */
+			}
+			// console.log(emaildata)
+
 			// sendEmail(emaildata)
 		}
 
 		await conn.commit()
 		await conn.end()
-		console.log('userservice COMMIT ')
+		console.log('userservice editOne COMMIT ')
 		return user
 	} catch (e) {
 		await conn.query('ROLLBACK')
 		await conn.end()
-		console.log('userservice ROLLBACK ')
+		console.log('userservice editOne ROLLBACK ')
 	}
 }
 

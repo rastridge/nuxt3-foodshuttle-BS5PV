@@ -13,7 +13,7 @@ export const useAlertStore = defineStore('alert', {
 		success(message) {
 			this.type = 'alert-success'
 			this.message = message
-			alert(this.type + ' ' + this.message)
+			// alert(this.type + ' ' + this.message)
 		},
 		error(message) {
 			this.type = 'alert-danger'

@@ -57,7 +57,7 @@
 			firebaseapikey: runtimeConfig.apiSecret,
 		},
 	})
-	console.log('users= ', users)
+	// console.log('users= ', users)
 
 	const updateUser = (id) => {
 		navigateTo(`/admin/users/${id}`)

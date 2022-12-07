@@ -36,7 +36,7 @@
 							<b-button
 								size="md"
 								variant="primary"
-								:disabled="loggingIn"
+								:disabled="auth.loggingIn"
 								@click.prevent="handleSubmit"
 								>Login
 							</b-button>

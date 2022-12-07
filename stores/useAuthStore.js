@@ -22,7 +22,7 @@ export const useAuthStore = defineStore('auth', {
 					this.loginSuccess(user)
 
 					// alert.clear()
-					alert.success('Login successful')
+					// alert.success('Login successful')
 
 					sessionStorage.removeItem('auth')
 					sessionStorage.setItem('auth', JSON.stringify(user))

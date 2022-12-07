@@ -5,10 +5,10 @@
 				<span class="visually-hidden">Loading...</span>
 			</div>
 
-			<p v-if="apps_data" class="display-3">apps_data Loaded...</p>
+			<!-- 			<p v-if="apps_data" class="display-3">apps_data Loaded...</p>
 			<p v-if="apps_data">apps_data= {{ apps_data }}</p>
 			<p v-if="form_state" class="display-3">form_state Loaded...</p>
-			<p>form_state= {{ form_state }}</p>
+			<p>form_state= {{ form_state }}</p> -->
 			<form class="form-horizontal">
 				<div class="form-group">
 					<div class="col-sm-offset-2 col-sm-4">
@@ -212,14 +212,13 @@
 
 	// get app namefor access inputs
 	const { data: apps_data } = await useFetch(`/users/getapps`, {
-		pick: 'admin_app_name',
 		method: 'get',
 		headers: {
 			firebaseapikey: runtimeConfig.apiSecret,
 		},
 	})
 
-	console.log('apps_data= ', apps_data)
+	// console.log('apps_data= ', apps_data)
 	// const apps = apps_data.value
 
 	const apps = [
@@ -295,7 +294,7 @@
 				firebaseapikey: runtimeConfig.apiSecret,
 			},
 		})
-		console.log('form_data= ', form_data)
+		// console.log('form_data= ', form_data)
 
 		// init form values if editing
 		form_state.value.admin_user_id = form_data.value.admin_user_id
@@ -313,98 +312,98 @@
 		form_state.value.password = ''
 		form_state.value.perms = [
 			{
-				admin_perm_id: 5843,
+				admin_perm_id: 0,
 				admin_app_id: 1,
 				admin_app_name: 'settings',
 				admin_perm: 3,
 				admin_user_id: 0,
 			},
 			{
-				admin_perm_id: 5844,
+				admin_perm_id: 0,
 				admin_app_id: 2,
 				admin_app_name: 'sponsors',
 				admin_perm: 3,
 				admin_user_id: 0,
 			},
 			{
-				admin_perm_id: 5845,
+				admin_perm_id: 0,
 				admin_app_id: 3,
 				admin_app_name: 'videos',
 				admin_perm: 3,
 				admin_user_id: 0,
 			},
 			{
-				admin_perm_id: 5846,
+				admin_perm_id: 0,
 				admin_app_id: 4,
 				admin_app_name: 'news',
 				admin_perm: 3,
 				admin_user_id: 0,
 			},
 			{
-				admin_perm_id: 5847,
+				admin_perm_id: 0,
 				admin_app_id: 5,
 				admin_app_name: 'newsletters',
 				admin_perm: 3,
 				admin_user_id: 0,
 			},
 			{
-				admin_perm_id: 5848,
+				admin_perm_id: 0,
 				admin_app_id: 6,
 				admin_app_name: 'sms',
 				admin_perm: 3,
 				admin_user_id: 0,
 			},
 			{
-				admin_perm_id: 5849,
+				admin_perm_id: 0,
 				admin_app_id: 8,
 				admin_app_name: 'users',
 				admin_perm: 3,
 				admin_user_id: 0,
 			},
 			{
-				admin_perm_id: 5850,
+				admin_perm_id: 0,
 				admin_app_id: 11,
 				admin_app_name: 'content',
 				admin_perm: 3,
 				admin_user_id: 0,
 			},
 			{
-				admin_perm_id: 5851,
+				admin_perm_id: 0,
 				admin_app_id: 12,
 				admin_app_name: 'accounts',
 				admin_perm: 3,
 				admin_user_id: 0,
 			},
 			{
-				admin_perm_id: 5852,
+				admin_perm_id: 0,
 				admin_app_id: 19,
 				admin_app_name: 'contributions',
 				admin_perm: 3,
 				admin_user_id: 0,
 			},
 			{
-				admin_perm_id: 5853,
+				admin_perm_id: 0,
 				admin_app_id: 21,
 				admin_app_name: 'filemanager',
 				admin_perm: 3,
 				admin_user_id: 0,
 			},
 			{
-				admin_perm_id: 5854,
+				admin_perm_id: 0,
 				admin_app_id: 26,
 				admin_app_name: 'archive',
 				admin_perm: 3,
 				admin_user_id: 0,
 			},
 			{
-				admin_perm_id: 5855,
+				admin_perm_id: 0,
 				admin_app_id: 29,
 				admin_app_name: 'payments',
 				admin_perm: 3,
 				admin_user_id: 0,
 			},
 			{
-				admin_perm_id: 5856,
+				admin_perm_id: 0,
 				admin_app_id: 31,
 				admin_app_name: 'newsletters_archive',
 				admin_perm: 3,
