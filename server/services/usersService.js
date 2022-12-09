@@ -100,10 +100,16 @@ async function authenticate({ username, password }) {
 	const users = await doDBQuery(sql)
 
 	let user = users.find((u) => {
-		// console.log(
-		// 	bcrypt.compareSync(password, u.admin_user_pass) &&
-		// 		u.admin_user_name === lc_username
-		// )
+		console.log(
+			'IN authenticate ',
+			password,
+			u.admin_user_pass,
+			bcrypt.compareSync(password, u.admin_user_pass),
+			u.admin_user_name,
+			lc_username,
+			u.admin_user_name === lc_username
+		)
+
 		let match = false
 		if (
 			bcrypt.compareSync(password, u.admin_user_pass) &&
@@ -123,6 +129,7 @@ async function authenticate({ username, password }) {
 	} else {
 		user = {}
 	}
+	console.log('IN authenticate user= ', user)
 	return user
 }
 
@@ -498,47 +505,50 @@ async function resetRequest({ username }) {
 		const msg =
 			'To reset your password ' +
 			admin_user_email +
-			` go to  <a href="${SITE_URL}/admin/users/resetform/` +
+			` go to  <a href="/reset/` +
 			username +
 			'">RESET PASSWORD</a>'
-		/* 
-		const email = {
-			from: FROM,
-			fromName: FROM_NAME,
+
+		const email_data = {
+			from: config.FROM,
+			fromName: config.FROM_NAME,
 			to: admin_user_email,
 			subject: 'BRC Member Account Modification',
 			body_text: '',
 			body_html: '<h3>' + msg + '</h3>',
 		}
-		sendEmail(email) */
+		console.log(email_data)
+		// sendEmail(email)
 	}
 
 	return username
 }
 
-async function resetPassword({ user, pass }) {
+async function resetPassword({ username, password }) {
+	// console.log('IN userservice resetPassword ', username, password)
 	// update user password
 	let sql = `UPDATE inbrc_admin_users
 					SET
 						admin_user_pass = ?,
 						modified_dt= NOW()
 					WHERE
-						admin_user_name = '${user}'`
+						admin_user_name = ?`
 
-	const hashedpassword = await bcrypt.hashSync(admin_user_pass, 10)
+	const hashedpassword = await bcrypt.hashSync(password, 10)
 	let inserts = []
-	inserts.push(hashedpassword)
+	inserts.push(hashedpassword, username)
 	const result = await doDBQuery(sql, inserts)
-	/* 
-	const email = {
-		from: FROM,
-		fromName: FROM_NAME,
+
+	const email_data = {
+		from: config.FROM,
+		fromName: config.FROM_NAME,
 		to: 'ron.astridge@me.com',
 		subject: 'BRC Member Account Modification',
 		body_text: '',
-		body_html: `<h3>The password has been changed for ${user}. The new password is "${pass}"</h3>`,
+		body_html: `<h3>The password has been changed for ${username}. The new password is "${password}"</h3>`,
 	}
-	sendEmail(email)
- */
+	console.log('email_data = ', email_data)
+	// sendEmail(email)
+
 	return result
 }

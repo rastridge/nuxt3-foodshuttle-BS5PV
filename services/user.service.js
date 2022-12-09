@@ -4,6 +4,8 @@ const runtimeConfig = useRuntimeConfig()
 
 export const userService = {
 	login,
+	resetRequest,
+	resetPassword,
 	// reset,
 	// getAll,
 	// getOne,
@@ -11,8 +13,6 @@ export const userService = {
 	// addOne,
 	// getApps,
 	// getAppPerms,
-	// resetRequest,
-	// resetPassword,
 	// deleteOne,
 	// changeStatus,
 }
@@ -27,6 +27,59 @@ async function login(username, password) {
 	})
 	return data
 }
+
+/* 
+function login(username, password) {
+	const requestOptions = {
+		url: `${API}/users/authenticate`,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		data: { username, password },
+	}
+	return Axios(requestOptions).then(handleSuccess).catch(handleError)
+}
+ */
+/* function resetRequest(username) {
+	const requestOptions = {
+		url: `/users/resetrequest`,
+		method: 'POST',
+		data: { username },
+	}
+	return Axios(requestOptions).then(handleSuccess).catch(handleError)
+}
+ */
+async function resetRequest(username) {
+	const { data, error } = await useFetch('/users/resetrequest', {
+		method: 'POST',
+		body: { username },
+		headers: {
+			firebaseapikey: runtimeConfig.apiSecret,
+		},
+	})
+	return data
+}
+
+async function resetPassword(username, password) {
+	const { data, error } = await useFetch('/users/resetpassword', {
+		method: 'POST',
+		body: { username, password },
+		headers: {
+			firebaseapikey: runtimeConfig.apiSecret,
+		},
+	})
+	return data
+}
+
+/* function resetPassword(user, pass) {
+	const requestOptions = {
+		url: `/users/resetpassword`,
+		method: 'POST',
+		data: { user, pass },
+	}
+	return Axios(requestOptions).then(handleSuccess).catch(handleError)
+}
+
+ */
 /* 
 async function getAll() {
 	const { data } = await useFetch('/users/editone', {

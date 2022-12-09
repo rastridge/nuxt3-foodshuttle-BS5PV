@@ -1,10 +1,13 @@
 <template>
-	<div class="row">
-		<div class="col">
-			<div v-if="!form_data" class="spinner-border text-primary" role="status">
-				<span class="visually-hidden">Loading...</span>
-			</div>
-
+	<div>
+		<div
+			v-if="!memberTypeOptions || !memberAdminTypeOptions"
+			class="spinner-border text-primary"
+			role="status"
+		>
+			<span class="visually-hidden">Loading...</span>
+		</div>
+		<div v-else>
 			<FormKit
 				type="form"
 				:config="{ validationVisibility: 'live' }"
@@ -163,11 +166,6 @@
 					v-model="state.member_admin_type_id"
 					:options="memberAdminTypeOptions"
 				/>
-
-				<!-- 				<details>
-					<summary>Form data</summary>
-					<pre>{{ state }}</pre>
-				</details> -->
 			</FormKit>
 
 			<div class="mb-3">
@@ -231,7 +229,7 @@
 		return result
 	}
 	const memberTypeOptions = getMemberTypeOptions(memberTypes.value)
-
+	/* 
 	// initialize formkit state
 	const state = reactive({
 		account_email: '',
@@ -258,6 +256,37 @@
 		member_admin_type_id: '',
 		member_admin_type2_id: '',
 		account_id: '',
+	})
+ */
+	const state = reactive({
+		account_email: 'joe@net.com',
+		member_firstname: 'Joe',
+		member_lastname: 'Blow',
+
+		// member_year: this.$moment().format('YYYY'),
+		member_year: 2022,
+		account_addr_street: '12 Cherry',
+		account_addr_street_ext: '',
+		account_addr_city: 'Buffalo',
+		account_addr_state: 'NY',
+		account_addr_country: 'US',
+		account_addr_postal: '14201',
+		account_addr_phone: '716-833-1222',
+
+		member_show_phone: '1',
+		member_show_addr: '1',
+		newsletter_recipient: '1',
+		mail_recipient: '0',
+		sms_recipient: '1',
+
+		member_type_id: '9',
+		member_type2_id: '',
+		member_admin_type_id: '0',
+		member_admin_type2_id: '0',
+
+		account_id: '',
+
+		// human: '',
 	})
 
 	// edit if there is an id - add if not
@@ -308,7 +337,7 @@
 	}
 
 	const cancelForm = () => {
-		navigateTo('/admin/accounts')
+		navigateTo('/admin/accounts') // needs to be / for self register
 	}
 </script>
 

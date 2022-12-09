@@ -41,9 +41,9 @@
 								>Login
 							</b-button>
 							<br />
-							<!-- 							<nuxt-link to="/admin/resetpassword" active-class="active"
+							<nuxt-link to="/resetpassword" active-class="active"
 								><a>Forgot password?</a></nuxt-link
-							> -->
+							>
 						</div>
 					</div>
 				</div>
@@ -54,7 +54,7 @@
 
 <script setup>
 	// const route = useRoute()
-	import { useAuthStore } from '@/stores/useAuthStore'
+	import { useAuthStore } from '~~/stores/auth'
 	import { useAlertStore } from '@/stores/alert'
 	const auth = useAuthStore()
 	const alert = useAlertStore()
@@ -76,9 +76,8 @@
 	const handleSubmit = async (e) => {
 		submitted.value = true
 		if (username.value && password.value) {
-			auth.login(username.value, password.value)
-
-			// if authenticated --> vuex action do this.app.router.push({ path: '/admin/accounts/men' })
+			auth.login(username.value, password.value) // pinia auth store
+			// alert.clear
 		}
 	}
 </script>
@@ -90,7 +89,7 @@
 	.loginbox {
 		margin: 0 auto;
 		margin-bottom: 10px;
-		width: 40%;
+		width: 50%;
 		justify-content: left;
 		align-items: left;
 		text-align: left;

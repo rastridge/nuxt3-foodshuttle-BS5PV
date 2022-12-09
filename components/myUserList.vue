@@ -1,10 +1,8 @@
 <template>
 	<div>
-		<div class="spinner-border text-primary" role="status">
+		<div v-if="!users" class="spinner-border text-primary" role="status">
 			<span class="visually-hidden">Loading...</span>
 		</div>
-
-		<div v-if="!users"><p class="display-2">Loading . . .</p></div>
 		<div v-else>
 			<ClientOnly>
 				<EasyDataTable

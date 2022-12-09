@@ -1,12 +1,8 @@
 <template>
 	<div>
-		<div class="spinner-border text-primary" role="status">
-			<span class="visually-hidden">Loading...</span>
-		</div>
 		<div v-if="!accounts" class="spinner-border text-primary" role="status">
 			<span class="visually-hidden">Loading...</span>
 		</div>
-
 		<div v-else>
 			<ClientOnly>
 				<EasyDataTable
@@ -40,7 +36,6 @@
 
 <script setup>
 	const runtimeConfig = useRuntimeConfig()
-
 	const {
 		data: accounts,
 		pending,

@@ -1,14 +1,9 @@
 <template>
-	<div class="row">
-		<div class="col">
-			<div class="spinner-border text-primary" role="status">
-				<span class="visually-hidden">Loading...</span>
-			</div>
-
-			<!-- 			<p v-if="apps_data" class="display-3">apps_data Loaded...</p>
-			<p v-if="apps_data">apps_data= {{ apps_data }}</p>
-			<p v-if="form_state" class="display-3">form_state Loaded...</p>
-			<p>form_state= {{ form_state }}</p> -->
+	<div>
+		<div v-if="!form_state" class="spinner-border text-primary" role="status">
+			<span class="visually-hidden">Loading...</span>
+		</div>
+		<div v-else>
 			<form class="form-horizontal">
 				<div class="form-group">
 					<div class="col-sm-offset-2 col-sm-4">
@@ -33,6 +28,9 @@
 							class="form-control"
 							autofocus
 						/>
+						<span v-if="username_required" class="error"
+							>Username required</span
+						>
 					</div>
 				</div>
 
@@ -47,6 +45,7 @@
 							type="email"
 							class="form-control"
 						/>
+						<span v-if="email_required" class="error">Email required</span>
 					</div>
 				</div>
 
@@ -208,6 +207,12 @@
 	}
 	const match = computed(() => form_state.value.password !== repeatPass.value)
 	const required = computed(() => form_state.value.password === '')
+	const username_required = computed(
+		() => form_state.value.admin_user_name === ''
+	)
+	const email_required = computed(
+		() => form_state.value.admin_user_email === ''
+	)
 	const addForm = props.id === 0
 
 	// get app namefor access inputs

@@ -27,9 +27,8 @@ export default defineNuxtConfig({
 		FROM_NAME: process.env.FROM_NAME,
 		// Keys within public, will be also be
 		// exposed to the client-side
-		public: {
-			firebaseApiKey: process.env.FIREBASE_API_KEY,
-		},
+
+		public: { firebaseApiKey: process.env.FIREBASE_API_KEY },
 	},
 	// meta: {
 	// 	charset: 'utf-8',
