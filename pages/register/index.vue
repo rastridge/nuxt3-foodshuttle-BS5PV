@@ -1,6 +1,11 @@
 <template>
 	<div class="register">
 		<common-header title="Register" />
+		<div v-if="alert.messages" :class="`alert ${alert.types}`">
+			{{ alert.messages }}
+		</div>
+
+		<my-accounts-self-form @submitted="handleSubmit" />
 
 		<!-- Modal -->
 		<b-modal id="my-modal" button-size="sm">
@@ -37,13 +42,12 @@
 				</div>
 			</template>
 		</b-modal>
-
-		<my-accounts-self-form @submitted="handleSubmit" />
 	</div>
 </template>
 
 <script setup>
-	// import { accountService } from '@/services/'
+	import { useAlertStore } from '@/stores/alert'
+	const alert = useAlertStore()
 
 	const state = reactive({
 		account_email: '',
@@ -80,6 +84,11 @@
 				firebaseapikey: runtimeConfig.apiSecret,
 			},
 		})
-		navigateTo('/')
+		if (data.value.message) {
+			// console.log('data ====', data.value.message)
+			alert.error(data.value.message)
+		} else {
+			navigateTo('/')
+		}
 	}
 </script>
