@@ -14,20 +14,26 @@ export const useAuthStore = defineStore('auth', {
 	actions: {
 		async login(username, password) {
 			this.loginRequest(username)
-			const { data: user, error } = await useFetch('/users/authenticate', {
-				method: 'POST',
-				body: { username, password },
+
+			const user = await $fetch('/users/authenticate', {
 				headers: {
 					firebaseapikey: runtimeConfig.apiSecret,
 				},
+				method: 'POST',
+				body: { username, password },
 			})
 
-			console.log('IN Actions userService.login user= ', user)
+			// const { admin_user_name, match } = user
+			// console.log(
+			// 	'IN Actions userService.login  admin_user_name, match = ',
+			// 	admin_user_name,
+			// 	match
+			// )
+			console.log('IN Actions userService.login user.match = ', user.match)
 
-			// userService.login(username, password).then((user) => {
 			// if (user.found == 'none') {
-			if (user) {
-				console.log('================== got here user is true')
+			if (user.match) {
+				console.log('IN Actions userService.login user is true')
 				this.loginSuccess(user)
 
 				alert.clear()
@@ -42,7 +48,6 @@ export const useAuthStore = defineStore('auth', {
 				this.loginFailure('loginFailure')
 				alert.error('Login failed - try again')
 			}
-			// })
 		},
 
 		logout() {

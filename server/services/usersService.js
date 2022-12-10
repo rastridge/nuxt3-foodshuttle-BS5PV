@@ -91,6 +91,9 @@ async function _getPerms(id) {
 	return perms
 }
 
+/***************************************** */
+/*              authenicate                */
+/***************************************** */
 async function authenticate({ username, password }) {
 	const lc_username = username.toLowerCase()
 	const sql = `SELECT *
@@ -99,16 +102,39 @@ async function authenticate({ username, password }) {
 
 	const users = await doDBQuery(sql)
 
-	let user = users.find((u) => {
-		console.log(
-			'IN authenticate ',
-			password,
-			u.admin_user_pass,
-			bcrypt.compareSync(password, u.admin_user_pass),
-			u.admin_user_name,
-			lc_username,
+	/* 	const findMatch = (users) => {
+		users.find((u) => {
+		// console.log(
+		// 	'IN authenticate ',
+		// 	password,
+		// 	u.admin_user_pass,
+		// 	bcrypt.compareSync(password, u.admin_user_pass),
+		// 	u.admin_user_name,
+		// 	lc_username,
+		// 	u.admin_user_name === lc_username
+		// )
+
+		let match = false
+		if (
+			bcrypt.compareSync(password, u.admin_user_pass) &&
 			u.admin_user_name === lc_username
-		)
+		) {
+			match = true
+		} else {
+			match = false
+		}
+		return users
+	} */
+	let user = users.find((u) => {
+		// console.log(
+		// 	'IN authenticate ',
+		// 	password,
+		// 	u.admin_user_pass,
+		// 	bcrypt.compareSync(password, u.admin_user_pass),
+		// 	u.admin_user_name,
+		// 	lc_username,
+		// 	u.admin_user_name === lc_username
+		// )
 
 		let match = false
 		if (
@@ -121,17 +147,22 @@ async function authenticate({ username, password }) {
 		}
 		return match
 	})
-
 	if (user) {
+		user.match = true
+
+		// there is a user with matching username and password
 		// add permissions to user
 		// const perms = await _getPerms(user.admin_user_id)
 		// user.perms = perms
 	} else {
-		user = {}
+		user = { match: false }
 	}
-	console.log('IN authenticate user= ', user)
+	console.log('IN authenticate user.match = ', user.match)
 	return user
 }
+/***************************************** */
+/*              getAll                     */
+/***************************************** */
 
 async function getAll() {
 	const sql = `select
@@ -148,7 +179,6 @@ async function getAll() {
 
 /***************************************** */
 /*              getOne                     */
-/*                                         */
 /***************************************** */
 async function getOne(id) {
 	const sql = `SELECT *
