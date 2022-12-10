@@ -70,7 +70,6 @@ async function _setPerms(aPerms, id) {
 
 /***************************************** */
 /*              _getPerms                  */
-/*                                         */
 /***************************************** */
 
 async function _getPerms(id) {
@@ -102,29 +101,6 @@ async function authenticate({ username, password }) {
 
 	const users = await doDBQuery(sql)
 
-	/* 	const findMatch = (users) => {
-		users.find((u) => {
-		// console.log(
-		// 	'IN authenticate ',
-		// 	password,
-		// 	u.admin_user_pass,
-		// 	bcrypt.compareSync(password, u.admin_user_pass),
-		// 	u.admin_user_name,
-		// 	lc_username,
-		// 	u.admin_user_name === lc_username
-		// )
-
-		let match = false
-		if (
-			bcrypt.compareSync(password, u.admin_user_pass) &&
-			u.admin_user_name === lc_username
-		) {
-			match = true
-		} else {
-			match = false
-		}
-		return users
-	} */
 	let user = users.find((u) => {
 		// console.log(
 		// 	'IN authenticate ',
@@ -152,12 +128,12 @@ async function authenticate({ username, password }) {
 
 		// there is a user with matching username and password
 		// add permissions to user
-		// const perms = await _getPerms(user.admin_user_id)
-		// user.perms = perms
+		const perms = await _getPerms(user.admin_user_id)
+		user.perms = perms
 	} else {
 		user = { match: false }
 	}
-	console.log('IN authenticate user.match = ', user.match)
+	// console.log('IN authenticate user.match = ', user.match)
 	return user
 }
 /***************************************** */

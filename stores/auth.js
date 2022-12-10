@@ -29,11 +29,11 @@ export const useAuthStore = defineStore('auth', {
 			// 	admin_user_name,
 			// 	match
 			// )
-			console.log('IN Actions userService.login user.match = ', user.match)
+			// console.log('IN Actions userService.login user.match = ', user.match)
 
 			// if (user.found == 'none') {
 			if (user.match) {
-				console.log('IN Actions userService.login user is true')
+				// console.log('IN Actions userService.login user is true')
 				this.loginSuccess(user)
 
 				alert.clear()
