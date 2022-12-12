@@ -15,7 +15,7 @@
 
 <style>
 	body {
-		background-color: rgb(183, 134, 134);
+		background-color: rgb(141, 136, 168);
 	}
 
 	.root {
@@ -26,19 +26,5 @@
 		border: solid thin rgb(0, 0, 0);
 		border-radius: 20px;
 		background-color: rgba(255, 255, 255, 0.3);
-	}
-
-	.bd-placeholder-img {
-		font-size: 1.125rem;
-		text-anchor: middle;
-		-webkit-user-select: none;
-		-moz-user-select: none;
-		user-select: none;
-	}
-
-	@media (min-width: 768px) {
-		.bd-placeholder-img-lg {
-			font-size: 3.5rem;
-		}
 	}
 </style>

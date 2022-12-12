@@ -6,6 +6,7 @@ export default defineNuxtConfig({
 		'nuxt-icon',
 		'@pinia/nuxt',
 	],
+
 	css: [
 		'bootstrap/dist/css/bootstrap.css',
 		'primevue/resources/themes/saga-blue/theme.css',

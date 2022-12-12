@@ -7,7 +7,7 @@
 <script setup>
 	import Menubar from 'primevue/menubar'
 
-	const items = ref([
+	const items = [
 		{
 			label: 'Home',
 			icon: 'pi pi-fw pi-bookmark',
@@ -19,8 +19,8 @@
 			url: '/loginpage',
 		},
 		{
-			label: 'Edit',
-			icon: 'pi pi-fw pi-pencil',
+			label: 'Examples',
+			icon: 'pi pi-fw pi-bookmark',
 			items: [
 				{
 					label: 'Autocomplete',
@@ -40,7 +40,7 @@
 				},
 			],
 		},
-	])
+	]
 </script>
 
 <style>

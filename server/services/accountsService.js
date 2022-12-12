@@ -32,7 +32,31 @@ export const accountsService = {
 }
 
 async function getAll() {
-	const sql = `SELECT *
+	const sql = `SELECT 
+									account_id as id,
+									account_id,
+									member_type_id,
+									member_type2_id,
+									member_firstname,
+									member_lastname,
+									CONCAT(member_firstname," ", member_lastname) as title,
+									member_year,
+									account_email,
+									account_email_opening,
+									account_textmsg_opening,
+									account_addr_street,
+									account_addr_street_ext,
+									account_addr_city,
+									account_addr_state,
+									account_addr_country,
+									account_addr_postal,
+									account_addr_phone,
+									newsletter_recipient,
+									mail_recipient,
+									sms_recipient,
+									modified_dt,
+									modified_dt as dt,
+									status
 							FROM inbrc_accounts
 							WHERE deleted = 0
 							ORDER BY member_lastname ASC`
