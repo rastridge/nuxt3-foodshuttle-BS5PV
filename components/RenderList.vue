@@ -12,7 +12,7 @@
 					<b-table-simple small hover responsive style="white-space: nowrap">
 						<b-thead>
 							<b-tr>
-								<b-th v-if="statusable">Status</b-th>
+								<b-th v-if="statusable">Use</b-th>
 								<b-th>Name</b-th>
 								<b-th>Modified</b-th>
 								<b-th v-if="editable || deleteable" colspan="2">Actions</b-th>
@@ -24,29 +24,37 @@
 									<a
 										@click="changeStatus({ id: item.id, status: item.status })"
 									>
-										<!-- 										<b-icon
-											:icon="item.status ? 'shift' : 'arrow-down'"
-											:variant="item.status ? 'primary' : 'default'"
-										></b-icon> -->
-										status
+										<i
+											v-if="item.status"
+											class="bi-arrow-up"
+											style="font-size: 1rem; color: cornflowerblue"
+										></i>
+										<i
+											v-else
+											class="bi-arrow-down"
+											style="font-size: 1rem; color: cornflowerblue"
+										></i>
 									</a>
 								</b-td>
 								<b-td>{{ item.title }}</b-td>
-								<!-- <b-td>{{ $moment(item.dt).format('MMM D YYYY') }}</b-td> -->
 								<b-td> {{ $dayjs(item.dt).format('YYYY-MM-DD h:mm a') }}</b-td>
 								<b-td>
 									<nuxt-link
 										v-if="editable"
 										:to="'/admin/' + app + '/' + item.id"
-										><a>
-											<!-- <b-icon icon="pencil-square"> </b-icon> -->edit
-										</a>
+									>
+										<i
+											class="bi-pencil-square"
+											style="font-size: 1rem; color: cornflowerblue"
+										></i>
 									</nuxt-link>
 								</b-td>
 								<b-td v-if="deleteable">
 									<a @click="deleteItem(item.id)">
-										<!-- <b-icon icon="trash"> </b-icon> -->
-										delete
+										<i
+											class="bi-trash"
+											style="font-size: 1rem; color: cornflowerblue"
+										></i>
 									</a>
 								</b-td>
 							</b-tr>
