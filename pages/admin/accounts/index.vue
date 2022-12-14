@@ -12,7 +12,6 @@
 				>Add Account</nuxt-link
 			>
 		</div>
-
 		<render-list
 			:data="accounts"
 			:app="app"
@@ -28,9 +27,7 @@
 </template>
 
 <script setup>
-	// import { getPerms } from '@/helpers'
 	const runtimeConfig = useRuntimeConfig()
-
 	definePageMeta({ layout: 'admin' })
 
 	const app = 'accounts'
@@ -90,7 +87,7 @@
 		})
 	}
 
-	const changeStatus = async (id, status) => {
+	const changeStatus = async ({ id, status }) => {
 		const { pending, error, refresh } = await useFetch(`/accounts/status`, {
 			method: 'POST',
 			headers: {

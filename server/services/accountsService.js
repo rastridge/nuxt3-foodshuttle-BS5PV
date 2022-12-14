@@ -16,6 +16,8 @@ async function doDBQuery(sql, inserts) {
 	if (inserts) {
 		sql = mysql.format(sql, inserts)
 	}
+
+	console.log('IN dbquery sql = ', sql)
 	const [rows, fields] = await conn1.execute(sql)
 	await conn1.end()
 	return rows
@@ -26,6 +28,7 @@ export const accountsService = {
 	getOne,
 	addOne,
 	editOne,
+	changeStatus,
 	deleteOne,
 	getMemberTypes,
 	getMemberAdminTypes,
@@ -336,8 +339,21 @@ async function deleteOne(id) {
 									deleted = '1',
 									deleted_dt= NOW()
 								WHERE account_id = ?;`
+	let inserts = []
+	inserts.push(id)
+	const accounts = await doDBQuery(sql, inserts)
+	return accounts
+}
 
-	const accounts = await doDBQuery(sql, [id])
+async function changeStatus({ id, status }) {
+	const sql = `UPDATE inbrc_accounts
+							SET
+									status = ?,
+									deleted_dt= NOW()
+								WHERE account_id = ?;`
+	let inserts = []
+	inserts.push(status, id)
+	const accounts = await doDBQuery(sql, inserts)
 	return accounts
 }
 

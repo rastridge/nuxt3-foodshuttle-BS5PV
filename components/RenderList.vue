@@ -1,11 +1,25 @@
 <template>
 	<div>
-		<p>Now: {{ $dayjs() }}</p>
 		<div v-if="viewable">
 			<div v-if="datalocal.length">
 				<div class="paging">
-					<div>{{ datalocal.length }} Records</div>
-					<!-- pagination -->
+					<div class="text-center mb-2">
+						<p>Now: {{ $dayjs() }}</p>
+						{{ datalocal.length }} Records
+						<p>CurrentPage = {{ CurrentPage }}</p>
+					</div>
+					<nav class="justify-content-center">
+						<b-pagination
+							v-model="CurrentPage"
+							:total-rows="Rows"
+							:per-page="PerPage"
+							first-text="First"
+							prev-text="Prev"
+							next-text="Next"
+							last-text="Last"
+							update:modelValue
+						></b-pagination>
+					</nav>
 				</div>
 
 				<div class="table-box">
@@ -18,22 +32,25 @@
 								<b-th v-if="editable || deleteable" colspan="2">Actions</b-th>
 							</b-tr>
 						</b-thead>
-						<b-tbody id="tbl">
-							<b-tr v-for="item in datalocal" :key="item.id">
+						<b-tbody>
+							<b-tr v-for="item in pagedData" :key="item.id">
 								<b-td v-if="statusable" class="h6">
 									<a
 										@click="changeStatus({ id: item.id, status: item.status })"
 									>
-										<i
-											v-if="item.status"
+										<!-- 										<i
+											v-if="item.status === 1"
 											class="bi-arrow-up"
-											style="font-size: 1rem; color: cornflowerblue"
+											style="font-size: 1rem; color: black"
 										></i>
 										<i
 											v-else
 											class="bi-arrow-down"
-											style="font-size: 1rem; color: cornflowerblue"
-										></i>
+											style="font-size: 1rem; color: black"
+										></i> -->
+										<button class="btn btn-success btn-sm">
+											{{ item.status ? 'Yes' : 'No' }}
+										</button>
 									</a>
 								</b-td>
 								<b-td>{{ item.title }}</b-td>
@@ -43,18 +60,18 @@
 										v-if="editable"
 										:to="'/admin/' + app + '/' + item.id"
 									>
-										<i
+										<button class="btn btn-warning btn-sm">Edit</button>
+										<!-- 										<i
 											class="bi-pencil-square"
-											style="font-size: 1rem; color: cornflowerblue"
-										></i>
+											style="font-size: 1rem; color: black"
+										></i> -->
 									</nuxt-link>
 								</b-td>
 								<b-td v-if="deleteable">
 									<a @click="deleteItem(item.id)">
-										<i
-											class="bi-trash"
-											style="font-size: 1rem; color: cornflowerblue"
-										></i>
+										<button class="btn btn-danger btn-sm">Delete</button>
+
+										<!-- <i class="bi-trash" style="font-size: 1rem; color: red"></i> -->
 									</a>
 								</b-td>
 							</b-tr>
@@ -82,26 +99,42 @@
 		viewable: { type: Boolean, default: false, required: false },
 	})
 	const emit = defineEmits(['changeStatus', 'deleteItem'])
-
 	const { $dayjs } = useNuxtApp()
+	const datalocal = ref(props.data)
+	const CurrentPage = ref(1)
+	const PerPage = ref(10)
+	const Rows = ref(datalocal.value.length)
+	const pagedData = ref(
+		datalocal.value.slice(
+			(CurrentPage.value - 1) * PerPage.value,
+			CurrentPage.value * PerPage.value
+		)
+	)
+	console.log('CurrentPage.value', CurrentPage.value)
 
-	/* 	watch: {
-		data() {
-			this.datalocal = this.data
-		},
-	}, */
-	const datalocal = computed(() => props.data)
+	watch(CurrentPage, () => {
+		pagedData.value = datalocal.value.slice(
+			(CurrentPage.value - 1) * PerPage.value,
+			CurrentPage.value * PerPage.value
+		)
+	})
 
 	const changeStatus = ({ id, status }) => {
-		const pos = datalocal.findIndex((u) => u.id === id)
-		datalocal[pos].status = !datalocal[pos].status
+		status = status ? 0 : 1
+
+		// in browser
+		const pos = datalocal.value.findIndex((u) => u.id === id)
+		datalocal.value[pos].status = status
 		// change DB
-		$emit('changeStatus', { id, status })
+		emit('changeStatus', { id, status })
 	}
 	const deleteItem = (id) => {
 		if (confirm('Are you sure you want to delete this?')) {
-			data = data.filter((u) => u.id !== id)
-			$emit('deleteItem', id)
+			// in browser
+			datalocal.value = datalocal.value.filter((u) => u.id !== id)
+			pagedData.value = pagedData.value.filter((u) => u.id !== id)
+			// in database
+			emit('deleteItem', id)
 		}
 	}
 </script>

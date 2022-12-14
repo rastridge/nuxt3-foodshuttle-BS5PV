@@ -7,7 +7,7 @@
 		>
 			<span class="visually-hidden">Loading...</span>
 		</div>
-		<div v-else>
+		<div v-else class="root">
 			<FormKit
 				type="form"
 				:config="{ validationVisibility: 'live' }"
@@ -178,6 +178,8 @@
 </template>
 
 <script setup>
+	import '@formkit/themes/genesis'
+
 	const runtimeConfig = useRuntimeConfig()
 
 	const emit = defineEmits(['submitted'])
@@ -343,17 +345,17 @@
 
 <style>
 	.formkit-inner {
-		background-color: rgba(255, 255, 255, 0.3);
-	}
-	[data-complete] .formkit-inner {
-		border-color: rgb(0, 255, 0);
-		box-shadow: 0 0 0 1px green;
+		background-color: rgba(255, 255, 255, 0.5);
 	}
 	[data-invalid] .formkit-inner {
 		border-color: red;
 		box-shadow: 0 0 0 1px red;
 	}
 
+	[data-complete] .formkit-inner {
+		border-color: red;
+		box-shadow: 0 0 0 1px green;
+	}
 	[data-complete] .formkit-inner::after {
 		content: '✅';
 		display: block;
