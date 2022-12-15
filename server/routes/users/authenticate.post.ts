@@ -5,7 +5,14 @@ export default defineEventHandler(async (event) => {
 	const headers = event.req.headers
 	const body = await readBody(event)
 
-	if (headers.authorization == config.apiSecret) {
+	console.log(
+		'IN AUTHENTICATE POST headers ,config.public.apiSecret = ',
+		headers,
+		config.public.apiSecret
+	)
+	/* 	if (headers.authorization == config.public.apiSecret) {
 		return usersService.authenticate(body)
-	}
+	}	 */
+
+	return usersService.authenticate(body)
 })

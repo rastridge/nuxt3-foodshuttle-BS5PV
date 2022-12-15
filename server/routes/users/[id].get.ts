@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
 	const headers = event.req.headers
 	const url = event.req.url
 	const id = event.context.params.id
-	if (headers.authorization == config.apiSecret) {
+	if (headers.authorization == config.public.apiSecret) {
 		return usersService.getOne(id)
 	} else {
 		return []

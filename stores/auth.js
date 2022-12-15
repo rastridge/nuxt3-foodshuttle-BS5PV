@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { useAlertStore } from './alert'
 const alert = useAlertStore()
-// import { userService } from '@/services'
 const runtimeConfig = useRuntimeConfig()
 
 export const useAuthStore = defineStore('auth', {
@@ -13,11 +12,15 @@ export const useAuthStore = defineStore('auth', {
 
 	actions: {
 		async login(username, password) {
+			console.log(
+				'IN AUTH LOGIN runtimeConfig.public.apiSecret ',
+				runtimeConfig.public.apiSecret
+			)
 			this.loginRequest(username)
 
 			const user = await $fetch('/users/authenticate', {
 				headers: {
-					firebaseapikey: runtimeConfig.apiSecret,
+					authorization: runtimeConfig.public.apiSecret,
 				},
 				method: 'POST',
 				body: { username, password },

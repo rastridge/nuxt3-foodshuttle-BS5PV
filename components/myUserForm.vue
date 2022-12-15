@@ -219,7 +219,7 @@
 	const { data: apps_data } = await useFetch(`/users/getapps`, {
 		method: 'get',
 		headers: {
-			firebaseapikey: runtimeConfig.apiSecret,
+			authorization: runtimeConfig.public.apiSecret,
 		},
 	})
 
@@ -296,7 +296,7 @@
 		const { data: form_data } = await useFetch(`/users/${props.id}`, {
 			method: 'get',
 			headers: {
-				firebaseapikey: runtimeConfig.apiSecret,
+				authorization: runtimeConfig.public.apiSecret,
 			},
 		})
 		// console.log('form_data= ', form_data)

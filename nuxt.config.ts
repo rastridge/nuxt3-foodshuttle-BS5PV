@@ -17,7 +17,6 @@ export default defineNuxtConfig({
 	runtimeConfig: {
 		// The private keys which are only
 		// available within server-side
-		apiSecret: process.env.API_SECRET,
 		DB_HOST: process.env.DB_HOST,
 		DB_USER: process.env.DB_USER,
 		DB_PASSWORD: process.env.DB_PASSWORD,
@@ -26,10 +25,12 @@ export default defineNuxtConfig({
 		ONCLIENT: process.client,
 		FROM: process.env.FROM,
 		FROM_NAME: process.env.FROM_NAME,
+
 		// Keys within public, will be also be
 		// exposed to the client-side
-
-		public: { firebaseApiKey: process.env.FIREBASE_API_KEY },
+		public: {
+			apiSecret: process.env.API_SECRET,
+		},
 	},
 	// meta: {
 	// 	charset: 'utf-8',

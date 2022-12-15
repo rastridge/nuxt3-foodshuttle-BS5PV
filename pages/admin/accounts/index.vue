@@ -6,6 +6,7 @@
 
 		<div class="text-center m-5 display-6">
 			<b>Account List</b>
+			runtimeConfig.public.apiSecret {{ runtimeConfig.public.apiSecret }}
 		</div>
 		<div class="text-center m-5">
 			<nuxt-link class="btn btn-primary" to="/admin/accounts/add"
@@ -74,7 +75,8 @@
 		initialCache: false,
 		method: 'get',
 		headers: {
-			firebaseapikey: runtimeConfig.apiSecret,
+			authorization: runtimeConfig.public.apiSecret,
+			// authorization: runtimeConfig.public.apiSecret,
 		},
 	})
 
@@ -82,7 +84,7 @@
 		const { pending, error, refresh } = await useFetch(`/accounts/${id}`, {
 			method: 'delete',
 			headers: {
-				firebaseapikey: runtimeConfig.apiSecret,
+				authorization: runtimeConfig.public.apiSecret,
 			},
 		})
 	}
@@ -91,7 +93,7 @@
 		const { pending, error, refresh } = await useFetch(`/accounts/status`, {
 			method: 'POST',
 			headers: {
-				firebaseapikey: runtimeConfig.apiSecret,
+				authorization: runtimeConfig.public.apiSecret,
 			},
 			body: { id, status },
 		})

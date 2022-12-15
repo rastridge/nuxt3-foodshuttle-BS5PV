@@ -194,7 +194,7 @@
 		{
 			method: 'get',
 			headers: {
-				firebaseapikey: runtimeConfig.apiSecret,
+				authorization: runtimeConfig.public.apiSecret,
 			},
 		}
 	)
@@ -216,7 +216,7 @@
 	const { data: memberTypes } = await useFetch('/accounts/membertypes', {
 		method: 'get',
 		headers: {
-			firebaseapikey: runtimeConfig.apiSecret,
+			authorization: runtimeConfig.public.apiSecret,
 		},
 	})
 	// convert for formkit
@@ -303,7 +303,7 @@
 		} = await useFetch(`/accounts/${props.id}`, {
 			method: 'get',
 			headers: {
-				firebaseapikey: runtimeConfig.apiSecret,
+				authorization: runtimeConfig.public.apiSecret,
 			},
 		})
 

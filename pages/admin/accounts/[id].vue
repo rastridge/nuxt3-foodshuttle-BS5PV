@@ -18,7 +18,7 @@
 			method: 'post',
 			body: state,
 			headers: {
-				firebaseapikey: runtimeConfig.apiSecret,
+				authorization: runtimeConfig.public.apiSecret,
 			},
 		})
 		navigate('/admin/accounts')

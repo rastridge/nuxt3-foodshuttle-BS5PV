@@ -9,7 +9,7 @@ const useAccountData = () => {
 		} = useFetch('/accounts/getall', {
 			method: 'get',
 			headers: {
-				firebaseapikey: runtimeConfig.apiSecret,
+				authorization: runtimeConfig.public.apiSecret,
 			},
 		})
 		return accounts

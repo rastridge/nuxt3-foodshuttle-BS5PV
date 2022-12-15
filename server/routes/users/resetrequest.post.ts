@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
 	const headers = event.req.headers
 	const body = await readBody(event)
 
-	if (headers.authorization == config.apiSecret) {
+	if (headers.authorization == config.public.apiSecret) {
 		return usersService.resetRequest(body)
 	}
 })

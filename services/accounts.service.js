@@ -16,7 +16,7 @@ async function getAll() {
 	const { data, pending, error, refresh } = await useFetch('/accounts/getall', {
 		method: 'get',
 		headers: {
-			firebaseapikey: 12345,
+			authorization: 12345,
 		},
 	})
 	return data
@@ -26,7 +26,7 @@ async function getMemberTypes() {
 	const { data } = await useFetch('/accounts/membertypes', {
 		method: 'get',
 		headers: {
-			firebaseapikey: 12345,
+			authorization: 12345,
 		},
 	})
 	return data
@@ -42,7 +42,7 @@ async function getAll() {
 	} = await useFetch('/accounts/getall', {
 		method: 'get',
 		headers: {
-			firebaseapikey: runtimeConfig.apiSecret,
+			authorization: runtimeConfig.public.apiSecret,
 		},
 	})
 	return {

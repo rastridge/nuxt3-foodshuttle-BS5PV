@@ -3,7 +3,7 @@
 const runtimeConfig = useRuntimeConfig()
 
 export const userService = {
-	login,
+	// login,
 	resetRequest,
 	resetPassword,
 	// reset,
@@ -17,17 +17,17 @@ export const userService = {
 	// changeStatus,
 }
 
-async function login(username, password) {
+/* async function login(username, password) {
 	const { data, error } = await useFetch('/users/authenticate', {
 		method: 'POST',
 		body: { username, password },
 		headers: {
-			firebaseapikey: runtimeConfig.apiSecret,
+			authorization: runtimeConfig.public.apiSecret,
 		},
 	})
 	return data
 }
-
+ */
 /* 
 function login(username, password) {
 	const requestOptions = {
@@ -53,7 +53,7 @@ async function resetRequest(username) {
 		method: 'POST',
 		body: { username },
 		headers: {
-			firebaseapikey: runtimeConfig.apiSecret,
+			authorization: runtimeConfig.public.apiSecret,
 		},
 	})
 	return data
@@ -64,7 +64,7 @@ async function resetPassword(username, password) {
 		method: 'POST',
 		body: { username, password },
 		headers: {
-			firebaseapikey: runtimeConfig.apiSecret,
+			authorization: runtimeConfig.public.apiSecret,
 		},
 	})
 	return data
@@ -85,7 +85,7 @@ async function getAll() {
 	const { data } = await useFetch('/users/editone', {
 		method: 'GET',
 		headers: {
-			firebaseapikey: runtimeConfig.apiSecret,
+			authorization: runtimeConfig.public.apiSecret,
 		},
 	})
 	return data

@@ -132,7 +132,7 @@ async function authenticate({ username, password }) {
 		// add permissions to user
 		const perms = await _getPerms(user.admin_user_id)
 		user.perms = perms
-		const token = await jwt.sign(user.admin_user_id, config.apiSecret)
+		const token = await jwt.sign(user.admin_user_id, config.public.apiSecret)
 		user.token = token
 	} else {
 		user = { match: false }

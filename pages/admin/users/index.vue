@@ -73,14 +73,14 @@
 		initialCache: false,
 		method: 'get',
 		headers: {
-			firebaseapikey: runtimeConfig.apiSecret,
+			authorization: runtimeConfig.public.apiSecret,
 		},
 	})
 	const deleteItem = async (id) => {
 		const { pending, error, refresh } = await useFetch(`/users/${id}`, {
 			method: 'delete',
 			headers: {
-				firebaseapikey: runtimeConfig.apiSecret,
+				authorization: runtimeConfig.public.apiSecret,
 			},
 		})
 	}
@@ -89,7 +89,7 @@
 		const { pending, error, refresh } = await useFetch(`/users/status`, {
 			method: 'POST',
 			headers: {
-				firebaseapikey: runtimeConfig.apiSecret,
+				authorization: runtimeConfig.public.apiSecret,
 			},
 			body: { id, status },
 		})

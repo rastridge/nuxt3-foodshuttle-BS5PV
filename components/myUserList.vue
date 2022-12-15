@@ -52,7 +52,7 @@
 		initialCache: false,
 		method: 'get',
 		headers: {
-			firebaseapikey: runtimeConfig.apiSecret,
+			authorization: runtimeConfig.public.apiSecret,
 		},
 	})
 	// console.log('users= ', users)
@@ -65,7 +65,7 @@
 		const { pending, error, refresh } = await useFetch(`/users/${itemId}`, {
 			method: 'delete',
 			headers: {
-				firebaseapikey: runtimeConfig.apiSecret,
+				authorization: runtimeConfig.public.apiSecret,
 			},
 		})
 	}
