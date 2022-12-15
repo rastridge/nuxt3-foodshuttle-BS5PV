@@ -64,7 +64,7 @@ export const useAuthStore = defineStore('auth', {
 		},
 		loginSuccess(user) {
 			this.status = { loggedIn: true }
-			// this.user = user
+			this.user = user
 		},
 		loginFailure() {
 			this.status = {}
