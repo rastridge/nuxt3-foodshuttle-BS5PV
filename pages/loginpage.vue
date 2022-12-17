@@ -54,30 +54,22 @@
 
 <script setup>
 	// const route = useRoute()
+	// import { useAuthStore } from '~~/stores/auth'
 	import { useAuthStore } from '~~/stores/auth'
 	import { useAlertStore } from '@/stores/alert'
 	const auth = useAuthStore()
 	const alert = useAlertStore()
-	const config = useRuntimeConfig()
+	// const config = useRuntimeConfig()
 
 	const username = ref('')
 	const password = ref('')
 	const submitted = ref(false)
 
-	/*
-						watch: {
-							route(to, from) {
-								// clear alert on location change
-								alert.clear
-							}
-						}
-			 */
-
 	const handleSubmit = async (e) => {
 		submitted.value = true
 		if (username.value && password.value) {
 			auth.login(username.value, password.value) // pinia auth store
-			// alert.clear
+			alert.clear
 		}
 	}
 </script>

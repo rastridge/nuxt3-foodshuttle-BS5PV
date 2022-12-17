@@ -1,22 +1,17 @@
 import { defineStore } from 'pinia'
-import { useAlertStore } from '~~/stores/alert'
-const alert = useAlertStore()
-
+// import { useAlertStore } from './alert'
+// const alert = useAlertStore()
 const runtimeConfig = useRuntimeConfig()
 
-export const useAuthStore = defineStore('auth', {
+export const useAuth2Store = defineStore('useAuth2', {
 	state: () => ({ status: { loggedIn: false }, user: {} }),
 	getters: {
-		loggingIn: (state) => state.status.loggingIn,
+		// loggingIn: (state) => state.status.loggingIn,
 		isLoggedIn: (state) => state.status.loggedIn,
 	},
 
 	actions: {
 		async login(username, password) {
-			console.log(
-				'IN AUTH LOGIN runtimeConfig.public.apiSecret ',
-				runtimeConfig.public.apiSecret
-			)
 			this.loginRequest(username)
 
 			const user = await $fetch('/users/authenticate', {
@@ -35,13 +30,12 @@ export const useAuthStore = defineStore('auth', {
 			// )
 			// console.log('IN Actions userService.login user.match = ', user.match)
 
-			// if (user.found == 'none') {
 			if (user.match) {
 				// console.log('IN Actions userService.login user is true')
 				this.loginSuccess(user)
 
-				alert.clear()
-				alert.success('Login successful')
+				// alert.clear()
+				// alert.success('Login successful')
 
 				sessionStorage.removeItem('auth')
 				sessionStorage.setItem('auth', JSON.stringify(user))
@@ -49,21 +43,22 @@ export const useAuthStore = defineStore('auth', {
 				// how to use router in pinia store ????
 				navigateTo('/admin')
 			} else {
-				this.loginFailure('loginFailure')
-				alert.error('Login failed - try again')
+				this.loginFailure()
+				// alert.error('Login failed - try again')
 			}
 		},
 
 		logout() {
-			alert.clear('')
+			// alert.clear()
 			this.status = { loggedIn: false }
-			this.user = null
+			this.user = {}
 			sessionStorage.removeItem('auth')
 			navigateTo('/')
 		},
 
 		loginRequest(user) {
-			this.status = { loggingIn: true }
+			// this.status = { loggingIn: true }
+			this.status = { loggedIn: false }
 			this.user = user
 		},
 		loginSuccess(user) {
@@ -71,8 +66,8 @@ export const useAuthStore = defineStore('auth', {
 			this.user = user
 		},
 		loginFailure() {
-			this.status = {}
-			this.user = null
+			this.status = { loggedIn: false }
+			this.user = {}
 		},
 	},
 })

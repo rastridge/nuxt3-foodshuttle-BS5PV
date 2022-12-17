@@ -110,7 +110,6 @@
 			CurrentPage.value * PerPage.value
 		)
 	)
-	console.log('CurrentPage.value', CurrentPage.value)
 
 	watch(CurrentPage, () => {
 		pagedData.value = datalocal.value.slice(
