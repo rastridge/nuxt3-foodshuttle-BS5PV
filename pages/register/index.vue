@@ -48,6 +48,7 @@
 <script setup>
 	import { useAlertStore } from '@/stores/alert'
 	const alert = useAlertStore()
+	const router = useRouter()
 
 	const state = reactive({
 		account_email: '',
@@ -85,7 +86,6 @@
 			},
 		})
 		if (data.value.message) {
-			// console.log('data ====', data.value.message)
 			alert.error(data.value.message)
 		} else {
 			navigateTo('/')

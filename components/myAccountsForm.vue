@@ -181,6 +181,7 @@
 	import '@formkit/themes/genesis'
 
 	const runtimeConfig = useRuntimeConfig()
+	const router = useRouter()
 
 	const emit = defineEmits(['submitted'])
 

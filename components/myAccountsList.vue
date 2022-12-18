@@ -74,6 +74,8 @@
 	const viewable = true
 
 	const runtimeConfig = useRuntimeConfig()
+	const router = useRouter()
+
 	const {
 		data: accounts,
 		pending,

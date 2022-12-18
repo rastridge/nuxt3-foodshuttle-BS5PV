@@ -30,6 +30,7 @@
 	import { useAuthStore } from '~~/stores/authStore'
 	const auth = useAuthStore()
 	definePageMeta({ layout: 'admin' })
+	const router = useRouter()
 
 	const app = 'accounts'
 	let editable = false
