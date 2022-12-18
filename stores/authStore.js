@@ -41,7 +41,6 @@ export const useAuthStore = defineStore('auth', {
 				this.loginSuccess(user)
 
 				alert.clear()
-				alert.success('Login successful')
 
 				sessionStorage.removeItem('auth')
 				sessionStorage.setItem('auth', JSON.stringify(user))
@@ -66,13 +65,16 @@ export const useAuthStore = defineStore('auth', {
 		},
 
 		loginRequest(user) {
-			// this.status = { loggingIn: true }
 			this.status = { loggedIn: false }
 			this.user = user
+			const alert = useAlertStore()
+			alert.set('Logging in . . .')
 		},
 		loginSuccess(user) {
 			this.status = { loggedIn: true }
 			this.user = user
+			// const alert = useAlertStore()
+			// alert.success('Login successful')
 		},
 		loginFailure() {
 			this.status = { loggedIn: false }

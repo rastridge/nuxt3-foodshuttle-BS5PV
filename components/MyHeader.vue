@@ -11,12 +11,12 @@
 		{
 			label: 'Home',
 			icon: 'pi pi-fw pi-bookmark',
-			url: '/',
+			to: '/',
 		},
 		{
 			label: 'Login',
 			icon: 'pi pi-fw pi-user',
-			url: '/loginpage',
+			to: '/loginpage',
 		},
 		{
 			label: 'Examples',
@@ -25,18 +25,18 @@
 				{
 					label: 'Autocomplete',
 					icon: 'pi pi-fw pi-bookmark',
-					url: '/autocomplete',
+					to: '/autocomplete',
 				},
 
 				{
 					label: 'Datepicker',
 					icon: 'pi pi-fw pi-bookmark',
-					url: '/datepicker',
+					to: '/datepicker',
 				},
 				{
 					label: 'Editor',
 					icon: 'pi pi-fw pi-bookmark',
-					url: '/editor',
+					to: '/editor',
 				},
 			],
 		},

@@ -29,7 +29,6 @@
 <script setup>
 	import { useAuthStore } from '~~/stores/authStore'
 	const auth = useAuthStore()
-	const runtimeConfig = useRuntimeConfig()
 	definePageMeta({ layout: 'admin' })
 
 	const app = 'accounts'

@@ -1,12 +1,6 @@
 <template>
 	<nav class="fixed-top">
-		<Menubar :model="items" class="p-menubar">
-			<!-- 			<template #item="{ item }">
-				<nuxt-link v-if="checkPerm(item.label)" :to="item.to">
-					item.label</nuxt-link
-				>
-			</template> -->
-		</Menubar>
+		<Menubar :model="items" class="p-menubar"> </Menubar>
 	</nav>
 </template>
 
