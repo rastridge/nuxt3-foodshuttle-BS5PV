@@ -18,16 +18,16 @@
 
 	const items = ref([
 		{
-			label: 'Logout',
-			icon: 'pi pi-fw pi-power-off',
-			to: '/logout',
+			label: 'Admin Home',
+			icon: 'pi pi-fw pi-bookmark',
+			to: '/admin',
+			visible: () => checkPerm('accounts') > 0,
 		},
 		{
 			label: 'Accounts',
 			icon: 'pi pi-fw pi-bookmark',
 			to: '/admin/accounts',
 			visible: () => checkPerm('accounts') > 0,
-			// visible: false,
 		},
 		{
 			label: 'Users',
@@ -40,6 +40,11 @@
 			icon: 'pi pi-fw pi-bookmark',
 			to: '/admin/news',
 			visible: () => checkPerm('news') > 0,
+		},
+		{
+			label: 'Logout',
+			icon: 'pi pi-fw pi-power-off',
+			to: '/logout',
 		},
 	])
 </script>
