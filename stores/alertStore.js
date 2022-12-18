@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
-export const useAlertStore = defineStore('alert2', {
+export const useAlertStore = defineStore('alert', {
 	state: () => ({
 		type: null,
-		message: 'blank',
+		message: null,
 	}),
 	getters: {
 		messages: (state) => state.message,

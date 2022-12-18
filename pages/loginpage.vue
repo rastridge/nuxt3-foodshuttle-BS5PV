@@ -53,13 +53,10 @@
 </template>
 
 <script setup>
-	// const route = useRoute()
-	// import { useAuthStore } from '~~/stores/auth'
-	import { useAuthStore } from '~~/stores/auth'
-	import { useAlertStore } from '@/stores/alert'
+	import { useAuthStore } from '~~/stores/authStore'
+	import { useAlertStore } from '~~/stores/alertStore'
 	const auth = useAuthStore()
-	const alert = useAlertStore()
-	// const config = useRuntimeConfig()
+	const alert = useAlertStore() // used in template
 
 	const username = ref('')
 	const password = ref('')
@@ -69,7 +66,6 @@
 		submitted.value = true
 		if (username.value && password.value) {
 			auth.login(username.value, password.value) // pinia auth store
-			alert.clear
 		}
 	}
 </script>
