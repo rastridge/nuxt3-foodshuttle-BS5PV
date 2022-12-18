@@ -46,7 +46,7 @@
 </template>
 
 <script setup>
-	import { useAlertStore } from '@/stores/alert'
+	import { useAlertStore } from '~~/stores/alertStore'
 	const alert = useAlertStore()
 	const router = useRouter()
 
