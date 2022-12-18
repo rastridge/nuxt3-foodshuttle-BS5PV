@@ -25,12 +25,11 @@ export default defineNuxtConfig({
 		ONCLIENT: process.client,
 		FROM: process.env.FROM,
 		FROM_NAME: process.env.FROM_NAME,
+		apiSecret: process.env.API_SECRET,
 
 		// Keys within public, will be also be
 		// exposed to the client-side
-		public: {
-			apiSecret: process.env.API_SECRET,
-		},
+		public: {},
 	},
 	// meta: {
 	// 	charset: 'utf-8',

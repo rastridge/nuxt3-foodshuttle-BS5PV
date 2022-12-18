@@ -6,20 +6,24 @@ export const useAuthStore = defineStore('auth', {
 	getters: {
 		loggingIn: (state) => state.status.loggingIn,
 		isLoggedIn: (state) => state.status.loggedIn,
+		// getToken: (state) => state.status.user.token,
+		getUser: (state) => state.status.user,
 	},
 
 	actions: {
 		async login(username, password) {
-			const runtimeConfig = useRuntimeConfig()
+			// const runtimeConfig = useRuntimeConfig()
 			const alert = useAlertStore()
+			const router = useRouter()
+
 			alert.clear()
 
 			this.loginRequest(username)
 
 			const user = await $fetch('/users/authenticate', {
-				headers: {
-					authorization: runtimeConfig.public.apiSecret,
-				},
+				// headers: {
+				// 	authorization: 'authtokexxxxx',
+				// },
 				method: 'POST',
 				body: { username, password },
 			})
@@ -43,7 +47,7 @@ export const useAuthStore = defineStore('auth', {
 				sessionStorage.setItem('auth', JSON.stringify(user))
 
 				// how to use router in pinia store ????
-				navigateTo('/admin')
+				navigateTo('/admin/users')
 			} else {
 				this.loginFailure()
 				// alert.error('Login failed - try again')
@@ -51,7 +55,10 @@ export const useAuthStore = defineStore('auth', {
 		},
 
 		logout() {
-			// alert.clear()
+			const router = useRouter()
+			const alert = useAlertStore()
+
+			alert.clear()
 			this.status = { loggedIn: false }
 			this.user = {}
 			sessionStorage.removeItem('auth')

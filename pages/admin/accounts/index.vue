@@ -6,7 +6,6 @@
 
 		<div class="text-center m-5 display-6">
 			<b>Account List</b>
-			runtimeConfig.public.apiSecret {{ runtimeConfig.public.apiSecret }}
 		</div>
 		<div class="text-center m-5">
 			<nuxt-link class="btn btn-primary" to="/admin/accounts/add"
@@ -28,6 +27,8 @@
 </template>
 
 <script setup>
+	import { useAuthStore } from '~~/stores/authStore'
+	const auth = useAuthStore()
 	const runtimeConfig = useRuntimeConfig()
 	definePageMeta({ layout: 'admin' })
 
@@ -75,8 +76,7 @@
 		initialCache: false,
 		method: 'get',
 		headers: {
-			authorization: runtimeConfig.public.apiSecret,
-			// authorization: runtimeConfig.public.apiSecret,
+			authorization: null,
 		},
 	})
 
@@ -84,7 +84,7 @@
 		const { pending, error, refresh } = await useFetch(`/accounts/${id}`, {
 			method: 'delete',
 			headers: {
-				authorization: runtimeConfig.public.apiSecret,
+				authorization: auth.user.token,
 			},
 		})
 	}
@@ -93,7 +93,7 @@
 		const { pending, error, refresh } = await useFetch(`/accounts/status`, {
 			method: 'POST',
 			headers: {
-				authorization: runtimeConfig.public.apiSecret,
+				authorization: auth.user.token,
 			},
 			body: { id, status },
 		})
