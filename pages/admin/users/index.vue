@@ -27,7 +27,8 @@
 	</div>
 </template>
 <script setup>
-	const runtimeConfig = useRuntimeConfig()
+	import { useAuthStore } from '~~/stores/authStore'
+	const auth = useAuthStore()
 	definePageMeta({ layout: 'admin' })
 	const app = 'users'
 	let editable = false
@@ -73,14 +74,14 @@
 		initialCache: false,
 		method: 'get',
 		headers: {
-			authorization: runtimeConfig.public.apiSecret,
+			authorization: auth.user.token,
 		},
 	})
 	const deleteItem = async (id) => {
 		const { pending, error, refresh } = await useFetch(`/users/${id}`, {
 			method: 'delete',
 			headers: {
-				authorization: runtimeConfig.public.apiSecret,
+				authorization: auth.user.token,
 			},
 		})
 	}
@@ -89,7 +90,7 @@
 		const { pending, error, refresh } = await useFetch(`/users/status`, {
 			method: 'POST',
 			headers: {
-				authorization: runtimeConfig.public.apiSecret,
+				authorization: auth.user.token,
 			},
 			body: { id, status },
 		})

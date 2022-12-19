@@ -191,7 +191,8 @@
 </template>
 
 <script setup>
-	const runtimeConfig = useRuntimeConfig()
+	import { useAuthStore } from '~~/stores/authStore'
+	const auth = useAuthStore()
 
 	const form_state = ref({})
 
@@ -219,7 +220,7 @@
 	const { data: apps_data } = await useFetch(`/users/getapps`, {
 		method: 'get',
 		headers: {
-			authorization: runtimeConfig.public.apiSecret,
+			authorization: auth.user.token,
 		},
 	})
 
@@ -296,7 +297,7 @@
 		const { data: form_data } = await useFetch(`/users/${props.id}`, {
 			method: 'get',
 			headers: {
-				authorization: runtimeConfig.public.apiSecret,
+				authorization: auth.user.token,
 			},
 		})
 		// console.log('form_data= ', form_data)

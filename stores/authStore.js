@@ -21,9 +21,9 @@ export const useAuthStore = defineStore('auth', {
 			this.loginRequest(username)
 
 			const user = await $fetch('/users/authenticate', {
-				// headers: {
-				// 	authorization: 'authtokexxxxx',
-				// },
+				headers: {
+					authorization: null,
+				},
 				method: 'POST',
 				body: { username, password },
 			})
@@ -67,7 +67,7 @@ export const useAuthStore = defineStore('auth', {
 			sessionStorage.removeItem('auth')
 			sessionStorage.setItem('auth', JSON.stringify(user))
 			const router = useRouter()
-			navigateTo('/admin/users')
+			navigateTo('/admin')
 			const alert = useAlertStore()
 			alert.success('Login successful')
 		},

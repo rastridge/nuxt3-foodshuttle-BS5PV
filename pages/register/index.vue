@@ -46,7 +46,9 @@
 </template>
 
 <script setup>
+	import { useAuthStore } from '~~/stores/authStore'
 	import { useAlertStore } from '~~/stores/alertStore'
+	const auth = useAuthStore()
 	const alert = useAlertStore()
 	const router = useRouter()
 
@@ -77,12 +79,11 @@
 	})
 
 	const handleSubmit = async function (state) {
-		const runtimeConfig = useRuntimeConfig()
 		const { data, pending, error } = await useFetch('/accounts/addone', {
 			method: 'post',
 			body: state,
 			headers: {
-				authorization: runtimeConfig.public.apiSecret,
+				authorization: auth.user.token,
 			},
 		})
 		if (data.value.message) {

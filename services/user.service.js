@@ -22,7 +22,7 @@ export const userService = {
 		method: 'POST',
 		body: { username, password },
 		headers: {
-			authorization: runtimeConfig.public.apiSecret,
+			authorization: auth.user.token,
 		},
 	})
 	return data
@@ -53,7 +53,7 @@ async function resetRequest(username) {
 		method: 'POST',
 		body: { username },
 		headers: {
-			authorization: runtimeConfig.public.apiSecret,
+			authorization: auth.user.token,
 		},
 	})
 	return data
@@ -64,7 +64,7 @@ async function resetPassword(username, password) {
 		method: 'POST',
 		body: { username, password },
 		headers: {
-			authorization: runtimeConfig.public.apiSecret,
+			authorization: auth.user.token,
 		},
 	})
 	return data
@@ -85,7 +85,7 @@ async function getAll() {
 	const { data } = await useFetch('/users/editone', {
 		method: 'GET',
 		headers: {
-			authorization: runtimeConfig.public.apiSecret,
+			authorization: auth.user.token,
 		},
 	})
 	return data

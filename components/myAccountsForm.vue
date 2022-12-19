@@ -179,7 +179,8 @@
 
 <script setup>
 	import '@formkit/themes/genesis'
-
+	import { useAuthStore } from '~~/stores/authStore'
+	const auth = useAuthStore()
 	const runtimeConfig = useRuntimeConfig()
 	const router = useRouter()
 
@@ -195,7 +196,7 @@
 		{
 			method: 'get',
 			headers: {
-				authorization: runtimeConfig.public.apiSecret,
+				authorization: auth.user.token,
 			},
 		}
 	)
@@ -217,7 +218,7 @@
 	const { data: memberTypes } = await useFetch('/accounts/membertypes', {
 		method: 'get',
 		headers: {
-			authorization: runtimeConfig.public.apiSecret,
+			authorization: auth.user.token,
 		},
 	})
 	// convert for formkit
@@ -232,7 +233,7 @@
 		return result
 	}
 	const memberTypeOptions = getMemberTypeOptions(memberTypes.value)
-	/* 
+	/*
 	// initialize formkit state
 	const state = reactive({
 		account_email: '',
@@ -260,7 +261,7 @@
 		member_admin_type2_id: '',
 		account_id: '',
 	})
- */
+	*/
 	const state = reactive({
 		account_email: 'joe@net.com',
 		member_firstname: 'Joe',
@@ -304,7 +305,7 @@
 		} = await useFetch(`/accounts/${props.id}`, {
 			method: 'get',
 			headers: {
-				authorization: runtimeConfig.public.apiSecret,
+				authorization: auth.user.token,
 			},
 		})
 

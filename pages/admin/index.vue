@@ -7,7 +7,7 @@
 
 	<p>session Admin user name is {{ sess.admin_user_name }}</p>
 	<p>session Admin user token is {{ sess.token }}</p>
-	<p>session Admin user is logged in {{ sess.isLoggedIn }}</p>
+	<p>auth Admin user is logged in {{ auth.isLoggedIn }}</p>
 </template>
 
 <script setup>

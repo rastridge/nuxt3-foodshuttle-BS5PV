@@ -11,6 +11,8 @@
 </template>
 
 <script setup>
+	import { useAuthStore } from '~~/stores/authStore'
+	const auth = useAuthStore()
 	definePageMeta({ layout: 'admin' })
 
 	const route = useRoute()
@@ -36,7 +38,7 @@
 			method: 'post',
 			body: form_state,
 			headers: {
-				authorization: runtimeConfig.public.apiSecret,
+				authorization: auth.user.token,
 			},
 		})
 		navigate('/admin/users')

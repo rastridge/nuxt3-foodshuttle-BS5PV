@@ -75,7 +75,7 @@
 		initialCache: false,
 		method: 'get',
 		headers: {
-			authorization: null,
+			authorization: auth.user.token,
 		},
 	})
 

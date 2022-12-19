@@ -66,6 +66,9 @@
 </template>
 
 <script setup>
+	import { useAuthStore } from '~~/stores/authStore'
+	const auth = useAuthStore()
+
 	const app = 'accounts'
 	const editable = false
 	const addable = false
@@ -85,7 +88,7 @@
 		initialCache: false,
 		method: 'get',
 		headers: {
-			authorization: runtimeConfig.public.apiSecret,
+			authorization: auth.user.token,
 		},
 	})
 
@@ -96,7 +99,7 @@
 		const { pending, error, refresh } = await useFetch(`/accounts/${id}`, {
 			method: 'delete',
 			headers: {
-				authorization: runtimeConfig.public.apiSecret,
+				authorization: auth.user.token,
 			},
 		})
 	}

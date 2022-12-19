@@ -4,7 +4,7 @@ import { useAuthStore } from '~~/stores/authStore'
 export default defineNuxtRouteMiddleware((from, to) => {
 	const alert = useAlertStore() // this must be inside the function
 	const auth = useAuthStore()
-	console.log(
+	/* 	console.log(
 		`IN test2.global.ts to from  fullPath = ${to.fullPath} ${from.fullPath} `
 	)
 
@@ -19,14 +19,16 @@ export default defineNuxtRouteMiddleware((from, to) => {
 		to.path.slice(0, 6) === '/admin' &&
 			JSON.parse(sessionStorage.getItem('auth')) &&
 			!auth.user
-	)
+	) */
 
 	if (
 		to.path.slice(0, 6) === '/admin' &&
 		JSON.parse(sessionStorage.getItem('auth')) &&
 		!auth.isLoggedIn
 	) {
-		console.log('restore authStore after refresh?')
+		console.log('restore authStore after refresh yes')
+
 		auth.user = JSON.parse(sessionStorage.getItem('auth'))
+		auth.status = { loggedIn: true }
 	}
 })

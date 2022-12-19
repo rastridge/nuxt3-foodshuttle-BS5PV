@@ -1,4 +1,4 @@
-// const runtimeConfig = useRuntimeConfig()
+import { useAuthStore } from '~~/stores/authStore'
 
 export const accountService = {
 	getAll,
@@ -13,43 +13,23 @@ export const accountService = {
 }
 
 async function getAll() {
+	const auth = useAuthStore()
 	const { data, pending, error, refresh } = await useFetch('/accounts/getall', {
 		method: 'get',
 		headers: {
-			authorization: 12345,
+			authorization: auth.user.token,
 		},
 	})
 	return data
 }
 
 async function getMemberTypes() {
+	const auth = useAuthStore()
 	const { data } = await useFetch('/accounts/membertypes', {
 		method: 'get',
 		headers: {
-			authorization: 12345,
+			authorization: auth.user.token,
 		},
 	})
 	return data
 }
-
-/* 
-async function getAll() {
-	const {
-		data: accounts,
-		pending,
-		error,
-		refresh,
-	} = await useFetch('/accounts/getall', {
-		method: 'get',
-		headers: {
-			authorization: runtimeConfig.public.apiSecret,
-		},
-	})
-	return {
-		accounts,
-		pending,
-		error,
-		refresh,
-	}
-}
- */

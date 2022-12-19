@@ -31,8 +31,10 @@
 </template>
 
 <script setup>
+	import { useAuthStore } from '~~/stores/authStore'
+	const auth = useAuthStore()
+
 	// import { userservice } from '@/services'
-	const runtimeConfig = useRuntimeConfig()
 	// let users = reactive([])
 
 	/* 	userservice.getAll().then(
@@ -52,7 +54,7 @@
 		initialCache: false,
 		method: 'get',
 		headers: {
-			authorization: runtimeConfig.public.apiSecret,
+			authorization: auth.user.token,
 		},
 	})
 	// console.log('users= ', users)
@@ -65,7 +67,7 @@
 		const { pending, error, refresh } = await useFetch(`/users/${itemId}`, {
 			method: 'delete',
 			headers: {
-				authorization: runtimeConfig.public.apiSecret,
+				authorization: auth.user.token,
 			},
 		})
 	}
