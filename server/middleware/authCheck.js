@@ -12,6 +12,7 @@ export default defineEventHandler(async (event) => {
 		// )
 		// console.log(' IN authCheck middleware ok = ', ok)
 	} else {
+		// no authorization
 		console.log('IN authCheck middleware no authorization')
 	}
 })
