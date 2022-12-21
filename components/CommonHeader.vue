@@ -1,7 +1,7 @@
 <template>
 	<div id="commonheader">
 		<b-row>
-			<b-col class="header m-2 mb-4"> {{ title }}</b-col>
+			<b-col class="header m-2 mb-4 display-4"> {{ title }}</b-col>
 		</b-row>
 	</div>
 </template>

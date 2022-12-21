@@ -96,7 +96,7 @@ async function _getPerms(id) {
 /*              authenicate                */
 /***************************************** */
 async function authenticate({ username, password }) {
-	const lc_username = username.toLowerCase()
+	const lc_admin_user_name = username.toLowerCase()
 	const sql = `SELECT *
 								FROM inbrc_admin_users
 								WHERE deleted = 0`
@@ -110,14 +110,14 @@ async function authenticate({ username, password }) {
 		// 	u.admin_user_pass,
 		// 	bcrypt.compareSync(password, u.admin_user_pass),
 		// 	u.admin_user_name,
-		// 	lc_username,
-		// 	u.admin_user_name === lc_username
+		// 	lc_admin_user_name,
+		// 	u.admin_user_name === lc_admin_user_name
 		// )
 
 		let match = false
 		if (
 			bcrypt.compareSync(password, u.admin_user_pass) &&
-			u.admin_user_name === lc_username
+			u.admin_user_name === lc_admin_user_name
 		) {
 			match = true
 		} else {
@@ -194,33 +194,29 @@ async function addOne({ admin_user_name, password, admin_user_email, perms }) {
 		password: config.DB_PASSWORD,
 		database: config.DB_DATABASE,
 	})
-	/* 	console.log('IN ADDONE ', {
-		admin_user_name,
-		password,
-		admin_user_email,
-		perms,
-	}) */
+	console.log('1a')
+
 	try {
 		await conn.query('START TRANSACTION')
-		// console.log('START TRANSACTION')
+		console.log('IN ADDONE START TRANSACTION')
 
-		// check for existing username
+		// check for existing username or email
 		let sql = `select *
 							from inbrc_admin_users
 							where deleted = 0`
 		const [rows, fields] = await conn.execute(sql)
 		const users = rows
-		const lc_username = admin_user_name.toLowerCase()
+		const lc_admin_user_name = admin_user_name.toLowerCase()
 		const lc_admin_user_email = admin_user_email.toLowerCase()
-		const user = users.find(
+		let user = users.find(
 			(u) =>
-				u.admin_user_name === lc_username ||
+				u.admin_user_name === lc_admin_user_name ||
 				u.admin_user_email === lc_admin_user_email
 		)
-		// console.log('START TRANSACTION')
+		console.log('1b')
 
 		if (!user) {
-			// console.log('2a')
+			console.log('2a')
 
 			// no other users with proposed username
 			sql = `INSERT INTO
@@ -233,12 +229,13 @@ async function addOne({ admin_user_name, password, admin_user_email, perms }) {
 								created_dt = NOW(),
 								modified_dt = NOW()`
 
-			let inserts = []
 			const hashedpassword = await bcrypt.hashSync(password, 10)
-			inserts.push(lc_username, hashedpassword, admin_user_email)
+			let inserts = []
+			inserts.push(lc_admin_user_name, hashedpassword, lc_admin_user_email)
+
 			sql = mysql.format(sql, inserts)
 			const [rows, fields] = await conn.execute(sql)
-			const user = rows
+			user = rows
 			// initial permissions with view only
 			const id = user.insertId
 			// console.log('1 id= ', id)
@@ -256,18 +253,19 @@ async function addOne({ admin_user_name, password, admin_user_email, perms }) {
 				await conn.execute(sql)
 				// console.log('3 sql= ', sql)
 			})
+
 			const msg =
 				'An account for user ' +
-				lc_username +
+				lc_admin_user_name +
 				'  has been created, password = ' +
 				password +
 				' email = ' +
-				admin_user_email
+				lc_admin_user_email
 			const emaildata = {
 				from: config.FROM,
 				fromName: config.FROM_NAME,
 				to: 'ron.astridge@me.com',
-				subject: 'BRC Member Account Modification',
+				subject: 'Foodshuttlewny Member Account Modification',
 				body_text: '',
 				body_html: '<h3>' + msg + '</h3>',
 			}
@@ -277,16 +275,19 @@ async function addOne({ admin_user_name, password, admin_user_email, perms }) {
 			console.log('2b')
 			const msg =
 				'A user with username ' +
-				lc_username +
+				lc_admin_user_name +
 				' or email ' +
 				lc_admin_user_email +
 				' already exists'
-			user.error = msg
+
+			user = { message: msg }
+			console.log('EXISTS ', msg)
+
 			const emaildata = {
 				from: config.FROM,
 				fromName: config.FROM_NAME,
 				to: 'ron.astridge@me.com',
-				subject: 'BRC Member Account Modification',
+				subject: 'Foodshuttlewny Member Account Modification',
 				body_text: '',
 				body_html: '<h3>' + msg + '</h3>',
 			}
@@ -327,26 +328,48 @@ async function editOne(info) {
 		password: config.DB_PASSWORD,
 		database: config.DB_DATABASE,
 	})
+
 	try {
 		await conn.query('START TRANSACTION')
+		console.log('1a')
 
 		// check for existing admin_user_name or admin_user_email
-		let sql =
-			`SELECT *
+		let sql = `SELECT *
 							FROM inbrc_admin_users
 							WHERE
-								deleted = 0 AND admin_user_id <> ` + admin_user_id
+								deleted = 0 AND admin_user_id !=  ${admin_user_id}`
 		const [rows, fields] = await conn.execute(sql)
 		const users = rows
-		const lc_username = admin_user_name.toLowerCase()
-		const lc_admin_user_email = admin_user_email.toLowerCase()
-		let user = users.find((u) => {
-			u.admin_user_name === lc_username ||
-				u.admin_user_email === lc_admin_user_email
-		})
 
+		const lc_admin_username = admin_user_name.toLowerCase()
+		const lc_admin_user_email = admin_user_email.toLowerCase()
+
+		const checkEmailUsername = (u) => {
+			u.admin_user_name == lc_admin_username ||
+				u.admin_user_email == lc_admin_user_email
+		}
+
+		let user = users.find((u) => {
+			console.log(
+				'users other find = ',
+				u.admin_user_name,
+				lc_admin_username,
+				u.admin_user_email,
+				lc_admin_user_email,
+				u.admin_user_name == lc_admin_username ||
+					u.admin_user_email == lc_admin_user_email
+			)
+
+			return (
+				u.admin_user_name == lc_admin_username ||
+				u.admin_user_email == lc_admin_user_email
+			)
+		})
+		console.log('user found = ', user)
 		// if no other users with proposed username or email
 		if (!user) {
+			console.log('2b')
+
 			sql = `UPDATE inbrc_admin_users
 							SET
 									admin_user_name = ?,
@@ -355,27 +378,34 @@ async function editOne(info) {
 									modified_dt= NOW()
 							WHERE
 									admin_user_id = ?`
+			console.log('2c')
 
 			let inserts = []
 			if (password.length > 0) {
+				// if reset password
 				const new_admin_user_pass = await bcrypt.hashSync(password, 10)
 				inserts.push(
-					lc_username,
-					admin_user_email,
+					lc_admin_username,
+					lc_admin_user_email,
 					new_admin_user_pass,
 					admin_user_id
 				)
 			} else {
 				inserts.push(
-					lc_username,
-					admin_user_email,
+					lc_admin_username,
+					lc_admin_user_email,
 					admin_user_pass,
 					admin_user_id
 				)
 			}
+			console.log('2d')
+
 			sql = mysql.format(sql, inserts)
 			const [rows, fields] = await conn.execute(sql)
 			user = rows
+
+			console.log('2e')
+
 			// update user perms by deleting old - creating new
 			sql = `DELETE
 						FROM
@@ -384,6 +414,7 @@ async function editOne(info) {
 							admin_user_id = ${admin_user_id}`
 
 			await conn.execute(sql)
+			console.log('2f')
 
 			// update perms
 			// loop through existing perms array
@@ -402,14 +433,16 @@ async function editOne(info) {
 									${value.admin_perm}
 								)`
 				await conn.execute(sql)
+				console.log('2g')
 			}
 			const msg =
 				'The account for admin user ' +
-				lc_username +
+				lc_admin_username +
 				'  has been modified, password = ' +
 				password +
 				' email = ' +
-				admin_user_email
+				lc_admin_user_email
+
 			const emaildata = {
 				from: config.FROM,
 				fromName: config.FROM_NAME,
@@ -421,13 +454,8 @@ async function editOne(info) {
 			// console.log(emaildata)
 			// sendEmail(emaildata)
 		} else {
-			const msg =
-				'A user with username ' +
-				lc_username +
-				' or email ' +
-				lc_admin_user_email +
-				' already exists'
-			user.error = msg
+			const msg = 'A user with this username or email already exists'
+			user = { message: msg }
 			const emaildata = {
 				from: config.FROM,
 				fromName: config.FROM_NAME,
@@ -437,6 +465,7 @@ async function editOne(info) {
 				body_html: '<h3>' + msg + '</h3>',
 			}
 			// console.log(emaildata)
+			console.log('EXISTS ', msg)
 
 			// sendEmail(emaildata)
 		}
@@ -475,7 +504,10 @@ async function getApps() {
                 FROM inbrc_admin_apps
                 ORDER BY
                     admin_app_id`
+
+	console.log('in getApps sql = ', sql)
 	const apps = await doDBQuery(sql)
+	console.log('in getApps after query apps = ', apps)
 
 	return apps
 }

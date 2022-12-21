@@ -1,5 +1,7 @@
 <script setup>
 	import { useAuthStore } from '~~/stores/authStore'
+	import { useAlertStore } from '~~/stores/alertStore'
+	const alert = useAlertStore()
 	const auth = useAuthStore()
 	definePageMeta({ layout: 'admin' })
 
@@ -12,7 +14,7 @@
 	const handleSubmit = async function (state) {
 		const runtimeConfig = useRuntimeConfig()
 		// console.log('state= ', state)
-		const { error } = await useFetch('/users/addone', {
+		const { data, error } = await useFetch('/users/addone', {
 			method: 'post',
 			body: state,
 			headers: {
@@ -20,7 +22,12 @@
 			},
 		})
 
-		navigateTo('/admin/users')
+		console.log('in handlesubmit data.value.message = ', data.value.message)
+		if (data.value.message) {
+			alert.error(data.value.message)
+		} else {
+			navigate('/admin/users')
+		}
 	}
 </script>
 
@@ -29,11 +36,15 @@
 		<Head>
 			<Title>Add User</Title>
 		</Head>
-		<div class="text-center m-5 display-6">
-			<b>Add User</b>
+		<common-header title="Add User" />
+
+		<div v-if="alert.message" :class="`alert ${alert.type}`">
+			{{ alert.message }}
 		</div>
-		<p v-if="error">error.message</p>
 		<my-user-form @submitted="onSubmit" />
+		<div v-if="alert.message" :class="`alert ${alert.type}`">
+			{{ alert.message }}
+		</div>
 	</div>
 </template>
 

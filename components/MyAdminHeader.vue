@@ -1,14 +1,24 @@
 <template>
+	<!-- <div v-if="alert.message" :class="`alert ${alert.type}`">
+		{{ alert.message }}
+	</div>
+	<div v-else> -->
 	<nav class="fixed-top">
 		<Menubar :model="items" class="p-menubar"> </Menubar>
 	</nav>
+	<!-- </div> -->
 </template>
 
 <script setup>
 	import Menubar from 'primevue/menubar'
+	// import { useAlertStore } from '~~/stores/alertStore'
+	import { useAuthStore } from '~~/stores/authStore'
+	// const alert = useAlertStore()
+	const auth = useAuthStore()
 
 	const checkPerm = (app) => {
-		const user = JSON.parse(sessionStorage.getItem('auth'))
+		// const user = JSON.parse(sessionStorage.getItem('auth'))
+		const user = auth.user
 		const temp = user.perms
 		const perms = temp.find(function (u) {
 			return u.admin_app_name === app

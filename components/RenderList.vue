@@ -6,7 +6,6 @@
 					<div class="text-center mb-2">
 						<p>Now: {{ $dayjs() }}</p>
 						{{ datalocal.length }} Records
-						<p>CurrentPage = {{ CurrentPage }}</p>
 					</div>
 					<nav class="justify-content-center">
 						<b-pagination

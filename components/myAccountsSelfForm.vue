@@ -80,11 +80,11 @@
 				type="tel"
 				label="Phone number"
 				name="account_addr_phone"
-				placeholder="xxx-xxx-xxxx"
+				placeholder="1-###-###-####"
 				v-model="state.account_addr_phone"
-				validation="required | matches:/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/"
+				validation="required | matches:/^[1]{1}-[0-9]{3}-[0-9]{3}-[0-9]{4}$/"
 				:validation-messages="{
-					matches: 'Phone number must be in the format xxx-xxx-xxxx',
+					matches: 'Phone number must be in the format 1-###-###-####',
 				}"
 			/>
 			<FormKit
@@ -220,17 +220,17 @@
 
 <style>
 	.formkit-inner {
-		background-color: rgba(255, 255, 255, 0.3);
-	}
-	[data-complete] .formkit-inner {
-		border-color: rgb(0, 255, 0);
-		box-shadow: 0 0 0 1px green;
+		background-color: rgba(255, 255, 255, 0.5);
 	}
 	[data-invalid] .formkit-inner {
 		border-color: red;
 		box-shadow: 0 0 0 1px red;
 	}
 
+	[data-complete] .formkit-inner {
+		border-color: red;
+		box-shadow: 0 0 0 1px green;
+	}
 	[data-complete] .formkit-inner::after {
 		content: '✅';
 		display: block;

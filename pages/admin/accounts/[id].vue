@@ -1,5 +1,7 @@
 <script setup>
 	import { useAuthStore } from '~~/stores/authStore'
+	import { useAlertStore } from '~~/stores/alertStore'
+	const alert = useAlertStore()
 	const auth = useAuthStore()
 	definePageMeta({ layout: 'admin' })
 	const route = useRoute()
@@ -15,15 +17,19 @@
 	}
 
 	const handleSubmit = async function (state) {
-		const runtimeConfig = useRuntimeConfig()
-		const { pending, error } = await useFetch('/accounts/editone', {
+		const { data, pending, error } = await useFetch('/accounts/editone', {
 			method: 'post',
 			body: state,
 			headers: {
 				authorization: auth.user.token,
 			},
 		})
-		navigate('/admin/accounts')
+		console.log('in handlesubmit data.value.message = ', data.value.message)
+		if (data.value.message) {
+			alert.error(data.value.message)
+		} else {
+			navigate('/admin/accounts')
+		}
 	}
 </script>
 
@@ -32,10 +38,15 @@
 		<Head>
 			<Title>Edit Account {{ id }}</Title>
 		</Head>
-		<div class="text-center m-5 display-6">
-			<b>Edit Account</b>
+		<common-header title="Edit account" />
+
+		<div v-if="alert.message" :class="`alert ${alert.type}`">
+			{{ alert.message }}
 		</div>
 
 		<my-accounts-form :id="id" @submitted="onSubmit" />
+		<div v-if="alert.message" :class="`alert ${alert.type}`">
+			{{ alert.message }}
+		</div>
 	</div>
 </template>

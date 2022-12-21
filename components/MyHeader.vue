@@ -19,6 +19,11 @@
 			to: '/loginpage',
 		},
 		{
+			label: 'Register',
+			icon: 'pi pi-fw pi-user',
+			to: '/register',
+		},
+		{
 			label: 'Examples',
 			icon: 'pi pi-fw pi-bookmark',
 			items: [

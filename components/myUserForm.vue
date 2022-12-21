@@ -78,7 +78,6 @@
 								class="form-control"
 							/>
 							<span v-if="required" class="error">Password required</span>
-							<p>Password ={{ form_state.password }}</p>
 						</div>
 					</div>
 
@@ -120,7 +119,10 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr v-for="(item, index) in apps" :key="item.admin_app_id">
+									<tr
+										v-for="(item, index) in apps_data"
+										:key="item.admin_app_id"
+									>
 										<td class="text-end">{{ item.admin_app_name }} :</td>
 										<td>
 											<div class="form-check">
@@ -182,10 +184,6 @@
 					</button>
 				</div>
 			</form>
-			<details>
-				<summary>Form state</summary>
-				<pre>{{ form_state }}</pre>
-			</details>
 		</div>
 	</div>
 </template>
@@ -227,7 +225,7 @@
 	// console.log('apps_data= ', apps_data)
 	// const apps = apps_data.value
 
-	const apps = [
+	/* 	const apps = [
 		{
 			admin_app_id: 1,
 			admin_app_name: 'settings',
@@ -285,7 +283,7 @@
 			admin_app_name: 'newsletters_archive',
 		},
 	]
-
+ */
 	// initlaize form ////////////////////////////
 	// get users id if editing
 	const props = defineProps({

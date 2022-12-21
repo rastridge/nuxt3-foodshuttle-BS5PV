@@ -3,15 +3,20 @@
 		<Head>
 			<Title>Edit User {{ id }}</Title>
 		</Head>
-		<div class="text-center m-5 display-6">
-			<b>Edit User</b>
+		<common-header title="Edit users" />
+
+		<div v-if="alert.message" :class="`alert ${alert.type}`">
+			{{ alert.message }}
 		</div>
+
 		<my-user-form :id="id" @submitted="onSubmit" />
 	</div>
 </template>
 
 <script setup>
 	import { useAuthStore } from '~~/stores/authStore'
+	import { useAlertStore } from '~~/stores/alertStore'
+	const alert = useAlertStore()
 	const auth = useAuthStore()
 	definePageMeta({ layout: 'admin' })
 
@@ -29,18 +34,23 @@
 	}
 
 	const handleSubmit = async function (form_state) {
-		console.log(
+		/* 		console.log(
 			'in handleSubmit form_state = ',
 			JSON.parse(JSON.stringify(form_state))
 		)
-
-		await useFetch('/users/editone', {
+ */
+		const { data, pending, error } = await useFetch('/users/editone', {
 			method: 'post',
 			body: form_state,
 			headers: {
 				authorization: auth.user.token,
 			},
 		})
-		navigate('/admin/users')
+		console.log('in handlesubmit data.value.message = ', data.value.message)
+		if (data.value.message) {
+			alert.error(data.value.message)
+		} else {
+			navigate('/admin/users')
+		}
 	}
 </script>

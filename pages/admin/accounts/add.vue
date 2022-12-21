@@ -1,5 +1,7 @@
 <script setup>
 	import { useAuthStore } from '~~/stores/authStore'
+	import { useAlertStore } from '~~/stores/alertStore'
+	const alert = useAlertStore()
 	const auth = useAuthStore()
 	definePageMeta({ layout: 'admin' })
 
@@ -10,15 +12,19 @@
 	}
 
 	const handleSubmit = async function (state) {
-		const runtimeConfig = useRuntimeConfig()
-		await useFetch('/accounts/addone', {
+		const { data, pending, error } = await useFetch('/accounts/addone', {
 			method: 'post',
 			body: state,
 			headers: {
 				authorization: auth.user.token,
 			},
 		})
-		navigateTo('/admin/accounts')
+		console.log('in handlesubmit data.value.message = ', data.value.message)
+		if (data.value.message) {
+			alert.error(data.value.message)
+		} else {
+			navigate('/admin/accounts')
+		}
 	}
 </script>
 
@@ -27,11 +33,17 @@
 		<Head>
 			<Title>Add Account</Title>
 		</Head>
-		<div class="text-center m-5 display-6">
-			<b>Add Account</b>
+		<common-header title="Add account" />
+
+		<div v-if="alert.message" :class="`alert ${alert.type}`">
+			{{ alert.message }}
 		</div>
 
 		<my-accounts-form @submitted="onSubmit" />
+
+		<div v-if="alert.message" :class="`alert ${alert.type}`">
+			{{ alert.message }}
+		</div>
 	</div>
 </template>
 

@@ -1,8 +1,8 @@
 <template>
 	<div class="register">
 		<common-header title="Register" />
-		<div v-if="alert.messages" :class="`alert ${alert.types}`">
-			{{ alert.messages }}
+		<div v-if="alert.message" :class="`alert ${alert.type}`">
+			{{ alert.message }}
 		</div>
 
 		<my-accounts-self-form @submitted="handleSubmit" />
@@ -48,7 +48,6 @@
 <script setup>
 	import { useAuthStore } from '~~/stores/authStore'
 	import { useAlertStore } from '~~/stores/alertStore'
-	const auth = useAuthStore()
 	const alert = useAlertStore()
 	const router = useRouter()
 
@@ -83,9 +82,10 @@
 			method: 'post',
 			body: state,
 			headers: {
-				authorization: auth.user.token,
+				// authorization: auth.user.token,
 			},
 		})
+		console.log('in handlesubmit data.value.message = ', data.value.message)
 		if (data.value.message) {
 			alert.error(data.value.message)
 		} else {

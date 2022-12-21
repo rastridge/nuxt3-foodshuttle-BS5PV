@@ -7,7 +7,7 @@
 		>
 			<span class="visually-hidden">Loading...</span>
 		</div>
-		<div v-else class="root">
+		<div v-else>
 			<FormKit
 				type="form"
 				:config="{ validationVisibility: 'live' }"
@@ -89,11 +89,11 @@
 					type="tel"
 					label="Phone number"
 					name="account_addr_phone"
-					placeholder="xxx-xxx-xxxx"
+					placeholder="1-###-###-####"
 					v-model="state.account_addr_phone"
-					validation="required | matches:/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/"
+					validation="required | matches:/^[1]{1}-[0-9]{3}-[0-9]{3}-[0-9]{4}$/"
 					:validation-messages="{
-						matches: 'Phone number must be in the format xxx-xxx-xxxx',
+						matches: 'Phone number must be in the format 1-###-###-####',
 					}"
 				/>
 				<FormKit
@@ -181,8 +181,8 @@
 	import '@formkit/themes/genesis'
 	import { useAuthStore } from '~~/stores/authStore'
 	const auth = useAuthStore()
-	const runtimeConfig = useRuntimeConfig()
 	const router = useRouter()
+	const { $dayjs } = useNuxtApp()
 
 	const emit = defineEmits(['submitted'])
 
@@ -268,7 +268,7 @@
 		member_lastname: 'Blow',
 
 		// member_year: this.$moment().format('YYYY'),
-		member_year: 2022,
+		member_year: $dayjs().format('YYYY'),
 		account_addr_street: '12 Cherry',
 		account_addr_street_ext: '',
 		account_addr_city: 'Buffalo',
@@ -296,7 +296,6 @@
 	// edit if there is an id - add if not
 	if (props.id !== 0) {
 		// get user with id
-		const runtimeConfig = useRuntimeConfig()
 		const {
 			data: formdata,
 			pending,
