@@ -191,6 +191,12 @@
 <script setup>
 	import { useAuthStore } from '~~/stores/authStore'
 	const auth = useAuthStore()
+	const router = useRouter()
+	const navigate = (p) => {
+		return navigateTo({
+			path: p,
+		})
+	}
 
 	const form_state = ref({})
 
@@ -422,7 +428,7 @@
 		emit('submitted', form_state)
 	}
 	const cancelForm = () => {
-		navigateTo('/admin/users')
+		navigate('/admin/users')
 	}
 </script>
 

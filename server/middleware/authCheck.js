@@ -1,28 +1,33 @@
 import jwt from 'jsonwebtoken'
-// import { useAlertStore } from '~~/stores/alertStore'
 
 export default defineEventHandler(async (event) => {
-	// const alert = useAlertStore()
 	const runtimeConfig = useRuntimeConfig()
+
 	const authorization = event.node.req.headers.authorization
 	const secretKey = runtimeConfig.apiSecret
-	// console.log('IN authCheck middleware secretKey = ', secretKey)
-	// console.log('IN authCheck middleware authorization = ', authorization)
+	const url = event.node.req.url
+	// const allowedRoutes = ['/__nuxt_error?url=', '/accounts', '/users', '/news]
+	const securedRoutes = ['/__nuxt_error?url=', '/accounts', '/users', '/news']
+	const api = url.slice(url.indexOf('/'), url.lastIndexOf('/'))
+	const isNuxt_error = api.search('/__nuxt_error') >= 0 ? true : false
+	// const isAllowedRoute = allowedRoutes.includes(api)
+	const isSecuredRoute = securedRoutes.includes(api)
 
-	if (authorization) {
-		// console.log(' IN authCheck verify jwt ')
-		const ok = await jwt.verify(
-			authorization,
-			secretKey,
-			function (err, decoded) {
-				// console.log(' IN authCheck err or decoded = ', err, decoded)
-				// if (err) {
-				// 	alert.error(err)
-				// }
+	console.log('secretKey = ', secretKey)
+	console.log('authorization = ', authorization)
+	console.log('request url: ', url)
+	console.log('isSecuredRoute = ', isSecuredRoute)
+	console.log('isNuxt_error = ', isNuxt_error)
+
+	if (isSecuredRoute && authorization !== 'not-needed' && !isNuxt_error)
+		await jwt.verify(authorization, secretKey, function (err, decoded) {
+			// await jwt.verify(authorization, 'fsdfsd', function (err, decoded) {
+			console.log('err or decoded = ', err, decoded)
+			if (err) {
+				throw createError({
+					statusCode: 500,
+					statusMessage: err,
+				})
 			}
-		)
-	} else {
-		// no authorization
-		// console.log('IN authCheck middleware NO authorization')
-	}
+		})
 })

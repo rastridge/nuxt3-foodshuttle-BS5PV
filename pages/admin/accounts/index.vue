@@ -6,6 +6,7 @@
 		<div class="text-center m-5 display-6">
 			<b>Account List</b>
 		</div>
+
 		<div class="text-center m-5">
 			<nuxt-link class="btn btn-primary" to="/admin/accounts/add"
 				>Add Account</nuxt-link
@@ -24,13 +25,20 @@
 		/>
 	</div>
 </template>
+
 <script setup>
 	import { useAuthStore } from '~~/stores/authStore'
 	const auth = useAuthStore()
 	definePageMeta({ layout: 'admin' })
 	const router = useRouter()
+	const navigate = (p) => {
+		return navigateTo({
+			path: p,
+		})
+	}
 
 	const app = 'accounts'
+
 	let editable = false
 	let addable = false
 	let deleteable = false
@@ -62,7 +70,7 @@
 		statusable = false
 		viewable = true
 	} else {
-		navigateTo('/admin') // no access
+		navigate('/admin') // no access
 	}
 
 	const {
@@ -75,6 +83,7 @@
 		method: 'get',
 		headers: {
 			authorization: auth.user.token,
+			// authorization: 'not-needed',
 		},
 	})
 

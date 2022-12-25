@@ -35,8 +35,13 @@
 </template>
 
 <script setup>
-	const runtimeConfig = useRuntimeConfig()
 	const emit = defineEmits(['submitted'])
+	const router = useRouter()
+	const navigate = (p) => {
+		return navigateTo({
+			path: p,
+		})
+	}
 
 	// initialize formkit state
 	const state = reactive({
@@ -49,7 +54,7 @@
 	}
 
 	const cancelForm = () => {
-		navigateTo('/loginpage')
+		navigate('/loginpage')
 	}
 </script>
 

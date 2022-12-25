@@ -35,12 +35,20 @@
 
 <script setup>
 	import { userService } from '@/services/'
-	const route = useRoute()
+
+	const router = useRouter()
+	const navigate = (p) => {
+		return navigateTo({
+			path: p,
+		})
+	}
+
 	const password = ref('')
 	const password_confirm = ref('')
 	const username = ref(route.params.username)
+
 	const submitHandler = () => {
 		userService.resetPassword(username.value, password.value)
-		navigateTo('/loginpage')
+		navigate('/loginpage')
 	}
 </script>

@@ -1,4 +1,4 @@
-import { accountsService } from '~~/server/services/accountsService'
+import { newsService } from '~~/server/services/newsService'
 
 export default defineEventHandler(async (event) => {
 	const runtimeConfig = useRuntimeConfig()
@@ -7,5 +7,5 @@ export default defineEventHandler(async (event) => {
 	console.log('IN addOne secretKey = ', secretKey)
 	console.log('IN addOne authorization = ', authorization)
 	const body = await readBody(event)
-	return accountsService.addOne(body)
+	return newsService.addOne(body)
 })

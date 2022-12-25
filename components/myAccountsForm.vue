@@ -181,9 +181,13 @@
 	import '@formkit/themes/genesis'
 	import { useAuthStore } from '~~/stores/authStore'
 	const auth = useAuthStore()
-	const router = useRouter()
 	const { $dayjs } = useNuxtApp()
-
+	const router = useRouter()
+	const navigate = (p) => {
+		return navigateTo({
+			path: p,
+		})
+	}
 	const emit = defineEmits(['submitted'])
 
 	const props = defineProps({
@@ -233,35 +237,7 @@
 		return result
 	}
 	const memberTypeOptions = getMemberTypeOptions(memberTypes.value)
-	/*
-	// initialize formkit state
-	const state = reactive({
-		account_email: '',
-		member_firstname: '',
-		member_lastname: '',
 
-		member_year: 2022,
-		account_addr_street: '',
-		account_addr_street_ext: '',
-		account_addr_city: '',
-		account_addr_state: '',
-		account_addr_country: '',
-		account_addr_postal: '',
-		account_addr_phone: '',
-
-		member_show_phone: 1,
-		member_show_addr: 1,
-		newsletter_recipient: 1,
-		mail_recipient: 1,
-		sms_recipient: 1,
-
-		member_type_id: '',
-		member_type2_id: '',
-		member_admin_type_id: '',
-		member_admin_type2_id: '',
-		account_id: '',
-	})
-	*/
 	const state = reactive({
 		account_email: 'joe@net.com',
 		member_firstname: 'Joe',
@@ -340,7 +316,7 @@
 	}
 
 	const cancelForm = () => {
-		navigateTo('/admin/accounts') // needs to be / for self register
+		navigate('/admin/accounts') // needs to be / for self register
 	}
 </script>
 

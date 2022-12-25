@@ -28,7 +28,7 @@ async function getMemberTypes() {
 	const { data } = await useFetch('/accounts/membertypes', {
 		method: 'get',
 		headers: {
-			authorization: auth.user.token,
+			authorization: 'not-needed',
 		},
 	})
 	return data

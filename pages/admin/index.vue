@@ -12,6 +12,10 @@
 	import { useAuthStore } from '~~/stores/authStore'
 	const auth = useAuthStore()
 	definePageMeta({ layout: 'admin' })
+	// if (!auth.isLoggedIn) {
+	// 	navigateTo('/loginpage')
+	// }
+
 	const sess = JSON.parse(sessionStorage.getItem('auth'))
 </script>
 

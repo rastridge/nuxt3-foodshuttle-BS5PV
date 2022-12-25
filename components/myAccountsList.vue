@@ -76,9 +76,12 @@
 	const statusable = false
 	const viewable = true
 
-	const runtimeConfig = useRuntimeConfig()
 	const router = useRouter()
-
+	const navigate = (p) => {
+		return navigateTo({
+			path: p,
+		})
+	}
 	const {
 		data: accounts,
 		pending,
@@ -93,7 +96,7 @@
 	})
 
 	const updateAccount = (id) => {
-		navigateTo(`/admin/accounts/${id}`)
+		navigate(`/admin/accounts/${id}`)
 	}
 	const deleteFromDB = async (id) => {
 		const { pending, error, refresh } = await useFetch(`/accounts/${id}`, {

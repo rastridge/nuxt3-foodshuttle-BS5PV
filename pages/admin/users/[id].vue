@@ -23,6 +23,8 @@
 	const route = useRoute()
 	const id = ref(route.params.id)
 	const runtimeConfig = useRuntimeConfig()
+
+	const router = useRouter()
 	const navigate = (p) => {
 		return navigateTo({
 			path: p,

@@ -48,20 +48,25 @@
 <script setup>
 	import { userService } from '@/services'
 	const router = useRouter()
+	const navigate = (p) => {
+		return navigateTo({
+			path: p,
+		})
+	}
 
 	// initialize formkit state
 	const state = ref({
 		username: '',
 	})
 	const cancelForm = () => {
-		navigateTo('/loginpage')
+		navigate('/loginpage')
 	}
 	const handleSubmit = function (state) {
 		userService.resetRequest(state.username).then((result) => {
 			if (!result.error) {
-				navigateTo('/loginpage')
+				navigate('/loginpage')
 			} else {
-				navigateTo('/loginpage')
+				navigate('/loginpage')
 
 				// this.submitStatus = 'ERROR'
 				// this.error = username.error

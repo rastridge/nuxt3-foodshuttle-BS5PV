@@ -98,8 +98,6 @@ async function addOne(info) {
 		// console.log('START TRANSACTION')
 
 		if (!account) {
-			// console.log('2a')
-
 			let sql = `INSERT INTO inbrc_accounts
 							SET
 									account_email = ?,
@@ -207,7 +205,6 @@ async function addOne(info) {
 			}
 			// sendEmail(emaildata)
 		} else {
-			console.log('2b')
 			const msg =
 				'An account with email ' + lc_account_email + ' already exists'
 
@@ -264,8 +261,6 @@ async function editOne(info) {
 		// console.log('START TRANSACTION')
 
 		if (!account) {
-			// console.log('2a')
-
 			let sql = `UPDATE inbrc_accounts
 							SET
 									account_email = ?,
@@ -373,7 +368,6 @@ async function editOne(info) {
 			}
 			// sendEmail(emaildata)
 		} else {
-			console.log('2b')
 			const msg =
 				'An account with email ' + lc_account_email + ' already exists'
 			account = { message: msg }

@@ -50,6 +50,11 @@
 	import { useAlertStore } from '~~/stores/alertStore'
 	const alert = useAlertStore()
 	const router = useRouter()
+	const navigate = (p) => {
+		return navigateTo({
+			path: p,
+		})
+	}
 
 	const state = reactive({
 		account_email: '',
@@ -82,14 +87,14 @@
 			method: 'post',
 			body: state,
 			headers: {
-				// authorization: auth.user.token,
+				authorization: 'not-needed',
 			},
 		})
 		console.log('in handlesubmit data.value.message = ', data.value.message)
 		if (data.value.message) {
 			alert.error(data.value.message)
 		} else {
-			navigateTo('/')
+			navigate('/')
 		}
 	}
 </script>

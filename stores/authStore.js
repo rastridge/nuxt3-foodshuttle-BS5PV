@@ -11,18 +11,33 @@ export const useAuthStore = defineStore('auth', {
 	},
 
 	actions: {
-		async login(username, password) {
-			// const runtimeConfig = useRuntimeConfig()
-			const alert = useAlertStore()
+		navigate(p) {
 			const router = useRouter()
+			return navigateTo({
+				path: p,
+			})
+		},
 
+		async login(username, password) {
+			this.loginRequest(username, password)
+		},
+
+		logout() {
+			const alert = useAlertStore()
 			alert.clear()
+			this.status = { loggedIn: false }
+			this.user = {}
+			sessionStorage.removeItem('auth')
+			this.navigate('/')
+		},
 
-			this.loginRequest(username)
-
+		async loginRequest(username, password) {
+			const alert = useAlertStore()
+			this.status = { loggedIn: false }
+			alert.attempt('Logging in . . .')
 			const user = await $fetch('/users/authenticate', {
 				headers: {
-					authorization: null,
+					authorization: 'not-needed',
 				},
 				method: 'POST',
 				body: { username, password },
@@ -37,47 +52,29 @@ export const useAuthStore = defineStore('auth', {
 			// console.log('IN Actions userService.login user.match = ', user.match)
 
 			if (user.match) {
+				this.user = user
+
 				// console.log('IN Actions userService.login user is true')
 				this.loginSuccess(user)
 			} else {
 				this.loginFailure()
 			}
 		},
-
-		logout() {
-			const router = useRouter()
-			const alert = useAlertStore()
-
-			alert.clear()
-			this.status = { loggedIn: false }
-			this.user = {}
-			sessionStorage.removeItem('auth')
-			navigateTo('/')
-		},
-
-		loginRequest(user) {
-			this.status = { loggedIn: false }
-			this.user = user
-			const alert = useAlertStore()
-			alert.attempt('Logging in . . .')
-		},
 		loginSuccess(user) {
 			this.status = { loggedIn: true }
 			this.user = user
 			sessionStorage.removeItem('auth')
 			sessionStorage.setItem('auth', JSON.stringify(user))
-			const router = useRouter()
-			navigateTo('/admin')
+			this.navigate('/admin')
 			const alert = useAlertStore()
 			alert.success('Login successful')
 		},
 		loginFailure() {
 			this.status = { loggedIn: false }
 			this.user = {}
-			const router = useRouter()
 			const alert = useAlertStore()
 			alert.error('Login failed - try again')
-			navigateTo('/loginpage')
+			this.navigate('/loginpage')
 		},
 	},
 })

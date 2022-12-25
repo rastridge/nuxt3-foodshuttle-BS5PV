@@ -216,8 +216,6 @@ async function addOne({ admin_user_name, password, admin_user_email, perms }) {
 		console.log('1b')
 
 		if (!user) {
-			console.log('2a')
-
 			// no other users with proposed username
 			sql = `INSERT INTO
 								inbrc_admin_users
@@ -272,7 +270,6 @@ async function addOne({ admin_user_name, password, admin_user_email, perms }) {
 			// console.log('4 emaildata= ', emaildata)
 			// sendEmail(emaildata)
 		} else {
-			console.log('2b')
 			const msg =
 				'A user with username ' +
 				lc_admin_user_name +
@@ -368,8 +365,6 @@ async function editOne(info) {
 		console.log('user found = ', user)
 		// if no other users with proposed username or email
 		if (!user) {
-			console.log('2b')
-
 			sql = `UPDATE inbrc_admin_users
 							SET
 									admin_user_name = ?,
@@ -378,7 +373,6 @@ async function editOne(info) {
 									modified_dt= NOW()
 							WHERE
 									admin_user_id = ?`
-			console.log('2c')
 
 			let inserts = []
 			if (password.length > 0) {
@@ -398,13 +392,10 @@ async function editOne(info) {
 					admin_user_id
 				)
 			}
-			console.log('2d')
 
 			sql = mysql.format(sql, inserts)
 			const [rows, fields] = await conn.execute(sql)
 			user = rows
-
-			console.log('2e')
 
 			// update user perms by deleting old - creating new
 			sql = `DELETE
@@ -414,7 +405,6 @@ async function editOne(info) {
 							admin_user_id = ${admin_user_id}`
 
 			await conn.execute(sql)
-			console.log('2f')
 
 			// update perms
 			// loop through existing perms array
@@ -433,7 +423,6 @@ async function editOne(info) {
 									${value.admin_perm}
 								)`
 				await conn.execute(sql)
-				console.log('2g')
 			}
 			const msg =
 				'The account for admin user ' +
@@ -505,9 +494,9 @@ async function getApps() {
                 ORDER BY
                     admin_app_id`
 
-	console.log('in getApps sql = ', sql)
+	// console.log('in getApps sql = ', sql)
 	const apps = await doDBQuery(sql)
-	console.log('in getApps after query apps = ', apps)
+	// console.log('in getApps after query apps = ', apps)
 
 	return apps
 }

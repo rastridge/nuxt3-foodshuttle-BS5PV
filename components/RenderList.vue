@@ -1,24 +1,23 @@
 <template>
 	<div>
+		<!-- <p>datalocal = {{ datalocal }}</p> -->
+		<!-- <p>pagedData 1st record id = {{ pagedData }}</p> -->
+		<!-- <p>pagedData length = {{ pagedData.length }}</p> -->
+		<!-- <p>PerPage = {{ PerPage }}</p> -->
 		<div v-if="viewable">
 			<div v-if="datalocal.length">
-				<div class="paging">
-					<div class="text-center mb-2">
-						<p>Now: {{ $dayjs() }}</p>
-						{{ datalocal.length }} Records
-					</div>
-					<nav class="justify-content-center">
-						<b-pagination
-							v-model="CurrentPage"
-							:total-rows="Rows"
-							:per-page="PerPage"
-							first-text="First"
-							prev-text="Prev"
-							next-text="Next"
-							last-text="Last"
-							update:modelValue
-						></b-pagination>
-					</nav>
+				<div class="mb-2">
+					<p>{{ datalocal.length }} Records</p>
+					<b-pagination
+						v-model="CurrentPage"
+						:total-rows="Rows"
+						:per-page="PerPage"
+						first-text="First"
+						prev-text="Prev"
+						next-text="Next"
+						last-text="Last"
+						update:modelValue
+					></b-pagination>
 				</div>
 
 				<div class="table-box">
@@ -37,16 +36,6 @@
 									<a
 										@click="changeStatus({ id: item.id, status: item.status })"
 									>
-										<!-- 										<i
-											v-if="item.status === 1"
-											class="bi-arrow-up"
-											style="font-size: 1rem; color: black"
-										></i>
-										<i
-											v-else
-											class="bi-arrow-down"
-											style="font-size: 1rem; color: black"
-										></i> -->
 										<button class="btn btn-success btn-sm">
 											{{ item.status ? 'Yes' : 'No' }}
 										</button>
@@ -60,17 +49,11 @@
 										:to="'/admin/' + app + '/' + item.id"
 									>
 										<button class="btn btn-warning btn-sm">Edit</button>
-										<!-- 										<i
-											class="bi-pencil-square"
-											style="font-size: 1rem; color: black"
-										></i> -->
 									</nuxt-link>
 								</b-td>
 								<b-td v-if="deleteable">
 									<a @click="deleteItem(item.id)">
 										<button class="btn btn-danger btn-sm">Delete</button>
-
-										<!-- <i class="bi-trash" style="font-size: 1rem; color: red"></i> -->
 									</a>
 								</b-td>
 							</b-tr>
@@ -79,15 +62,17 @@
 				</div>
 			</div>
 			<div v-else>
-				<div class="row">
-					<div class="col text-center">No Records</div>
-				</div>
+				<div class="text-center">No Records Available</div>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script setup>
+	// make date functions available
+	const { $dayjs } = useNuxtApp()
+
+	// input
 	const props = defineProps({
 		data: { type: Array, required: true },
 		pagesize: { type: Number, default: 15, required: false },
@@ -97,23 +82,33 @@
 		deleteable: { type: Boolean, default: false, required: false },
 		viewable: { type: Boolean, default: false, required: false },
 	})
+	// output
 	const emit = defineEmits(['changeStatus', 'deleteItem'])
-	const { $dayjs } = useNuxtApp()
-	const datalocal = ref(props.data)
+
+	// Initial settings for pagination
+	const PerPage = 10
+	const Rows = props.data.length
 	const CurrentPage = ref(1)
-	const PerPage = ref(10)
-	const Rows = ref(datalocal.value.length)
+
+	// make local copy of input data
+	const datalocal = computed(() => props.data)
+
+	// choose records for paginated display
+	// Initial value
 	const pagedData = ref(
 		datalocal.value.slice(
-			(CurrentPage.value - 1) * PerPage.value,
-			CurrentPage.value * PerPage.value
+			(CurrentPage.value - 1) * PerPage,
+			CurrentPage.value * PerPage
 		)
 	)
 
-	watch(CurrentPage, () => {
+	// choose records for paginated display
+	// update pagedData as CurrrentPage changes
+	watchEffect(() => {
+		// console.log('IN WATCH')
 		pagedData.value = datalocal.value.slice(
-			(CurrentPage.value - 1) * PerPage.value,
-			CurrentPage.value * PerPage.value
+			(CurrentPage.value - 1) * PerPage,
+			CurrentPage.value * PerPage
 		)
 	})
 
@@ -130,7 +125,7 @@
 		if (confirm('Are you sure you want to delete this?')) {
 			// in browser
 			datalocal.value = datalocal.value.filter((u) => u.id !== id)
-			pagedData.value = pagedData.value.filter((u) => u.id !== id)
+			// pagedData.value = pagedData.value.filter((u) => u.id !== id)
 			// in database
 			emit('deleteItem', id)
 		}

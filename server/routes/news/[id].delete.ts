@@ -1,9 +1,9 @@
-import { accountsService } from '~~/server/services/accountsService'
+import { newsService } from '~~/server/services/newsService'
 
 export default defineEventHandler(async (event) => {
 	const config = useRuntimeConfig()
 	const headers = event.node.req.headers
 
 	const id = event.context.params.id
-	return accountsService.deleteOne(id)
+	return newsService.deleteOne(id)
 })

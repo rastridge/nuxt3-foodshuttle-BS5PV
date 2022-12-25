@@ -1,20 +1,22 @@
 <template>
 	<div>
 		<Head>
-			<Title>Admin Users List</Title>
+			<Title>News Items List</Title>
 		</Head>
-		<!-- <p>Page visits: {{ count }}</p> -->
-
 		<div class="text-center m-5 display-6">
-			<b>Users List</b>
+			<b>News Items List</b>
 		</div>
-		<div class="text-center m-5">
-			<nuxt-link class="btn btn-primary" to="/admin/users/add"
-				>Add User</nuxt-link
+		<!-- 		<div class="text-center m-5">
+			<nuxt-link class="btn btn-primary" to="/admin/news/add"
+				>Add News Item</nuxt-link
 			>
-		</div>
+		</div> -->
+		<span v-if="error" class="text-danger">ERROR: {{ error }}</span>
+		<!-- startyear {{ startyear }} -->
+		<select-year :startyear="startyear" @submitted="onSubmit" />
+
 		<render-list
-			:data="users"
+			:data="filteredData"
 			:app="app"
 			:statusable="statusable"
 			:editable="editable"
@@ -26,28 +28,26 @@
 		/>
 	</div>
 </template>
+
 <script setup>
 	import { useAuthStore } from '~~/stores/authStore'
 	const auth = useAuthStore()
+	const { $dayjs } = useNuxtApp()
 
 	definePageMeta({ layout: 'admin' })
 
-	const router = useRouter()
-	const navigate = (p) => {
-		return navigateTo({
-			path: p,
-		})
-	}
-
-	const app = 'users'
+	const app = 'news'
+	const startyear = ref(2020)
+	let year = ref(parseInt($dayjs().format('YYYY')))
+	// let year = ref(2021)
 	let editable = false
 	let addable = false
 	let deleteable = false
 	let statusable = false
 	let viewable = true
-	// get perms for admin user
-	const admin = JSON.parse(sessionStorage.getItem('auth'))
-	const temp = admin.perms
+
+	const user = JSON.parse(sessionStorage.getItem('auth'))
+	const temp = user.perms
 	const perms = temp.find((u) => u.admin_app_name === app)
 	if (perms.admin_perm === 3) {
 		// all access
@@ -71,23 +71,37 @@
 		statusable = false
 		viewable = true
 	} else {
-		navigate('/admin') // no access
+		navigateTo('/admin') // no access
+	}
+
+	const onSubmit = function (value) {
+		// console.log('in onSubmit value = ', value)
+		year.value = value
 	}
 
 	const {
-		data: users,
+		data: news,
 		pending,
 		error,
 		refresh,
-	} = await useFetch('/users/getall', {
+	} = await useFetch('/news/getall', {
 		initialCache: false,
 		method: 'get',
 		headers: {
 			authorization: auth.user.token,
 		},
 	})
+
+	const filteredData = computed(() => {
+		return news.value.filter((d) => {
+			return parseInt($dayjs(d.dt).format('YYYY')) === year.value
+		})
+	})
+
+	// const checkYear = (dt) => parseInt(dayjs(dt).format('YYYY')) === year.value
+
 	const deleteItem = async (id) => {
-		const { pending, error, refresh } = await useFetch(`/users/${id}`, {
+		const { pending, error, refresh } = await useFetch(`/news/${id}`, {
 			method: 'delete',
 			headers: {
 				authorization: auth.user.token,
@@ -96,7 +110,7 @@
 	}
 
 	const changeStatus = async ({ id, status }) => {
-		const { pending, error, refresh } = await useFetch(`/users/status`, {
+		const { pending, error, refresh } = await useFetch(`/news/status`, {
 			method: 'POST',
 			headers: {
 				authorization: auth.user.token,

@@ -6,7 +6,11 @@
 	definePageMeta({ layout: 'admin' })
 
 	const router = useRouter()
-
+	const navigate = (p) => {
+		return navigateTo({
+			path: p,
+		})
+	}
 	const onSubmit = function (state) {
 		handleSubmit(state)
 	}
