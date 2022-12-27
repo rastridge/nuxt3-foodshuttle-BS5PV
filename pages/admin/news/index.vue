@@ -6,13 +6,12 @@
 		<div class="text-center m-5 display-6">
 			<b>News Items List</b>
 		</div>
-		<!-- 		<div class="text-center m-5">
+		<div class="text-center m-5">
 			<nuxt-link class="btn btn-primary" to="/admin/news/add"
 				>Add News Item</nuxt-link
 			>
-		</div> -->
+		</div>
 		<span v-if="error" class="text-danger">ERROR: {{ error }}</span>
-		<!-- startyear {{ startyear }} -->
 		<select-year :startyear="startyear" @submitted="onSubmit" />
 
 		<render-list
@@ -102,7 +101,7 @@
 
 	const deleteItem = async (id) => {
 		const { pending, error, refresh } = await useFetch(`/news/${id}`, {
-			method: 'delete',
+			method: 'DELETE',
 			headers: {
 				authorization: auth.user.token,
 			},

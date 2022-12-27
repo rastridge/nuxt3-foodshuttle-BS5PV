@@ -7,6 +7,13 @@ export default defineNuxtConfig({
 		'@pinia/nuxt',
 	],
 
+	dayjs: {
+		locales: ['en'],
+		defaultLocale: 'en',
+		defaultTimeZone: 'America/New_York',
+		plugins: ['utc', 'timezone'],
+	},
+
 	css: [
 		'bootstrap/dist/css/bootstrap.css',
 		'primevue/resources/themes/saga-blue/theme.css',

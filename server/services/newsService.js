@@ -38,6 +38,7 @@ async function getAll() {
 									news_event_dt,
 									news_event_dt as dt,
 									news_expire_dt,
+									news_release_dt,
 									news_synop,
 									status
                 FROM
@@ -86,11 +87,6 @@ async function getPage(pg) {
 }
 
 async function getAllCurrent() {
-	/*
-	fs.appendFile('/home/rastridge/api.buffalorugby.org/logs/getAllCurrent.txt', 'in getAllCurrent', function (err) {
-		if (err) throw err;
-	})
-	*/
 	const sql = `SELECT
 										news_id,
 										news_id as id,
@@ -99,6 +95,7 @@ async function getAllCurrent() {
                     news_event_dt,
                     news_event_dt as dt,
                     news_expire_dt,
+                    news_release_dt,
                     status,
                     news_synop,
                     news_article
@@ -112,7 +109,6 @@ async function getAllCurrent() {
                     DATEDIFF( CURDATE(), news_expire_dt)  <=  0
 
                 ORDER BY dt DESC`
-
 	const news = await doDBQuery(sql)
 	return news
 }
@@ -120,7 +116,7 @@ async function getAllCurrent() {
 async function getOne(id) {
 	const sql = `select * from inbrc_news where news_id = ` + id
 
-	news = await doDBQuery(sql)
+	const news = await doDBQuery(sql)
 
 	return news[0]
 }
@@ -158,16 +154,14 @@ async function addOne({
 }
 
 async function deleteOne(id) {
-	const sql =
-		`UPDATE inbrc_news SET deleted=1, deleted_dt= NOW() WHERE news_id = ` + id
-	news = await doDBQuery(sql)
+	const sql = `UPDATE inbrc_news SET deleted = 1, deleted_dt = NOW() WHERE news_id = ${id}`
+	const news = await doDBQuery(sql)
 
 	return news
 }
 
 async function changeStatus({ id, status }) {
-	const sql =
-		`UPDATE inbrc_news SET status = "` + status + `" WHERE news_id = ` + id
+	const sql = `UPDATE inbrc_news SET status = ${status} WHERE news_id = ${id}`
 	const news = await doDBQuery(sql)
 
 	return news

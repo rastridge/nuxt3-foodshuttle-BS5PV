@@ -14,14 +14,9 @@
 			to: '/',
 		},
 		{
-			label: 'Login',
-			icon: 'pi pi-fw pi-user',
-			to: '/loginpage',
-		},
-		{
-			label: 'Register',
-			icon: 'pi pi-fw pi-user',
-			to: '/register',
+			label: 'News',
+			icon: 'pi pi-fw pi-bookmark',
+			to: '/news',
 		},
 		{
 			label: 'Examples',
@@ -44,6 +39,16 @@
 					to: '/editor',
 				},
 			],
+		},
+		{
+			label: 'Register',
+			icon: 'pi pi-fw pi-user',
+			to: '/register',
+		},
+		{
+			label: 'Login',
+			icon: 'pi pi-fw pi-user',
+			to: '/loginpage',
 		},
 	]
 </script>

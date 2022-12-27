@@ -125,7 +125,7 @@
 		if (confirm('Are you sure you want to delete this?')) {
 			// in browser
 			datalocal.value = datalocal.value.filter((u) => u.id !== id)
-			// pagedData.value = pagedData.value.filter((u) => u.id !== id)
+			pagedData.value = pagedData.value.filter((u) => u.id !== id)
 			// in database
 			emit('deleteItem', id)
 		}
