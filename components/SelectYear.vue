@@ -1,21 +1,18 @@
 <template>
 	<div>
-		<form>
-			<div class="row form-group justify-content-center">
-				<div class="col-sm-4">
-					<b-form-select
-						v-model="year"
-						:options="years"
-						class="form-control text-center"
-						@change="setYear($event)"
-					></b-form-select>
-				</div>
-			</div>
-		</form>
+		<Dropdown
+			v-model="year"
+			:options="years"
+			optionLabel="label"
+			optionValue="value"
+			placeholder="Select a Year"
+		/>
+		<!-- year = {{ year }} years = {{ years }} -->
 	</div>
 </template>
 
 <script setup>
+	import Dropdown from 'primevue/dropdown'
 	const { $dayjs } = useNuxtApp()
 
 	const props = defineProps({
@@ -24,25 +21,38 @@
 			required: true,
 		},
 	})
-	console.log('startyear= ', props.startyear)
+	const emit = defineEmits(['submitted'])
 
+	// needed for dropdown
 	const year = ref($dayjs().format('YYYY'))
-
 	const years = computed(() => {
 		{
 			const years = [] // array of numbers
 			const thisyear = parseInt($dayjs().format('YYYY'))
 			for (let year = props.startyear; year <= thisyear + 1; year++) {
-				years.push(year)
+				years.push({ label: year, value: year })
 			}
 			return years
 		}
 	})
-	const emit = defineEmits(['submitted'])
-
-	const setYear = (value) => {
-		emit('submitted', value)
+	const setYear = (yr) => {
+		emit('submitted', yr)
 		// this.$store.commit('pagination/saveyear', value)
 		// this.$store.commit('pagination/savepage', '1')
 	}
+
+	// for some reason @change does not work
+	watch(year, () => setYear(year.value))
 </script>
+
+<style lang="scss" scoped>
+	.p-treeselect {
+		width: 20rem;
+	}
+
+	@media screen and (max-width: 640px) {
+		.p-treeselect {
+			width: 100%;
+		}
+	}
+</style>
