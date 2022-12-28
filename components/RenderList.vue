@@ -69,19 +69,16 @@
 				</DataTable>
 			</div>
 		</div>
-		<!-- 
+
 		<Dialog
 			v-model:visible="deleteProductDialog"
 			:style="{ width: '450px' }"
-			header="Confirm"
+			header="Confirm deletion"
 			:modal="true"
 		>
 			<div class="confirmation-content">
 				<i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
-				<span v-if="product"
-					>Are you sure you want to delete <b>{{ product.name }}</b
-					>?</span
-				>
+				<span>Are you sure you want to delete this record? >?</span>
 			</div>
 
 			<template #footer>
@@ -95,11 +92,10 @@
 					label="Yes"
 					icon="pi pi-check"
 					class="p-button-text"
-					@click="deleteItem"
+					@click="confirmedDelete(itemId)"
 				/>
 			</template>
 		</Dialog>
-		 -->
 	</div>
 </template>
 
@@ -120,17 +116,20 @@
 	// output
 	const emit = defineEmits(['changeStatus', 'deleteItem'])
 
+	// make local copy of input data
+	const datalocal = ref(props.data)
+
 	// Initial settings for pagination
 	const perPage = 10
 
-	// watch(props.data, () => {
-	// 	alert('IN WATCH')
-	// 	datalocal.value = props.data
-	// })
-
-	// make local copy of input data
-	const datalocal = ref(props.data)
+	// Initial settings for dialog
+	const itemId = ref('')
 	const deleteProductDialog = ref(false)
+
+	watchEffect(() => {
+		// alert('IN WATCH')
+		datalocal.value = props.data
+	})
 
 	const changeStatus = ({ id, status }) => {
 		status = status ? 0 : 1
@@ -141,12 +140,16 @@
 		emit('changeStatus', { id, status })
 	}
 	const deleteItem = (id) => {
-		if (confirm('Are you sure you want to delete this?')) {
-			// in browser
-			datalocal.value = datalocal.value.filter((u) => u.id !== id)
-			// in database
-			emit('deleteItem', id)
-		}
+		itemId.value = id
+		deleteProductDialog.value = true
+	}
+	const confirmedDelete = (id) => {
+		deleteProductDialog.value = false
+
+		// in browser
+		datalocal.value = datalocal.value.filter((u) => u.id !== id)
+		// in database
+		emit('deleteItem', id)
 	}
 </script>
 

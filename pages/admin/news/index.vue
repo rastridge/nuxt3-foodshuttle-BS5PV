@@ -12,7 +12,7 @@
 			>
 		</div>
 		<span v-if="error" class="text-danger">ERROR: {{ error }}</span>
-		<select-year :startyear="startyear" @submitted="onSubmit" />
+		<select-year :startyear="startyear" @submitted="onSubmit" class="mb-3" />
 
 		<render-list
 			:data="filteredData"
