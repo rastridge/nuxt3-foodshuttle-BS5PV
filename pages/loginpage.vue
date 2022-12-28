@@ -1,6 +1,6 @@
 <template>
 	<div id="loginpage">
-		<div class="row">
+		<div class="grid">
 			<div class="col">
 				<div class="loginbox">
 					<div v-if="alert.message" :class="`alert ${alert.type}`">
@@ -33,13 +33,12 @@
 							</b-form-group>
 						</b-form>
 						<div class="center-content">
-							<b-button
-								size="md"
-								variant="primary"
+							<Button
+								class="p-button-sm"
 								:disabled="auth.loggingIn"
 								@click.prevent="handleSubmit"
 								>Login
-							</b-button>
+							</Button>
 							<br />
 							<nuxt-link to="/resetpassword" active-class="active"
 								><a>Forgot password?</a></nuxt-link

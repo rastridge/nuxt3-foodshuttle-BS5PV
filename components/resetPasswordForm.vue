@@ -1,5 +1,5 @@
 <template>
-	<div class="row">
+	<div class="grid">
 		<div class="col">
 			<p>
 				In a few moments instructions to reset your password will be sent to you

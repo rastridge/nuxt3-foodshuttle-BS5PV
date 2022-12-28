@@ -18,7 +18,8 @@
 <script setup></script>
 
 <style>
-	/* @import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css'); */
+	@import url('https://unpkg.com/primeflex@^3/primeflex.min.css');
+	/* @import '~~node_modules/eefilmprx/primeflex.css'; */
 
 	body {
 		background-color: rgb(183, 134, 134);

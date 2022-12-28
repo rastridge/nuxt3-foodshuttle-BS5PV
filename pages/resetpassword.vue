@@ -3,11 +3,11 @@
 		<Head>
 			<Title>Admin User Request Password Reset</Title>
 		</Head>
-		<div class="row">
+		<div class="grid">
 			<div class="col-sm-6 col-sm-offset-3">
 				<h3>Admin User Request Password Reset</h3>
 
-				<div class="row">
+				<div class="grid">
 					<div class="col">
 						<p>
 							In a few moments instructions to reset your password will be sent

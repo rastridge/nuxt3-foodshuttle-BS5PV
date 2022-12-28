@@ -1,8 +1,8 @@
 <template>
 	<div id="commonheader">
-		<b-row>
-			<b-col class="header m-2 mb-4 display-4"> {{ title }}</b-col>
-		</b-row>
+		<div class="grid">
+			<div class="col text-3xl">{{ title }}</div>
+		</div>
 	</div>
 </template>
 

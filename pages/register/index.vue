@@ -12,14 +12,9 @@
 			<template #modal-header>
 				<h3>Thank you for considering the Food Shuttle of WNY</h3>
 				<div class="w-100">
-					<b-button
-						variant="primary"
-						size="sm"
-						class="float-right"
-						@click="hideModal('my-modal')"
-					>
+					<Button class="p-button-sm" @click="hideModal('my-modal')">
 						Close
-					</b-button>
+					</Button>
 				</div>
 			</template>
 			<template>
@@ -31,14 +26,9 @@
 			</template>
 			<template #modal-footer>
 				<div class="w-100">
-					<b-button
-						variant="primary"
-						size="sm"
-						class="float-right"
-						@click="hideModal('my-modal')"
-					>
+					<Button class="p-button-sm" @click="hideModal('my-modal')">
 						Close
-					</b-button>
+					</Button>
 				</div>
 			</template>
 		</b-modal>

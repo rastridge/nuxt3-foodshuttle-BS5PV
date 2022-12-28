@@ -1,70 +1,105 @@
 <template>
 	<div>
-		<!-- <p>datalocal = {{ datalocal }}</p> -->
-		<!-- <p>pagedData 1st record id = {{ pagedData }}</p> -->
-		<!-- <p>pagedData length = {{ pagedData.length }}</p> -->
-		<!-- <p>PerPage = {{ PerPage }}</p> -->
 		<div v-if="viewable">
-			<div v-if="datalocal.length">
-				<div class="mb-2">
-					<p>{{ datalocal.length }} Records</p>
-					<b-pagination
-						v-model="CurrentPage"
-						:total-rows="Rows"
-						:per-page="PerPage"
-						first-text="First"
-						prev-text="Prev"
-						next-text="Next"
-						last-text="Last"
-						update:modelValue
-					></b-pagination>
-				</div>
-
-				<div class="table-box">
-					<b-table-simple small hover responsive style="white-space: nowrap">
-						<b-thead>
-							<b-tr>
-								<b-th v-if="statusable">Use</b-th>
-								<b-th>Name</b-th>
-								<b-th>Modified</b-th>
-								<b-th v-if="editable || deleteable" colspan="2">Actions</b-th>
-							</b-tr>
-						</b-thead>
-						<b-tbody>
-							<b-tr v-for="item in pagedData" :key="item.id">
-								<b-td v-if="statusable" class="h6">
-									<a
-										@click="changeStatus({ id: item.id, status: item.status })"
-									>
-										<button class="btn btn-success btn-sm">
-											{{ item.status ? 'Yes' : 'No' }}
-										</button>
-									</a>
-								</b-td>
-								<b-td>{{ item.title }}</b-td>
-								<b-td> {{ $dayjs(item.dt).format('YYYY-MM-DD h:mm a') }}</b-td>
-								<b-td>
-									<nuxt-link
-										v-if="editable"
-										:to="'/admin/' + app + '/' + item.id"
-									>
-										<button class="btn btn-warning btn-sm">Edit</button>
-									</nuxt-link>
-								</b-td>
-								<b-td v-if="deleteable">
-									<a @click="deleteItem(item.id)">
-										<button class="btn btn-danger btn-sm">Delete</button>
-									</a>
-								</b-td>
-							</b-tr>
-						</b-tbody>
-					</b-table-simple>
-				</div>
-			</div>
-			<div v-else>
-				<div class="text-center">No Records Available</div>
+			<div class="card">
+				<DataTable
+					ref="dataTableRef"
+					:value="datalocal"
+					striped-rows
+					class="p-datatable-sm"
+					responsiveLayout="scroll"
+					:paginator="true"
+					:rows="perPage"
+					paginator-template="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+					:rows-per-page-options="[10, 20, 50]"
+					current-page-report-template="Showing {first} to {last} of {totalRecords}"
+				>
+					<template #header>
+						<div class="datatable-header">
+							<div class="flex justify-between">
+								<span class="text-xl"
+									>{{ datalocal ? datalocal.length : 0 }} Records</span
+								>
+							</div>
+						</div>
+					</template>
+					<template #empty> No Data Found. </template>
+					<Column v-if="statusable" field="status" header="Use"
+						><template #body="slotProps">
+							<a
+								href="#"
+								@click="
+									changeStatus({
+										id: slotProps.data.id,
+										status: slotProps.data.status,
+									})
+								"
+								><i v-if="slotProps.data.status" class="pi pi-thumbs-up"></i
+								><i v-else class="pi pi-thumbs-down"></i
+							></a> </template
+					></Column>
+					<Column field="title" header="Name"></Column>
+					<Column field="dt" header="Modified">
+						<template #body="slotProps">
+							{{ $dayjs(slotProps.data.dt).format('YYYY-MM-DD h:mm a') }}
+						</template></Column
+					>
+					<Column
+						v-if="editable || deleteable"
+						field="id"
+						header="Actions"
+						:exportable="false"
+						style="min-width: 8rem"
+					>
+						<template #body="slotProps">
+							<nuxt-link
+								v-if="editable"
+								:to="`/admin/${app}/${slotProps.data.id}`"
+								class="me-2"
+								><i class="pi pi-pencil"></i>
+							</nuxt-link>
+							<a
+								v-if="deleteable"
+								href="#"
+								@click="deleteItem(slotProps.data.id)"
+								><i class="pi pi-trash"></i
+							></a>
+						</template>
+					</Column>
+				</DataTable>
 			</div>
 		</div>
+		<!-- 
+		<Dialog
+			v-model:visible="deleteProductDialog"
+			:style="{ width: '450px' }"
+			header="Confirm"
+			:modal="true"
+		>
+			<div class="confirmation-content">
+				<i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+				<span v-if="product"
+					>Are you sure you want to delete <b>{{ product.name }}</b
+					>?</span
+				>
+			</div>
+
+			<template #footer>
+				<Button
+					label="No"
+					icon="pi pi-times"
+					class="p-button-text"
+					@click="deleteProductDialog = false"
+				/>
+				<Button
+					label="Yes"
+					icon="pi pi-check"
+					class="p-button-text"
+					@click="deleteItem"
+				/>
+			</template>
+		</Dialog>
+		 -->
 	</div>
 </template>
 
@@ -86,35 +121,19 @@
 	const emit = defineEmits(['changeStatus', 'deleteItem'])
 
 	// Initial settings for pagination
-	const PerPage = 10
-	const Rows = props.data.length
-	const CurrentPage = ref(1)
+	const perPage = 10
+
+	// watch(props.data, () => {
+	// 	alert('IN WATCH')
+	// 	datalocal.value = props.data
+	// })
 
 	// make local copy of input data
-	const datalocal = computed(() => props.data)
-
-	// choose records for paginated display
-	// Initial value
-	const pagedData = ref(
-		datalocal.value.slice(
-			(CurrentPage.value - 1) * PerPage,
-			CurrentPage.value * PerPage
-		)
-	)
-
-	// choose records for paginated display
-	// update pagedData as CurrrentPage changes
-	watchEffect(() => {
-		// console.log('IN WATCH')
-		pagedData.value = datalocal.value.slice(
-			(CurrentPage.value - 1) * PerPage,
-			CurrentPage.value * PerPage
-		)
-	})
+	const datalocal = ref(props.data)
+	const deleteProductDialog = ref(false)
 
 	const changeStatus = ({ id, status }) => {
 		status = status ? 0 : 1
-
 		// in browser
 		const pos = datalocal.value.findIndex((u) => u.id === id)
 		datalocal.value[pos].status = status
@@ -125,7 +144,6 @@
 		if (confirm('Are you sure you want to delete this?')) {
 			// in browser
 			datalocal.value = datalocal.value.filter((u) => u.id !== id)
-			pagedData.value = pagedData.value.filter((u) => u.id !== id)
 			// in database
 			emit('deleteItem', id)
 		}

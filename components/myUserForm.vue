@@ -7,12 +7,12 @@
 			<form class="form-horizontal">
 				<div class="form-group">
 					<div class="col-sm-offset-2 col-sm-4">
-						<button
+						<Button
 							class="btn btn-primary"
 							@click.prevent="submitForm(form_state)"
 						>
 							Submit
-						</button>
+						</Button>
 					</div>
 				</div>
 
@@ -97,7 +97,7 @@
 					</div>
 				</div>
 
-				<div class="row">
+				<div class="grid">
 					<div class="col">
 						<h5 class="text-center">Application permissions</h5>
 						<div class="table-responsive">
@@ -171,17 +171,10 @@
 					</div>
 				</div>
 
-				<div class="m3">
-					<button
-						class="btn btn-primary"
-						@click.prevent="submitForm(form_state)"
-					>
-						Submit
-					</button>
+				<div class="m-3">
+					<Button @click.prevent="submitForm(form_state)"> Submit </Button>
 
-					<button class="btn btn-default" @click.prevent="cancelForm()">
-						Cancel
-					</button>
+					<Button @click.prevent="cancelForm()"> Cancel </Button>
 				</div>
 			</form>
 		</div>

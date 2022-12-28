@@ -73,12 +73,8 @@
 		<!-- </FormKit> -->
 
 		<div class="mb-3">
-			<button class="btn btn-primary me-1" @click.prevent="submitForm(state)">
-				Submit
-			</button>
-			<button class="btn btn-danger" @click.prevent="cancelForm()">
-				Cancel
-			</button>
+			<Button class="me-1" @click.prevent="submitForm(state)">Submit</Button>
+			<Button @click.prevent="cancelForm()"> Cancel </Button>
 		</div>
 	</div>
 	<!-- </div> -->

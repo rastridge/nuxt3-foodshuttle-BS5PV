@@ -140,9 +140,7 @@
 		</FormKit>
 
 		<div class="mb-3">
-			<button class="btn btn-danger" @click.prevent="cancelForm()">
-				Cancel
-			</button>
+			<Button @click.prevent="cancelForm()"> Cancel </Button>
 		</div>
 	</div>
 </template>
