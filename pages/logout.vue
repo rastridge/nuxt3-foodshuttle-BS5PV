@@ -1,5 +1,5 @@
 <template>
-	<div class="text-center m-5 display-6">
+	<div class="text-center m-5 text-xl">
 		<b>Good bye</b>
 	</div>
 </template>

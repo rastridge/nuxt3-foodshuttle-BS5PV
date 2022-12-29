@@ -3,7 +3,7 @@
 		<Head>
 			<Title>Accounts List</Title>
 		</Head>
-		<div class="text-center m-5 display-6">
+		<div class="text-center m-5 text-2xl">
 			<b>Account List</b>
 		</div>
 
