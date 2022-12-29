@@ -12,7 +12,7 @@
 
 		<!-- Modal -->
 		<Dialog
-			:header="selectedItem.news_title"
+			header="Register"
 			v-model:visible="displayModal"
 			:breakpoints="{ '960px': '75vw', '640px': '90vw' }"
 			:style="{ width: '50vw' }"

@@ -7,9 +7,12 @@
 			<b>News Items List</b>
 		</div>
 		<div class="text-center m-5">
-			<nuxt-link class="p-button-sm" to="/admin/news/add"
-				>Add News Item</nuxt-link
+			<Button
+				class="p-button-sm"
+				label="Add account"
+				@click="navigateTo('/admin/news/add')"
 			>
+			</Button>
 		</div>
 		<span v-if="error" class="text-danger">ERROR: {{ error }}</span>
 		<select-year :startyear="startyear" @submitted="onSubmit" class="mb-3" />

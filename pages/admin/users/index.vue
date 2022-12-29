@@ -9,7 +9,12 @@
 			<b>Users List</b>
 		</div>
 		<div class="text-center m-5">
-			<nuxt-link class="p-button-sm" to="/admin/users/add">Add User</nuxt-link>
+			<Button
+				class="p-button-sm"
+				label="Add account"
+				@click="navigateTo('/admin/accounts/add')"
+			>
+			</Button>
 		</div>
 		<render-list
 			:data="users"

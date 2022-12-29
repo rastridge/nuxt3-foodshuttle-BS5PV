@@ -8,9 +8,12 @@
 		</div>
 
 		<div class="text-center m-5">
-			<nuxt-link class="p-button-sm" to="/admin/accounts/add"
-				>Add Account</nuxt-link
+			<Button
+				class="p-button-sm"
+				label="Add account"
+				@click="navigateTo('/admin/accounts/add')"
 			>
+			</Button>
 		</div>
 		<render-list
 			:data="accounts"
