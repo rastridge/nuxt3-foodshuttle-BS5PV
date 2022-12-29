@@ -1,12 +1,12 @@
 <template>
 	<div>
 		<div v-if="viewable">
-			<div class="card">
+			<div class="table-box">
 				<DataTable
 					ref="dataTableRef"
 					:value="datalocal"
 					striped-rows
-					class="p-datatable-sm"
+					class="p-datatable-sm p-datatable-generic"
 					responsiveLayout="scroll"
 					:paginator="true"
 					:rows="perPage"
@@ -14,15 +14,15 @@
 					:rows-per-page-options="[10, 20, 50]"
 					current-page-report-template="Showing {first} to {last} of {totalRecords}"
 				>
-					<template #header>
+					<!-- 					<template #header>
 						<div class="datatable-header">
-							<div class="flex justify-between">
-								<span class="text-xl"
+							<div class="flex justify-content-center">
+								<span class="text-l"
 									>{{ datalocal ? datalocal.length : 0 }} Records</span
 								>
 							</div>
 						</div>
-					</template>
+					</template> -->
 					<template #empty> No Data Found. </template>
 					<Column v-if="statusable" field="status" header="Use"
 						><template #body="slotProps">
@@ -156,16 +156,16 @@
 
 <style scoped>
 	.table-box {
-		background-color: rgb(250, 250, 250);
-		min-height: 580px;
+		background-color: rgb(255, 255, 255);
 		padding: 0.5rem;
-		border: thin gray dotted;
+		padding-top: 1rem;
+		border-radius: 10px;
+		border: thin rgb(0, 0, 0) solid;
 	}
-	.fade-enter-active,
-	.fade-leave-active {
-		transition: opacity 2s;
-	}
-	.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-		opacity: 0;
+
+	.p-component {
+		font-family: Roboto, Helvetica, Arial;
+		font-size: 0.9rem;
+		font-weight: normal;
 	}
 </style>

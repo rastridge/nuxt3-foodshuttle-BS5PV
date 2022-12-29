@@ -81,6 +81,7 @@
 	@media screen and (max-width: 640px) {
 		.loginbox {
 			width: 100%;
+			padding: 1rem;
 		}
 	}
 </style>

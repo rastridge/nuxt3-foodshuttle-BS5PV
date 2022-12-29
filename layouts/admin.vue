@@ -22,16 +22,4 @@
 	}
 </style>
 
-<style>
-	@import url('https://unpkg.com/primeflex@^3/primeflex.min.css');
-
-	.content {
-		max-width: 70%;
-		margin: 0 auto;
-		padding: 3rem;
-		margin-top: 1rem;
-		border: solid thin rgb(0, 0, 0);
-		border-radius: 20px;
-		background-color: rgba(255, 255, 255, 0.3);
-	}
-</style>
+<style></style>

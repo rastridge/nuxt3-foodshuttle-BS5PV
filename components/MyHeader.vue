@@ -1,6 +1,14 @@
 <template>
 	<nav class="fixed-top">
-		<Menubar :model="items" class="p-menubar"> </Menubar>
+		<Menubar :model="items" class="p-menubar">
+			<template #start>
+				<img
+					alt="logo"
+					src="/trucklogo.png"
+					height="40"
+					class="mr-2"
+				/> </template
+		></Menubar>
 	</nav>
 </template>
 
@@ -56,5 +64,8 @@
 <style>
 	.p-menubar {
 		justify-content: center;
+	}
+	.p-menubar {
+		background-color: rgb(3, 205, 97);
 	}
 </style>

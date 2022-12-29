@@ -34,11 +34,6 @@
 	const auth = useAuthStore()
 	definePageMeta({ layout: 'admin' })
 	const router = useRouter()
-	const navigate = (p) => {
-		return navigateTo({
-			path: p,
-		})
-	}
 
 	const app = 'accounts'
 
@@ -73,7 +68,7 @@
 		statusable = false
 		viewable = true
 	} else {
-		navigate('/admin') // no access
+		navigateTo('/admin') // no access
 	}
 
 	const {
