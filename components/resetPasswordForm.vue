@@ -26,7 +26,7 @@
 			</FormKit>
 
 			<div class="mb-3">
-				<button class="btn btn-danger" @click.prevent="cancelForm()">
+				<button class="p-button-danger" @click.prevent="cancelForm()">
 					Cancel
 				</button>
 			</div>

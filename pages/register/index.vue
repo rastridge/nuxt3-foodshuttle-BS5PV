@@ -11,42 +11,42 @@
 		</div>
 
 		<!-- Modal -->
-		<b-modal id="my-modal" button-size="sm">
-			<template #modal-header>
-				<h3>Thank you for considering the Food Shuttle of WNY</h3>
-				<div class="w-100">
-					<Button class="p-button-sm" @click="hideModal('my-modal')">
-						Close
-					</Button>
-				</div>
+		<Dialog
+			:header="selectedItem.news_title"
+			v-model:visible="displayModal"
+			:breakpoints="{ '960px': '75vw', '640px': '90vw' }"
+			:style="{ width: '50vw' }"
+		>
+			<p>
+				Registering is an expression of interest in being informed of Food
+				Shuttle of WNY activities and does not imply any commitment. Give us a
+				try and see if we're right for you.
+			</p>
+			<template #footer>
+				<Button
+					label="Return"
+					@click="closeModal"
+					class="p-button-sm"
+					autofocus
+				/>
 			</template>
-			<template>
-				<p>
-					Registering is an expression of interest in being informed of Food
-					Shuttle of WNY activities and does not imply any commitment. Give us a
-					try and see if we're right for you.
-				</p>
-			</template>
-			<template #modal-footer>
-				<div class="w-100">
-					<Button class="p-button-sm" @click="hideModal('my-modal')">
-						Close
-					</Button>
-				</div>
-			</template>
-		</b-modal>
+		</Dialog>
 	</div>
 </template>
 
 <script setup>
 	import { useAuthStore } from '~~/stores/authStore'
+	import Dialog from 'primevue/dialog'
 	import { useAlertStore } from '~~/stores/alertStore'
 	const alert = useAlertStore()
-	const router = useRouter()
-	const navigate = (p) => {
-		return navigateTo({
-			path: p,
-		})
+
+	const displayModal = ref(false)
+	const openModal = (item) => {
+		displayModal.value = true
+		selectedItem.value = item
+	}
+	const closeModal = () => {
+		displayModal.value = false
 	}
 
 	const state = reactive({
@@ -87,7 +87,7 @@
 		if (data.value.message) {
 			alert.error(data.value.message)
 		} else {
-			navigate('/')
+			navigateTo('/')
 		}
 	}
 </script>

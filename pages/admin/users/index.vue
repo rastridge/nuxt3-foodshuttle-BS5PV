@@ -9,9 +9,7 @@
 			<b>Users List</b>
 		</div>
 		<div class="text-center m-5">
-			<nuxt-link class="btn btn-primary" to="/admin/users/add"
-				>Add User</nuxt-link
-			>
+			<nuxt-link class="p-button-sm" to="/admin/users/add">Add User</nuxt-link>
 		</div>
 		<render-list
 			:data="users"

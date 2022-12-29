@@ -7,7 +7,7 @@
 			<b>News Items List</b>
 		</div>
 		<div class="text-center m-5">
-			<nuxt-link class="btn btn-primary" to="/admin/news/add"
+			<nuxt-link class="p-button-sm" to="/admin/news/add"
 				>Add News Item</nuxt-link
 			>
 		</div>

@@ -8,7 +8,7 @@
 		</div>
 
 		<div class="text-center m-5">
-			<nuxt-link class="btn btn-primary" to="/admin/accounts/add"
+			<nuxt-link class="p-button-sm" to="/admin/accounts/add"
 				>Add Account</nuxt-link
 			>
 		</div>

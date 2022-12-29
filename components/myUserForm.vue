@@ -7,10 +7,7 @@
 			<form class="form-horizontal">
 				<div class="form-group">
 					<div class="col-sm-offset-2 col-sm-4">
-						<Button
-							class="btn btn-primary"
-							@click.prevent="submitForm(form_state)"
-						>
+						<Button class="p-button-sm" @click.prevent="submitForm(form_state)">
 							Submit
 						</Button>
 					</div>
