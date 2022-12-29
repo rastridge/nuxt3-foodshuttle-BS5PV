@@ -9,36 +9,31 @@
 
 					<div v-if="!auth.isLoggedIn">
 						<h3 class="headline">Login Admin User</h3>
-						<b-form class="mb-3">
-							<b-form-group
-								id="username-1"
+
+						<FormKit
+							type="form"
+							submit_label="Loginin"
+							@submit="handleSubmit"
+							#default="{ value }"
+						>
+							<FormKit
+								type="text"
+								name="username"
 								label="Username"
-								label-for="username"
+								validate="required|length:5"
 							>
-								<b-form-input id="username" v-model="username"> </b-form-input>
-								<p v-show="submitted && !username" class="error">
-									Username is required
-								</p>
-							</b-form-group>
-							<b-form-group
-								id="password-1"
+							</FormKit>
+							<FormKit
+								type="password"
+								name="password"
 								label="Password"
-								label-for="password"
+								validate="required|length:5"
 							>
-								<b-form-input id="password" v-model="password" type="password">
-								</b-form-input>
-								<p v-show="submitted && !password" class="error">
-									Password is required
-								</p>
-							</b-form-group>
-						</b-form>
+							</FormKit>
+							<!-- <FormKit type="submit" label="Login"> </FormKit> -->
+						</FormKit>
+
 						<div class="center-content">
-							<Button
-								class="p-button-sm"
-								:disabled="auth.loggingIn"
-								@click.prevent="handleSubmit"
-								>Login
-							</Button>
 							<br />
 							<nuxt-link to="/resetpassword" active-class="active"
 								><a>Forgot password?</a></nuxt-link
@@ -61,10 +56,10 @@
 	const password = ref('')
 	const submitted = ref(false)
 
-	const handleSubmit = async (e) => {
+	const handleSubmit = async (values) => {
 		submitted.value = true
-		if (username.value && password.value) {
-			auth.login(username.value, password.value) // pinia auth store
+		if (values.username && values.password) {
+			auth.login(values.username, values.password) // pinia auth store
 		}
 	}
 </script>
@@ -74,11 +69,18 @@
 		color: red;
 	}
 	.loginbox {
+		background-color: rgba(255, 255, 255, 0.2);
 		margin: 0 auto;
-		margin-bottom: 10px;
-		width: 50%;
+		padding: 2rem;
+		border: thin black solid;
+		width: 20rem;
 		justify-content: left;
 		align-items: left;
 		text-align: left;
+	}
+	@media screen and (max-width: 640px) {
+		.loginbox {
+			width: 100%;
+		}
 	}
 </style>

@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="formBox">
 		<FormKit
 			type="form"
 			:config="{ validationVisibility: 'live' }"
@@ -193,6 +193,24 @@
 </script>
 
 <style scoped>
+	.error {
+		color: red;
+	}
+	.formBox {
+		background-color: rgba(255, 255, 255, 0.2);
+		margin: 0 auto;
+		padding: 2rem;
+		border: thin black solid;
+		width: 20rem;
+		justify-content: left;
+		align-items: left;
+		text-align: left;
+	}
+	@media screen and (max-width: 640px) {
+		.loginbox {
+			width: 100%;
+		}
+	}
 	.formkit-inner {
 		background-color: rgba(255, 255, 255, 0.5);
 	}

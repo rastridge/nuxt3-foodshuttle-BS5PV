@@ -25,12 +25,17 @@
 		background-color: rgb(183, 134, 134);
 	}
 	.content {
-		max-width: 70%;
+		width: 90%;
 		margin: 0 auto;
 		padding: 3rem;
 		margin-top: 1rem;
 		border: solid thin rgb(0, 0, 0);
 		border-radius: 20px;
 		background-color: rgba(255, 255, 255, 0.3);
+		@media screen and (max-width: 640px) {
+			.content {
+				width: 100%;
+			}
+		}
 	}
 </style>

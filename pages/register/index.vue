@@ -6,6 +6,9 @@
 		</div>
 
 		<my-accounts-self-form @submitted="handleSubmit" />
+		<div v-if="alert.message" :class="`alert ${alert.type}`">
+			{{ alert.message }}
+		</div>
 
 		<!-- Modal -->
 		<b-modal id="my-modal" button-size="sm">
