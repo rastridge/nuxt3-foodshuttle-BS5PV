@@ -32,10 +32,10 @@
 		border: solid thin rgb(0, 0, 0);
 		border-radius: 20px;
 		background-color: rgba(255, 255, 255, 0.3);
-		@media screen and (max-width: 640px) {
-			.content {
-				width: 100%;
-			}
+	}
+	@media screen and (max-width: 640px) {
+		.content {
+			width: 100%;
 		}
 	}
 </style>

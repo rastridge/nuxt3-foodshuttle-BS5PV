@@ -58,6 +58,7 @@
 								class="me-2"
 								><i class="pi pi-pencil"></i>
 							</nuxt-link>
+							&nbsp;
 							<a
 								v-if="deleteable"
 								href="#"
