@@ -3,7 +3,7 @@
 		<Head>
 			<Title>News Items List</Title>
 		</Head>
-		<div class="text-center m-5 display-6">
+		<div class="text-center m-5 text-xl">
 			<b>News Items List</b>
 		</div>
 		<div class="text-center m-5">

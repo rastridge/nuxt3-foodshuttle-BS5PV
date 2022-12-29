@@ -5,7 +5,7 @@
 		</Head>
 		<!-- <p>Page visits: {{ count }}</p> -->
 
-		<div class="text-center m-5 display-6">
+		<div class="text-center m-5 text-xl">
 			<b>Users List</b>
 		</div>
 		<div class="text-center m-5">

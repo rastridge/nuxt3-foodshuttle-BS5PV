@@ -1,11 +1,6 @@
 export default defineNuxtConfig({
 	ssr: false,
-	modules: [
-		'@formkit/nuxt',
-		'bootstrap-vue-3/nuxt',
-		'nuxt-icon',
-		'@pinia/nuxt',
-	],
+	modules: ['@formkit/nuxt', 'nuxt-icon', '@pinia/nuxt'],
 
 	dayjs: {
 		locales: ['en'],
@@ -15,7 +10,6 @@ export default defineNuxtConfig({
 	},
 
 	css: [
-		'bootstrap/dist/css/bootstrap.css',
 		'primevue/resources/themes/saga-blue/theme.css',
 		'primevue/resources/primevue.css',
 		'primeicons/primeicons.css',
