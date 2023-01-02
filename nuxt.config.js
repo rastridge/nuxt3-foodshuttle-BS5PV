@@ -9,10 +9,14 @@ export default defineNuxtConfig({
 		plugins: ['utc', 'timezone'],
 	},
 
+	// plugins: [{ src: '~plugins/nuxt-quill', ssr: false }],
 	css: [
 		'primevue/resources/themes/saga-blue/theme.css',
 		'primevue/resources/primevue.css',
 		'primeicons/primeicons.css',
+		// 'quill/dist/quill.core.css',
+		// 'quill/dist/quill.snow.css',
+		// 'quill/dist/quill.bubble.css',
 	],
 
 	runtimeConfig: {

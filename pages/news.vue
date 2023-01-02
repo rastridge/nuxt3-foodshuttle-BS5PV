@@ -1,23 +1,29 @@
 <template>
 	<div>
-		<div v-for="item in news" :key="item.news_id">
-			<div
-				class="card"
-				style="width: 18rem; background-color: rgba(255, 255, 255, 0.4)"
+		<!-- <div class="card"> -->
+		<h2>News</h2>
+		<div
+			class="flex flex-wrap card-container align-items-center justify-content-center"
+		>
+			<Card
+				v-for="item in news"
+				:key="item.news_id"
+				class="mycard shadow-7 m-2 p-2 border-round cursor-pointer"
 			>
-				<div class="card-body">
-					<h5 class="card-title">{{ item.news_title }}</h5>
-					<p class="card-text">{{ item.news_synop }}</p>
+				<template #title>
+					<!-- dayjs adjusts for our TZ -->
+					<span class="text-sm">
+						{{ $dayjs(item.dt).format('MMM D, YYYY HH:mm a') }} </span
+					><br />
+					{{ item.news_title }}
+				</template>
+				<template #subtitle> {{ item.news_synop }} </template>
+
+				<template #footer>
 					<a href="#" @click.prevent="openModal(item)">Read More</a>
-					<!-- Button trigger modal -->
-					<!-- <Button
-						class="p-button-sm"
-						label="Read More"
-						icon="pi pi-external-link"
-						@click="openModal"
-					/> -->
-				</div>
-			</div>
+				</template>
+			</Card>
+			<!-- </div> -->
 		</div>
 
 		<!-- Modal -->
@@ -27,7 +33,8 @@
 			:breakpoints="{ '960px': '75vw', '640px': '90vw' }"
 			:style="{ width: '50vw' }"
 		>
-			<p v-html="selectedItem.news_article"></p>
+			<span v-html="selectedItem.news_article"></span>
+
 			<template #footer>
 				<Button
 					label="Return"
@@ -42,6 +49,8 @@
 
 <script setup>
 	import Dialog from 'primevue/dialog'
+	import Card from 'primevue/card'
+	const { $dayjs } = useNuxtApp()
 	const displayModal = ref(false)
 	const openModal = (item) => {
 		displayModal.value = true
@@ -74,7 +83,17 @@
 	p {
 		margin: 0;
 	}
+	.mycard {
+		min-width: 20rem;
+		min-height: 100px;
+		background-color: rgba(255, 255, 255, 0.4);
+	}
 
+	@media screen and (max-width: 640px) {
+		.mycard {
+			width: 100%;
+		}
+	}
 	.confirmation-content {
 		display: flex;
 		align-items: center;

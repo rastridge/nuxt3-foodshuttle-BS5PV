@@ -36,7 +36,7 @@ async function getAll() {
 									news_title,
 									news_title as title,
 									news_event_dt,
-									news_event_dt as dt,
+ 									CONVERT_TZ(news_event_dt,'UTC','-05:00') as dt,
 									news_expire_dt,
 									news_release_dt,
 									news_synop,
@@ -59,7 +59,7 @@ async function getPage(pg) {
 								news_title,
 								news_title as title,
 								news_event_dt,
-								news_event_dt as dt,
+ 										CONVERT_TZ(news_event_dt,'UTC','-05:00') as dt,
 								news_expire_dt,
 								news_synop,
 								status
@@ -93,7 +93,7 @@ async function getAllCurrent() {
 										news_title,
 										news_title as title,
                     news_event_dt,
-                    news_event_dt as dt,
+ 										CONVERT_TZ(news_event_dt,'UTC','-05:00') as dt,
                     news_expire_dt,
                     news_release_dt,
                     status,
@@ -114,7 +114,18 @@ async function getAllCurrent() {
 }
 
 async function getOne(id) {
-	const sql = `select * from inbrc_news where news_id = ` + id
+	const sql =
+		`select 
+				news_id,
+				news_id as id,
+				news_title,
+				news_title as title,
+				CONVERT_TZ(news_event_dt,'UTC','-05:00') as news_event_dt,
+				news_expire_dt,
+				news_release_dt,
+				status,
+				news_synop,
+				news_article from inbrc_news where news_id = ` + id
 
 	const news = await doDBQuery(sql)
 

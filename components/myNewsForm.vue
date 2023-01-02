@@ -1,93 +1,101 @@
 <template>
 	<div>
-		<!-- <div v-if="!formdata" class="spinner-border text-primary" role="status">
+		<!-- <div v-if="!news_data" class="spinner-border text-primary" role="status">
 			<span class="visually-hidden">Loading...</span>
+		</div> -->
+		<div style="background-color: beige; padding: 2rem">
+			<p>dayjs.tz.guess() = {{ $dayjs.tz.guess() }}</p>
+			<p>Now GMT = {{ $dayjs() }}</p>
+			<!-- <p>Now local = {{ $dayjs().tz('America/New_York') }}</p> -->
+			<p>Now local = {{ $dayjs.utc().local().format() }}</p>
+			<p>
+				Now local GMT formatted =
+				{{ $dayjs($dayjs.utc().format()).format('MMM D, YYYY  HH:mm a') }}
+			</p>
+			<p>
+				Now GMT offset 5 formatted =
+				{{ $dayjs($dayjs().utcOffset(-5)).format('MMM D, YYYY HH:mm a') }}
+			</p>
+			<!-- <p>dayjsLocal = {{ dayjsLocal }}</p>
+			<p>dayjsAmerica = {{ dayjsAmerica }}</p>
+			<p>dayjsAmericaKeep = {{ dayjsAmericaKeep }}</p> -->
 		</div>
-		<div v-else> -->
-
-		<pre>
-	<!-- {{ state.news_event_dt }} -->
-</pre>
-		<!-- <FormKit
+		<FormKit
 			type="form"
 			:config="{ validationVisibility: 'live' }"
 			v-model="state"
 			submit-label="Submit"
 			@submit="submitForm(state)"
-		> -->
-		<FormKit
-			label="News Title"
-			name="news_title"
-			type="text"
-			validation="required"
-			v-model="state.news_title"
-		/>
-		<FormKit
-			label="Synopsis"
-			name="news_synop"
-			type="textarea"
-			validation="required"
-			v-model="state.news_synop"
-		/>
-		<FormKit
-			label="Article"
-			name="news_article"
-			type="textarea"
-			validation="required"
-			v-model="state.news_article"
-		/>
-		<FormKit
-			label="Raw Article"
-			name="news_article_raw"
-			type="textarea"
-			v-model="state.news_article"
-		/>
-		<FormKit
-			type="datetime-local"
-			label="Event Date"
-			name="news_event_dt"
-			validation="required"
-			v-model="state.news_event_dt"
-		/>
-		<p>
-			{{ state.news_event_dt }}
-		</p>
-		<FormKit
-			type="datetime-local"
-			label="Release Date"
-			name="news_release_dt"
-			validation="required"
-			v-model="state.news_release_dt"
-		/>
-		<p>{{ state.news_release_dt }}</p>
+		>
+			<FormKit
+				label="News Title"
+				name="news_title"
+				type="text"
+				validation="required"
+				v-model="state.news_title"
+			/>
+			<FormKit
+				label="Synopsis"
+				name="news_synop"
+				type="textarea"
+				validation="required"
+				v-model="state.news_synop"
+			/>
 
-		<FormKit
-			type="datetime-local"
-			label="Expire Date"
-			name="news_expire_dt"
-			validation="required"
-			v-model="state.news_expire_dt"
-		/>
-		<p>{{ state.news_expire_dt }}</p>
+			<FormKit
+				label="Raw Article"
+				name="news_article_raw"
+				type="textarea"
+				v-model="state.news_article"
+			/>
+			<div class="editor">
+				<h3>Body of article primevue editor</h3>
+				<!-- primevue editor -->
+				<Editor v-model="state.news_article" editorStyle="height: 320px" />
+			</div>
 
-		<!-- </FormKit> -->
+			<FormKit
+				type="datetime-local"
+				label="Event Date"
+				name="news_event_dt"
+				validation="required"
+				v-model="state.news_event_dt"
+			/>
+			<p>state.news_event_dt = {{ state.news_event_dt }}</p>
+			<FormKit
+				type="datetime-local"
+				label="Release Date"
+				name="news_release_dt"
+				validation="required"
+				v-model="state.news_release_dt"
+			/>
+			<p>{{ state.news_release_dt }}</p>
 
-		<div class="mb-3">
-			<Button class="me-1" @click.prevent="submitForm(state)">Submit</Button>
+			<FormKit
+				type="datetime-local"
+				label="Expire Date"
+				name="news_expire_dt"
+				validation="required"
+				v-model="state.news_expire_dt"
+			/>
+			<p>{{ state.news_expire_dt }}</p>
 			<Button @click.prevent="cancelForm()"> Cancel </Button>
-		</div>
+		</FormKit>
 	</div>
 	<!-- </div> -->
 </template>
 
 <script setup>
-	// import 'dayjs/plugin/utc'
-	// import 'dayjs/plugin/timezone'
 	import '@formkit/themes/genesis'
+
+	// import Editor from 'primevue/editor'
+
 	import { useAuthStore } from '~~/stores/authStore'
 	const auth = useAuthStore()
-	const { $dayjs } = useNuxtApp()
 	const router = useRouter()
+
+	// testing date manipulayion
+	const { $dayjs } = useNuxtApp()
 
 	const emit = defineEmits(['submitted'])
 
@@ -100,7 +108,7 @@
 	if (props.id !== 0) {
 		// get user with id
 		const {
-			data: formdata,
+			data: news_data,
 			pending,
 			error,
 			refresh,
@@ -110,14 +118,16 @@
 				authorization: auth.user.token,
 			},
 		})
-		state.news_id = formdata.value.news_id
-		state.id = formdata.value.news_id
-		state.news_title = formdata.value.news_title
-		state.news_synop = formdata.value.news_synop
-		state.news_article = formdata.value.news_article
-		state.news_event_dt = formdata.value.news_event_dt.substr(0, 16)
-		state.news_release_dt = formdata.value.news_release_dt.substr(0, 16)
-		state.news_expire_dt = formdata.value.news_expire_dt.substr(0, 16)
+		state.news_id = props.id
+		state.id = props.id
+		state.news_title = news_data.value.news_title
+		state.news_synop = news_data.value.news_synop
+		state.news_article = news_data.value.news_article
+		state.news_event_dt = $dayjs(news_data.value.news_event_dt).format(
+			'YYYY-MM-DD HH:mm'
+		)
+		state.news_release_dt = news_data.value.news_release_dt.substr(0, 16)
+		state.news_expire_dt = news_data.value.news_expire_dt.substr(0, 16)
 	} else {
 		state.news_id = ''
 		state.id = ''
@@ -134,9 +144,14 @@
 
 	// form handlers
 	const submitForm = (state) => {
+		// adjust date -  store local time as UTC  5 hours difference
+		// game time always entered relative to Buffalo NY ????
 		let alteredState = state
+		// alteredState.news_event_dt = $dayjs(state.news_event_dt)
+		// 	.subtract(5, 'h')
+		// 	.format('YYYY-MM-DDTHH:mm')
 		alteredState.news_event_dt = $dayjs(state.news_event_dt)
-			.subtract(5, 'h')
+			.tz('America/Toronto')
 			.format('YYYY-MM-DDTHH:mm')
 		alteredState.news_expire_dt = $dayjs(state.news_expire_dt)
 			.subtract(5, 'h')
@@ -144,7 +159,7 @@
 		alteredState.news_release_dt = $dayjs(state.news_release_dt)
 			.subtract(5, 'h')
 			.format('YYYY-MM-DDTHH:mm')
-		emit('submitted', alteredState)
+		emit('submitted', state)
 	}
 
 	const cancelForm = () => {
@@ -153,6 +168,14 @@
 </script>
 
 <style>
+	.editor {
+		width: 50%;
+	}
+	@media screen and (max-width: 640px) {
+		.editor {
+			width: 100%;
+		}
+	}
 	.formkit-inner {
 		background-color: rgba(255, 255, 255, 0.5);
 	}
