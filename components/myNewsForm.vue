@@ -1,25 +1,5 @@
 <template>
 	<div>
-		<!-- <div v-if="!news_data" class="spinner-border text-primary" role="status">
-			<span class="visually-hidden">Loading...</span>
-		</div> -->
-		<div style="background-color: beige; padding: 2rem">
-			<p>dayjs.tz.guess() = {{ $dayjs.tz.guess() }}</p>
-			<p>Now GMT = {{ $dayjs() }}</p>
-			<!-- <p>Now local = {{ $dayjs().tz('America/New_York') }}</p> -->
-			<p>Now local = {{ $dayjs.utc().local().format() }}</p>
-			<p>
-				Now local GMT formatted =
-				{{ $dayjs($dayjs.utc().format()).format('MMM D, YYYY  HH:mm a') }}
-			</p>
-			<p>
-				Now GMT offset 5 formatted =
-				{{ $dayjs($dayjs().utcOffset(-5)).format('MMM D, YYYY HH:mm a') }}
-			</p>
-			<!-- <p>dayjsLocal = {{ dayjsLocal }}</p>
-			<p>dayjsAmerica = {{ dayjsAmerica }}</p>
-			<p>dayjsAmericaKeep = {{ dayjsAmericaKeep }}</p> -->
-		</div>
 		<FormKit
 			type="form"
 			:config="{ validationVisibility: 'live' }"
@@ -27,6 +7,14 @@
 			submit-label="Submit"
 			@submit="submitForm(state)"
 		>
+			state.news_article {{ state.news_article }}
+			<quill-editor
+				contentType="html"
+				:content="state.news_article"
+				theme="snow"
+				toolbar="full"
+			></quill-editor>
+
 			<FormKit
 				label="News Title"
 				name="news_title"
@@ -61,7 +49,7 @@
 				validation="required"
 				v-model="state.news_event_dt"
 			/>
-			<p>state.news_event_dt = {{ state.news_event_dt }}</p>
+
 			<FormKit
 				type="datetime-local"
 				label="Release Date"
@@ -69,7 +57,6 @@
 				validation="required"
 				v-model="state.news_release_dt"
 			/>
-			<p>{{ state.news_release_dt }}</p>
 
 			<FormKit
 				type="datetime-local"
@@ -78,7 +65,6 @@
 				validation="required"
 				v-model="state.news_expire_dt"
 			/>
-			<p>{{ state.news_expire_dt }}</p>
 			<Button @click.prevent="cancelForm()"> Cancel </Button>
 		</FormKit>
 	</div>
@@ -87,12 +73,14 @@
 
 <script setup>
 	import '@formkit/themes/genesis'
+	import '@vueup/vue-quill/dist/vue-quill.snow.css'
+	import ImageUploader from 'quill-image-uploader'
 
 	// import Editor from 'primevue/editor'
 
 	import { useAuthStore } from '~~/stores/authStore'
 	const auth = useAuthStore()
-	const router = useRouter()
+	// const router = useRouter()
 
 	// testing date manipulayion
 	const { $dayjs } = useNuxtApp()
@@ -123,11 +111,17 @@
 		state.news_title = news_data.value.news_title
 		state.news_synop = news_data.value.news_synop
 		state.news_article = news_data.value.news_article
+
+		// Adjust for local time and Format for Primevue calendar
 		state.news_event_dt = $dayjs(news_data.value.news_event_dt).format(
 			'YYYY-MM-DD HH:mm'
 		)
-		state.news_release_dt = news_data.value.news_release_dt.substr(0, 16)
-		state.news_expire_dt = news_data.value.news_expire_dt.substr(0, 16)
+		state.news_release_dt = $dayjs(news_data.value.news_release_dt).format(
+			'YYYY-MM-DD HH:mm'
+		)
+		state.news_expire_dt = $dayjs(news_data.value.news_expire_dt).format(
+			'YYYY-MM-DD HH:mm'
+		)
 	} else {
 		state.news_id = ''
 		state.id = ''
@@ -135,30 +129,15 @@
 		state.title = 'testnews'
 		state.news_article = 'a body of article dsfasdff'
 		state.news_synop = 'adsf syop of asdff'
-		state.news_event_dt = '2022-11-25T23:32'
-		state.news_expire_dt = '2023-01-17T23:32'
-		state.news_release_dt = '2022-01-17T23:32'
+		state.news_event_dt = '2022-11-25 23:01'
+		state.news_expire_dt = '2023-01-17 23:01'
+		state.news_release_dt = '2022-01-17 23:01'
 
 		// human: '',
 	}
 
 	// form handlers
 	const submitForm = (state) => {
-		// adjust date -  store local time as UTC  5 hours difference
-		// game time always entered relative to Buffalo NY ????
-		let alteredState = state
-		// alteredState.news_event_dt = $dayjs(state.news_event_dt)
-		// 	.subtract(5, 'h')
-		// 	.format('YYYY-MM-DDTHH:mm')
-		alteredState.news_event_dt = $dayjs(state.news_event_dt)
-			.tz('America/Toronto')
-			.format('YYYY-MM-DDTHH:mm')
-		alteredState.news_expire_dt = $dayjs(state.news_expire_dt)
-			.subtract(5, 'h')
-			.format('YYYY-MM-DDTHH:mm')
-		alteredState.news_release_dt = $dayjs(state.news_release_dt)
-			.subtract(5, 'h')
-			.format('YYYY-MM-DDTHH:mm')
 		emit('submitted', state)
 	}
 

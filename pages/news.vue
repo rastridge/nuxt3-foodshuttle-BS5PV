@@ -11,7 +11,7 @@
 				class="mycard shadow-7 m-2 p-2 border-round cursor-pointer"
 			>
 				<template #title>
-					<!-- dayjs adjusts for our TZ -->
+					<!-- Adjust for local time and Format for Primevue calendar -->
 					<span class="text-sm">
 						{{ $dayjs(item.dt).format('MMM D, YYYY HH:mm a') }} </span
 					><br />

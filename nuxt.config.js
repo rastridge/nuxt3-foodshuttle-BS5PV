@@ -6,7 +6,6 @@ export default defineNuxtConfig({
 		locales: ['en'],
 		defaultLocale: 'en',
 		defaultTimeZone: 'America/New_York',
-		plugins: ['utc', 'timezone'],
 	},
 
 	// plugins: [{ src: '~plugins/nuxt-quill', ssr: false }],
