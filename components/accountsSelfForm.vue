@@ -2,20 +2,20 @@
 	<div class="formBox">
 		<FormKit
 			type="form"
-			:config="{ validationVisibility: 'live' }"
 			v-model="state"
 			submit-label="Submit"
 			@submit="submitForm(state)"
 		>
+			<h4>* required</h4>
 			<FormKit
-				label="First Name"
+				label="First Name *"
 				name="member_firstname"
 				type="text"
 				validation="required"
 				v-model="state.member_firstname"
 			/>
 			<FormKit
-				label="Last Name"
+				label="Last Name *"
 				name="member_lastname"
 				type="text"
 				validation="required"
@@ -23,7 +23,7 @@
 			/>
 			<FormKit
 				type="email"
-				label="Email address"
+				label="Email address *"
 				name="account_email"
 				validation="required|email"
 				v-model="state.account_email"
@@ -37,7 +37,7 @@
 			/>
 			<FormKit
 				type="text"
-				label="Street"
+				label="Street address *"
 				name="account_addr_street"
 				validation="required"
 				v-model="state.account_addr_street"
@@ -50,35 +50,35 @@
 			/>
 			<FormKit
 				type="text"
-				label="City"
+				label="City *"
 				name="account_addr_city"
 				validation="required"
 				v-model="state.account_addr_city"
 			/>
 			<FormKit
 				type="text"
-				label="State"
+				label="State *"
 				name="account_addr_state"
 				validation="required"
 				v-model="state.account_addr_state"
 			/>
 			<FormKit
 				type="text"
-				label="Country"
+				label="Country *"
 				name="account_addr_country"
 				validation="required"
 				v-model="state.account_addr_country"
 			/>
 			<FormKit
 				type="text"
-				label="Postal Code"
+				label="Postal Code *"
 				name="account_addr_postal"
 				validation="required | matches:/^[0-9]{5}$/"
 				v-model="state.account_addr_postal"
 			/>
 			<FormKit
 				type="tel"
-				label="Phone number"
+				label="Phone number *"
 				name="account_addr_phone"
 				placeholder="1-###-###-####"
 				v-model="state.account_addr_phone"
@@ -146,27 +146,30 @@
 </template>
 
 <script setup>
-	const emit = defineEmits(['submitted'])
-	const router = useRouter()
-	const navigate = (p) => {
-		return navigateTo({
-			path: p,
-		})
-	}
-	const state = reactive({
-		account_email: 'joe@net.com',
-		member_firstname: 'Joe',
-		member_lastname: 'Blow',
+	import '@formkit/themes/genesis'
 
-		// member_year: this.$moment().format('YYYY'),
-		member_year: 2022,
-		account_addr_street: '12 Cherry',
+	const { $dayjs } = useNuxtApp()
+	//
+	// outgoing
+	//
+	const emit = defineEmits(['submitted'])
+
+	//
+	// initialize form
+	//
+	const state = reactive({
+		account_email: '',
+		member_firstname: '',
+		member_lastname: '',
+
+		member_year: $dayjs().format('YYYY'),
+		account_addr_street: '',
 		account_addr_street_ext: '',
-		account_addr_city: 'Buffalo',
-		account_addr_state: 'NY',
-		account_addr_country: 'US',
-		account_addr_postal: '14201',
-		account_addr_phone: '716-833-1222',
+		account_addr_city: '',
+		account_addr_state: '',
+		account_addr_country: '',
+		account_addr_postal: '',
+		account_addr_phone: '',
 
 		member_show_phone: '1',
 		member_show_addr: '1',
@@ -177,55 +180,18 @@
 		member_type_id: '9',
 		member_type2_id: '',
 		member_admin_type_id: '0',
-		member_admin_type2_id: '0',
+		member_admin_type2_id: '',
 
 		// human: '',
 	})
-
+	//
 	// form handlers
+	//
 	const submitForm = (state) => {
 		emit('submitted', state)
 	}
 
 	const cancelForm = () => {
-		navigate('/')
+		navigateTo('/')
 	}
 </script>
-
-<style scoped>
-	.error {
-		color: red;
-	}
-	.formBox {
-		background-color: rgba(255, 255, 255, 0.2);
-		margin: 0 auto;
-		padding: 2rem;
-		border: thin black solid;
-		width: 20rem;
-		justify-content: left;
-		align-items: left;
-		text-align: left;
-	}
-	@media screen and (max-width: 640px) {
-		.loginbox {
-			width: 100%;
-		}
-	}
-	.formkit-inner {
-		background-color: rgba(255, 255, 255, 0.5);
-	}
-	[data-invalid] .formkit-inner {
-		border-color: red;
-		box-shadow: 0 0 0 1px red;
-	}
-
-	[data-complete] .formkit-inner {
-		border-color: red;
-		box-shadow: 0 0 0 1px green;
-	}
-	[data-complete] .formkit-inner::after {
-		content: '✅';
-		display: block;
-		padding: 0.5em;
-	}
-</style>

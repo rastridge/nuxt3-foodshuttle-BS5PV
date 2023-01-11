@@ -5,7 +5,7 @@
 			:options="years"
 			optionLabel="label"
 			optionValue="value"
-			placeholder="Select a Year"
+			placeholder="Select a Different Year"
 		/>
 		<!-- year = {{ year }} years = {{ years }} -->
 	</div>
@@ -14,16 +14,23 @@
 <script setup>
 	import Dropdown from 'primevue/dropdown'
 	const { $dayjs } = useNuxtApp()
-
+	//
+	// Incoming
+	//
 	const props = defineProps({
 		startyear: {
 			type: Number,
 			required: true,
 		},
 	})
+	//
+	// Outgoing
+	//
 	const emit = defineEmits(['submitted'])
 
-	// needed for dropdown
+	//
+	// Info for dropdown
+	//
 	const year = ref($dayjs().format('YYYY'))
 	const years = computed(() => {
 		{
@@ -35,21 +42,20 @@
 			return years
 		}
 	})
-	const setYear = (yr) => {
-		emit('submitted', yr)
-		// this.$store.commit('pagination/saveyear', value)
-		// this.$store.commit('pagination/savepage', '1')
-	}
+	//
+	// Action for dropdown
+	//
 
-	// for some reason @change does not work
-	watch(year, () => setYear(year.value))
+	// this.$store.commit('pagination/saveyear', value)
+	// this.$store.commit('pagination/savepage', '1')
+
+	watch(year, () => emit('submitted', year.value))
 </script>
 
 <style lang="scss" scoped>
-	.p-treeselect {
+	.p-dropdown {
 		width: 20rem;
 	}
-
 	@media screen and (max-width: 640px) {
 		.p-treeselect {
 			width: 100%;

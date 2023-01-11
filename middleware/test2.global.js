@@ -22,6 +22,12 @@ export default defineNuxtRouteMiddleware((from, to) => {
 	}
 
 	console.log(
+		'auth.isLoggedIn  to.path.includes(/admin)',
+		auth.isLoggedIn,
+		to.path.includes('/admin')
+	)
+
+	console.log(
 		'!auth.isLoggedIn && to.path.includes(/admin)',
 		!auth.isLoggedIn && to.path.includes('/admin')
 	)

@@ -52,6 +52,12 @@
 			visible: () => checkPerm('news') > 0,
 		},
 		{
+			label: 'Newsletters',
+			icon: 'pi pi-fw pi-bookmark',
+			to: '/admin/newsletters',
+			visible: () => checkPerm('newsletters') > 0,
+		},
+		{
 			label: 'Logout',
 			icon: 'pi pi-fw pi-power-off',
 			to: '/logout',

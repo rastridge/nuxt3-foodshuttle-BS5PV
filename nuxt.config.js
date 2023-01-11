@@ -1,6 +1,12 @@
 export default defineNuxtConfig({
 	ssr: false,
-	modules: ['@formkit/nuxt', 'nuxt-icon', '@pinia/nuxt'],
+	modules: [
+		'@formkit/nuxt',
+		'nuxt-icon',
+		'@pinia/nuxt',
+		'@vueuse/nuxt',
+		'formidable',
+	],
 
 	dayjs: {
 		locales: ['en'],
@@ -8,14 +14,10 @@ export default defineNuxtConfig({
 		defaultTimeZone: 'America/New_York',
 	},
 
-	// plugins: [{ src: '~plugins/nuxt-quill', ssr: false }],
 	css: [
 		'primevue/resources/themes/saga-blue/theme.css',
 		'primevue/resources/primevue.css',
 		'primeicons/primeicons.css',
-		// 'quill/dist/quill.core.css',
-		// 'quill/dist/quill.snow.css',
-		// 'quill/dist/quill.bubble.css',
 	],
 
 	runtimeConfig: {

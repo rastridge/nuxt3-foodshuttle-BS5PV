@@ -1,13 +1,13 @@
 <template>
 	<div>
-		<div v-if="!form_state" class="spinner-border text-primary" role="status">
+		<div v-if="!state" class="spinner-border text-primary" role="status">
 			<span class="visually-hidden">Loading...</span>
 		</div>
-		<div v-else>
+		<div v-else class="formBox">
 			<form class="form-horizontal">
 				<div class="form-group">
 					<div class="col-sm-offset-2 col-sm-4">
-						<Button class="p-button-sm" @click.prevent="submitForm(form_state)">
+						<Button class="p-button-sm" @click.prevent="submitForm(state)">
 							Submit
 						</Button>
 					</div>
@@ -20,7 +20,7 @@
 					<div class="col-sm-4">
 						<input
 							id="admin_user_name"
-							v-model.trim="form_state.admin_user_name"
+							v-model.trim="state.admin_user_name"
 							type="text"
 							class="form-control"
 							autofocus
@@ -38,7 +38,7 @@
 					<div class="col-sm-6">
 						<input
 							id="admin_user_email"
-							v-model.trim="form_state.admin_user_email"
+							v-model.trim="state.admin_user_email"
 							type="email"
 							class="form-control"
 						/>
@@ -70,7 +70,7 @@
 						<div class="col-sm-4">
 							<input
 								id="password"
-								v-model.trim="form_state.password"
+								v-model.trim="state.password"
 								type="text"
 								class="form-control"
 							/>
@@ -126,7 +126,7 @@
 												<input
 													class="form-check-input"
 													type="radio"
-													v-model="form_state.perms[index].admin_perm"
+													v-model="state.perms[index].admin_perm"
 													value="3"
 												/>
 											</div>
@@ -136,7 +136,7 @@
 												<input
 													class="form-check-input"
 													type="radio"
-													v-model="form_state.perms[index].admin_perm"
+													v-model="state.perms[index].admin_perm"
 													value="2"
 												/>
 											</div>
@@ -146,7 +146,7 @@
 												<input
 													class="form-check-input"
 													type="radio"
-													v-model="form_state.perms[index].admin_perm"
+													v-model="state.perms[index].admin_perm"
 													value="1"
 												/>
 											</div>
@@ -156,7 +156,7 @@
 												<input
 													class="form-check-input"
 													type="radio"
-													v-model="form_state.perms[index].admin_perm"
+													v-model="state.perms[index].admin_perm"
 													value="0"
 												/>
 											</div>
@@ -169,7 +169,7 @@
 				</div>
 
 				<div class="m-3">
-					<Button @click.prevent="submitForm(form_state)"> Submit </Button>
+					<Button @click.prevent="submitForm(state)"> Submit </Button>
 
 					<Button @click.prevent="cancelForm()"> Cancel </Button>
 				</div>
@@ -181,136 +181,28 @@
 <script setup>
 	import { useAuthStore } from '~~/stores/authStore'
 	const auth = useAuthStore()
-	const router = useRouter()
-	const navigate = (p) => {
-		return navigateTo({
-			path: p,
-		})
-	}
-
-	const form_state = ref({})
-
-	// password input
-	const reset = ref(false)
-	const repeatPass = ref('')
-	const resetPassword = () => {
-		reset.value = !reset
-		if (reset.value) {
-			form_state.value.password = ''
-			repeatPass.value = ''
-		}
-	}
-	const match = computed(() => form_state.value.password !== repeatPass.value)
-	const required = computed(() => form_state.value.password === '')
-	const username_required = computed(
-		() => form_state.value.admin_user_name === ''
-	)
-	const email_required = computed(
-		() => form_state.value.admin_user_email === ''
-	)
-	const addForm = props.id === 0
-
-	// get app namefor access inputs
-	const { data: apps_data } = await useFetch(`/users/getapps`, {
-		method: 'get',
-		headers: {
-			authorization: auth.user.token,
-		},
-	})
-
-	// console.log('apps_data= ', apps_data)
-	// const apps = apps_data.value
-
-	/* 	const apps = [
-		{
-			admin_app_id: 1,
-			admin_app_name: 'settings',
-		},
-		{
-			admin_app_id: 2,
-			admin_app_name: 'sponsors',
-		},
-		{
-			admin_app_id: 3,
-			admin_app_name: 'videos',
-		},
-		{
-			admin_app_id: 4,
-			admin_app_name: 'news',
-		},
-		{
-			admin_app_id: 5,
-			admin_app_name: 'newsletters',
-		},
-		{
-			admin_app_id: 6,
-			admin_app_name: 'sms',
-		},
-		{
-			admin_app_id: 8,
-			admin_app_name: 'users',
-		},
-		{
-			admin_app_id: 11,
-			admin_app_name: 'content',
-		},
-		{
-			admin_app_id: 12,
-			admin_app_name: 'accounts',
-		},
-		{
-			admin_app_id: 19,
-			admin_app_name: 'contributions',
-		},
-		{
-			admin_app_id: 21,
-			admin_app_name: 'filemanager',
-		},
-		{
-			admin_app_id: 26,
-			admin_app_name: 'archive',
-		},
-		{
-			admin_app_id: 29,
-			admin_app_name: 'payments',
-		},
-		{
-			admin_app_id: 31,
-			admin_app_name: 'newsletters_archive',
-		},
-	]
- */
-	// initlaize form ////////////////////////////
-	// get users id if editing
+	//
+	// Incoming
+	//
 	const props = defineProps({
 		id: { Number, default: 0 },
 	})
-	// add is zero  edit is non zero
-	if (props.id !== 0) {
-		// get user data
-		const { data: form_data } = await useFetch(`/users/${props.id}`, {
-			method: 'get',
-			headers: {
-				authorization: auth.user.token,
-			},
-		})
-		// console.log('form_data= ', form_data)
 
-		// init form values if editing
-		form_state.value.admin_user_id = form_data.value.admin_user_id
-		form_state.value.admin_user_name = form_data.value.admin_user_name
-		form_state.value.admin_user_email = form_data.value.admin_user_email
-		form_state.value.admin_user_pass = form_data.value.admin_user_pass
-		form_state.value.password = ''
-		form_state.value.perms = form_data.value.perms
-	} else {
-		// init form values if adding
-		form_state.value.admin_user_id = ''
-		form_state.value.admin_user_name = ''
-		form_state.value.admin_user_email = ''
-		form_state.value.admin_user_pass = ''
-		form_state.value.password = ''
-		form_state.value.perms = [
+	//
+	// outgoing
+	//
+	const emit = defineEmits(['submitted'])
+
+	//
+	// Initialize form
+	//
+	const state = reactive({
+		admin_user_id: '',
+		admin_user_name: '',
+		admin_user_email: '',
+		admin_user_pass: '',
+		password: '',
+		perms: [
 			{
 				admin_perm_id: 0,
 				admin_app_id: 1,
@@ -409,21 +301,64 @@
 				admin_perm: 3,
 				admin_user_id: 0,
 			},
-		]
+		],
+	})
+
+	//
+	// password input
+	//
+	const reset = ref(false)
+	const repeatPass = ref('')
+	const resetPassword = () => {
+		reset.value = !reset
+		if (reset.value) {
+			state.password = ''
+			repeatPass.value = ''
+		}
 	}
-	// form handlers ///////////////////////////////
-	const emit = defineEmits(['submitted'])
-	const submitForm = (form_state) => {
-		console.log('in submitForm form_state = ', form_state)
-		emit('submitted', form_state)
+	const match = computed(() => state.password !== repeatPass.value)
+	const required = computed(() => state.password === '')
+	const username_required = computed(() => state.admin_user_name === '')
+	const email_required = computed(() => state.admin_user_email === '')
+	const addForm = props.id === 0
+
+	// get app namefor access inputs
+	const { data: apps_data } = await useFetch(`/users/getapps`, {
+		method: 'get',
+		headers: {
+			authorization: auth.user.token,
+		},
+	})
+
+	// initlaize form ////////////////////////////
+	// get users id if editing
+	// add is zero  edit is non zero
+	if (props.id !== 0) {
+		// get user data
+		const { data: form_data } = await useFetch(`/users/${props.id}`, {
+			method: 'get',
+			headers: {
+				authorization: auth.user.token,
+			},
+		})
+		// console.log('form_data= ', form_data)
+
+		// init form values if editing
+		state.admin_user_id = form_data.value.admin_user_id
+		state.admin_user_name = form_data.value.admin_user_name
+		state.admin_user_email = form_data.value.admin_user_email
+		state.admin_user_pass = form_data.value.admin_user_pass
+		state.password = ''
+		state.perms = form_data.value.perms
+	}
+	//
+	// form handlers
+	//
+	const submitForm = (state) => {
+		console.log('in submitForm state = ', state)
+		emit('submitted', state)
 	}
 	const cancelForm = () => {
-		navigate('/admin/users')
+		navigateTo('/admin/users')
 	}
 </script>
-
-<style>
-	.error {
-		color: red;
-	}
-</style>

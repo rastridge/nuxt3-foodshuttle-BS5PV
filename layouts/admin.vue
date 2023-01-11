@@ -1,6 +1,6 @@
 <template>
 	<header>
-		<my-admin-header />
+		<admin-header />
 	</header>
 
 	<!-- spacer to avoid header -->
@@ -17,9 +17,8 @@
 </script>
 
 <style>
+	@import '@/assets/css/main.css';
 	body {
 		background-color: rgb(141, 136, 168);
 	}
 </style>
-
-<style></style>

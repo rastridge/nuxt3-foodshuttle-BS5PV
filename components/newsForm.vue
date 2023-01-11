@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="formBox">
 		<FormKit
 			type="form"
 			:config="{ validationVisibility: 'live' }"
@@ -7,14 +7,6 @@
 			submit-label="Submit"
 			@submit="submitForm(state)"
 		>
-			state.news_article {{ state.news_article }}
-			<quill-editor
-				contentType="html"
-				:content="state.news_article"
-				theme="snow"
-				toolbar="full"
-			></quill-editor>
-
 			<FormKit
 				label="News Title"
 				name="news_title"
@@ -29,6 +21,7 @@
 				validation="required"
 				v-model="state.news_synop"
 			/>
+			<p>state.news_synop {{ state.news_synop }}</p>
 
 			<FormKit
 				label="Raw Article"
@@ -36,11 +29,17 @@
 				type="textarea"
 				v-model="state.news_article"
 			/>
+			<p>state.news_article {{ state.news_article }}</p>
 			<div class="editor">
-				<h3>Body of article primevue editor</h3>
-				<!-- primevue editor -->
-				<Editor v-model="state.news_article" editorStyle="height: 320px" />
+				<quill-editor
+					ref="quillref"
+					contentType="html"
+					v-model:content="state.news_article"
+					toolbar="full"
+					@update:content="update($event)"
+				></quill-editor>
 			</div>
+			<!-- </FormKit> -->
 
 			<FormKit
 				type="datetime-local"
@@ -73,28 +72,48 @@
 
 <script setup>
 	import '@formkit/themes/genesis'
-	import '@vueup/vue-quill/dist/vue-quill.snow.css'
-	import ImageUploader from 'quill-image-uploader'
-
-	// import Editor from 'primevue/editor'
 
 	import { useAuthStore } from '~~/stores/authStore'
 	const auth = useAuthStore()
-	// const router = useRouter()
 
-	// testing date manipulayion
 	const { $dayjs } = useNuxtApp()
-
+	//
+	// Outgoing
+	//
 	const emit = defineEmits(['submitted'])
-
+	//
+	// Incoming
+	//
 	const props = defineProps({
 		id: { Number, default: 0 },
 	})
-	const state = reactive({})
 
+	const update = (e) => {
+		console.log('e', e)
+		state.news_article = e
+	}
+	// const quillref = ref(null)
+	// const hold = ref(null)
+	//
+	// Initialize form
+	//
+	const state = reactive({
+		news_id: '',
+		id: '',
+		news_title: '',
+		title: '',
+		news_article: '',
+		news_synop: '',
+		news_event_dt: $dayjs().format('YYYY-MM-DD HH:mm'),
+		news_expire_dt: $dayjs().format('YYYY-MM-DD HH:mm'),
+		news_release_dt: $dayjs().format('YYYY-MM-DD HH:mm'),
+	})
+
+	//
 	// edit if there is an id - add if not
+	//
 	if (props.id !== 0) {
-		// get user with id
+		// get user with id === props.id
 		const {
 			data: news_data,
 			pending,
@@ -122,21 +141,11 @@
 		state.news_expire_dt = $dayjs(news_data.value.news_expire_dt).format(
 			'YYYY-MM-DD HH:mm'
 		)
-	} else {
-		state.news_id = ''
-		state.id = ''
-		state.news_title = 'testnews'
-		state.title = 'testnews'
-		state.news_article = 'a body of article dsfasdff'
-		state.news_synop = 'adsf syop of asdff'
-		state.news_event_dt = '2022-11-25 23:01'
-		state.news_expire_dt = '2023-01-17 23:01'
-		state.news_release_dt = '2022-01-17 23:01'
-
-		// human: '',
 	}
 
+	//
 	// form handlers
+	//
 	const submitForm = (state) => {
 		emit('submitted', state)
 	}
@@ -145,31 +154,3 @@
 		navigateTo('/admin/news') // needs to be / for self register
 	}
 </script>
-
-<style>
-	.editor {
-		width: 50%;
-	}
-	@media screen and (max-width: 640px) {
-		.editor {
-			width: 100%;
-		}
-	}
-	.formkit-inner {
-		background-color: rgba(255, 255, 255, 0.5);
-	}
-	[data-invalid] .formkit-inner {
-		border-color: red;
-		box-shadow: 0 0 0 1px red;
-	}
-
-	[data-complete] .formkit-inner {
-		border-color: red;
-		box-shadow: 0 0 0 1px green;
-	}
-	[data-complete] .formkit-inner::after {
-		content: '✅';
-		display: block;
-		padding: 0.5em;
-	}
-</style>

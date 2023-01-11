@@ -7,7 +7,7 @@ import Card from 'primevue/card'
 import DataTable from 'primevue/datatable'
 import Dialog from 'primevue/dialog'
 import Column from 'primevue/column'
-import Editor from 'primevue/editor'
+// import Editor from 'primevue/editor'
 import InputText from 'primevue/inputtext'
 import Menubar from 'primevue/menubar'
 import Tooltip from 'primevue/tooltip'
@@ -25,7 +25,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 	nuxtApp.vueApp.component('Column', Column)
 	nuxtApp.vueApp.component('DataTable', DataTable)
 	nuxtApp.vueApp.component('Dialog', Dialog)
-	nuxtApp.vueApp.component('Editor', Editor)
+	// nuxtApp.vueApp.component('Editor', Editor)
 	nuxtApp.vueApp.component('InputText', InputText)
 	nuxtApp.vueApp.component('Menubar', Menubar)
 	nuxtApp.vueApp.component('Tooltip', Tooltip)

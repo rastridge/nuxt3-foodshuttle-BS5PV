@@ -12,10 +12,11 @@
 			<Button
 				class="p-button-sm"
 				label="Add account"
-				@click="navigateTo('/admin/accounts/add')"
+				@click="navigateTo('/admin/users/add')"
 			>
 			</Button>
 		</div>
+
 		<render-list
 			:data="users"
 			:app="app"
@@ -29,20 +30,20 @@
 		/>
 	</div>
 </template>
+
 <script setup>
 	import { useAuthStore } from '~~/stores/authStore'
 	const auth = useAuthStore()
 
 	definePageMeta({ layout: 'admin' })
 
-	const router = useRouter()
-	const navigate = (p) => {
-		return navigateTo({
-			path: p,
-		})
-	}
-
+	//
+	// Initialize values for Renderlist
+	//
 	const app = 'users'
+	//
+	// Set access permisions for Renderlist
+	//
 	let editable = false
 	let addable = false
 	let deleteable = false
@@ -61,22 +62,24 @@
 		viewable = true
 	} else if (perms.admin_perm === 2) {
 		// create
-		editable = false
+		// editable = false
 		addable = true
-		deleteable = false
-		statusable = false
+		// deleteable = false
+		// statusable = false
 		viewable = true
 	} else if (perms.admin_perm === 1) {
 		// view
-		editable = false
-		addable = false
-		deleteable = false
-		statusable = false
+		// editable = false
+		// addable = false
+		// deleteable = false
+		// statusable = false
 		viewable = true
 	} else {
-		navigate('/admin') // no access
+		navigateTo('/admin') // no access
 	}
-
+	//
+	// Get all users
+	//
 	const {
 		data: users,
 		pending,
@@ -89,6 +92,9 @@
 			authorization: auth.user.token,
 		},
 	})
+	//
+	// Renderlist actions
+	//
 	const deleteItem = async (id) => {
 		const { pending, error, refresh } = await useFetch(`/users/${id}`, {
 			method: 'delete',

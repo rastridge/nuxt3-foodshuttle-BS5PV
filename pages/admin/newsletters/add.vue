@@ -5,11 +5,12 @@
 	const auth = useAuthStore()
 
 	definePageMeta({ layout: 'admin' })
+
 	//
-	// Accounts form action
+	// Newsletters form action
 	//
 	const onSubmit = async function (state) {
-		const { data, pending, error } = await useFetch('/accounts/addone', {
+		const { data, pending, error } = await useFetch('/newsletters/addone', {
 			method: 'post',
 			body: state,
 			headers: {
@@ -19,7 +20,7 @@
 		if (data.value.message) {
 			alert.error(data.value.message)
 		} else {
-			navigateTo('/admin/accounts')
+			navigateTo('/admin/newsletters')
 		}
 	}
 </script>
@@ -27,15 +28,15 @@
 <template>
 	<div>
 		<Head>
-			<Title>Add Account</Title>
+			<Title>Add Newsletter</Title>
 		</Head>
-		<common-header title="Add account" />
+		<common-header title="Add Newsletter" />
 
 		<div v-if="alert.message" :class="`alert ${alert.type}`">
 			{{ alert.message }}
 		</div>
 
-		<accounts-form @submitted="onSubmit" />
+		<newsletters-form @submitted="onSubmit" />
 
 		<div v-if="alert.message" :class="`alert ${alert.type}`">
 			{{ alert.message }}

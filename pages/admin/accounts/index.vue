@@ -3,7 +3,7 @@
 		<Head>
 			<Title>Accounts List</Title>
 		</Head>
-		<div class="text-center m-5 text-2xl">
+		<div class="text-center m-5 text-xl">
 			<b>Account List</b>
 		</div>
 
@@ -32,17 +32,20 @@
 <script setup>
 	import { useAuthStore } from '~~/stores/authStore'
 	const auth = useAuthStore()
+
 	definePageMeta({ layout: 'admin' })
-	const router = useRouter()
-
+	//
+	// Initialize values for Renderlist and Select Year
+	//
 	const app = 'accounts'
-
+	//
+	// Set access permisions for Renderlist
+	//
 	let editable = false
 	let addable = false
 	let deleteable = false
 	let statusable = false
 	let viewable = true
-
 	const user = JSON.parse(sessionStorage.getItem('auth'))
 	const temp = user.perms
 	const perms = temp.find((u) => u.admin_app_name === app)
@@ -55,22 +58,25 @@
 		viewable = true
 	} else if (perms.admin_perm === 2) {
 		// create
-		editable = false
+		// editable = false
 		addable = true
-		deleteable = false
-		statusable = false
+		// deleteable = false
+		// statusable = false
 		viewable = true
 	} else if (perms.admin_perm === 1) {
 		// view
-		editable = false
-		addable = false
-		deleteable = false
-		statusable = false
+		// editable = false
+		// addable = false
+		// deleteable = false
+		// statusable = false
 		viewable = true
 	} else {
 		navigateTo('/admin') // no access
 	}
 
+	//
+	// Get all accounts
+	//
 	const {
 		data: accounts,
 		pending,
@@ -84,7 +90,9 @@
 			// authorization: 'not-needed',
 		},
 	})
-
+	//
+	// Renderlist actions
+	//
 	const deleteItem = async (id) => {
 		const { pending, error, refresh } = await useFetch(`/accounts/${id}`, {
 			method: 'delete',

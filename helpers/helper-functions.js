@@ -6,36 +6,32 @@
 	}
 	t.years = years
 }
+*/
 
-export function sendNowLater(t) {
-	t.$modal.show('dialog', {
-		title: 'Do you want to send now or later',
-		text: '',
-		buttons: [
-			{
-				title: 'Save and Send Now',
-				handler: () => {
-					t.addNewsletter('sendNow')
-				},
-			},
-			{
-				title: 'Save and Send Later',
-				default: true, // Will be triggered by default if 'Enter' pressed.
-				handler: () => {
-					t.addNewsletter('sendLater')
-				}, // Button click handler
-			},
-			{
-				title: 'Cancel',
-				handler: () => {
-					t.submitStatus = ''
-					t.$modal.hide('dialog')
-				},
-			},
-		],
+import Swal from 'sweetalert2'
+// fn is either save and send or save
+export function openSaveSendModal(fn) {
+	Swal.fire({
+		title: 'What to do?',
+		showDenyButton: true,
+		showCancelButton: true,
+		showConfirmButton: true,
+		confirmButtonText: `Send now`,
+		denyButtonText: `Send later`,
+	}).then((result) => {
+		if (result.isConfirmed) {
+			// fn('sendNow')
+			Swal.fire('Saved and Sent', '', 'success')
+		} else if (result.isDenied) {
+			// fn('sendLater')
+			Swal.fire('Saved', '', 'success')
+		} else if (result.isDismissed) {
+			// this.submitStatus = ''
+		}
 	})
 }
- */
+
+/*
 export function getPerms(t) {
 	const user = JSON.parse(sessionStorage.getItem('auth'))
 	const temp = user.perms

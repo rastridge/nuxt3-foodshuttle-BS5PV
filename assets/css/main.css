@@ -18,7 +18,49 @@ body {
 	border-radius: 20px;
 	background-color: rgba(255, 255, 255, 0.3);
 }
+.editor {
+	width: 20rem;
+	background-color: rgba(255, 255, 255, 0.5);
+}
+.error {
+	color: red;
+}
+.formBox {
+	background-color: rgba(255, 255, 255, 0.2);
+	margin: 0 auto;
+	padding: 2rem;
+	border: thin black solid;
+	width: 25rem;
+	justify-content: left;
+	align-items: left;
+	text-align: left;
+}
+
+.formkit-inner {
+	background-color: rgba(255, 255, 255, 0.5);
+}
+[data-invalid] .formkit-inner {
+	border-color: red;
+	box-shadow: 0 0 0 1px red;
+}
+
+[data-complete] .formkit-inner {
+	border-color: red;
+	box-shadow: 0 0 0 1px green;
+}
+[data-complete] .formkit-inner::after {
+	content: '✅';
+	display: block;
+	padding: 0.5em;
+}
+
 @media screen and (max-width: 640px) {
+	.loginbox {
+		width: 100%;
+	}
+	.formBox {
+		width: 100%;
+	}
 	.content {
 		width: 100%;
 		padding: 0.5rem;

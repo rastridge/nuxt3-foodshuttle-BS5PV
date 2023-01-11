@@ -20,14 +20,12 @@ async function doDBQuery(sql, inserts) {
 
 export const newsService = {
 	getAll,
-	getPage,
 	getOne,
 	addOne,
 	editOne,
 	deleteOne,
 	changeStatus,
 	getAllCurrent,
-	getNewsLetterRecipientTypes,
 }
 
 async function getAll() {
@@ -51,40 +49,6 @@ async function getAll() {
 	const news = await doDBQuery(sql)
 
 	return news
-}
-
-async function getPage(pg) {
-	const sql = `SELECT
-								news_id,
-								news_id as id,
-								news_title,
-								news_title as title,
-								news_event_dt,
-								news_event_dt as dt,
-								news_expire_dt,
-								news_synop,
-								status
-							FROM
-								inbrc_news
-							WHERE
-								deleted = 0
-							ORDER BY dt DESC`
-
-	const items = await doDBQuery(sql)
-	const page = parseInt(pg) || 1
-	const pager = paginate(items.length, page, PAGE_SIZE_SM)
-	const pageOfItems = items.slice(pager.startIndex, pager.endIndex + 1)
-
-	return { pager, pageOfItems }
-
-	/*
-	// get pager object for specified page
-
-	// get page of items from items array
-
-	// return pager object and current page of items
-	return res.json({ pager, pageOfItems });
-*/
 }
 
 async function getAllCurrent() {
@@ -212,10 +176,4 @@ async function editOne({
 	const news = await doDBQuery(sql, inserts)
 
 	return news
-}
-
-async function getNewsLetterRecipientTypes() {
-	const sql = `SELECT * FROM inbrc_newsletter_recipient_types WHERE 1`
-	const recipientypes = await doDBQuery(sql)
-	return recipientypes
 }

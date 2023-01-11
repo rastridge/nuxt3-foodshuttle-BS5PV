@@ -5,7 +5,7 @@
 			{{ alert.message }}
 		</div>
 
-		<my-accounts-self-form @submitted="handleSubmit" />
+		<accounts-self-form @submitted="handleSubmit" />
 		<div v-if="alert.message" :class="`alert ${alert.type}`">
 			{{ alert.message }}
 		</div>
@@ -35,10 +35,10 @@
 </template>
 
 <script setup>
-	import { useAuthStore } from '~~/stores/authStore'
 	import Dialog from 'primevue/dialog'
 	import { useAlertStore } from '~~/stores/alertStore'
 	const alert = useAlertStore()
+	const { $dayjs } = useNuxtApp()
 
 	const displayModal = ref(false)
 	const openModal = (item) => {
@@ -53,8 +53,7 @@
 		account_email: '',
 		member_firstname: '',
 		member_lastname: '',
-		// member_year: this.$moment().format('YYYY'),
-		member_year: 2022,
+		member_year: $dayjs().format('YYYY'),
 		account_addr_street: '',
 		account_addr_street_ext: '',
 		account_addr_city: '',

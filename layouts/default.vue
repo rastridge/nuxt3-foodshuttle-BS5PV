@@ -1,6 +1,6 @@
 <template>
 	<header>
-		<my-header />
+		<top-menu />
 	</header>
 
 	<!-- spacer -->
@@ -11,7 +11,7 @@
 		<slot />
 	</div>
 	<footer>
-		<my-footer />
+		<footer />
 	</footer>
 </template>
 
